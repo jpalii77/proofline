@@ -6,7 +6,7 @@ import { createNemotronBrain } from '../src/agent/nemotron-brain.mjs';
 import { runAgent } from '../src/agent/pipeline.mjs';
 import { createSampleIO, loadSamples } from '../src/io/sample.mjs';
 import { createTokenFactoryClient, parseJsonReply } from '../src/llm.mjs';
-import { readConfig } from '../src/runtime.mjs';
+import { configProblem, publicConfig, readConfig, wiringFor } from '../src/runtime.mjs';
 import { createTavilyClient } from '../src/tavily.mjs';
 
 const FAKE_KEY = 'test-not-a-real-key';
@@ -59,10 +59,21 @@ test('Tavily client posts the query and trims results', async () => {
   assert.match((await bad.search('x')).error, /429/);
 });
 
-test('without a Nebius key the app falls back to sample mode', () => {
-  assert.equal(readConfig({}).sampleMode, true);
-  assert.equal(readConfig({ NEBIUS_API_KEY: FAKE_KEY }).sampleMode, false);
-  assert.equal(readConfig({ NEBIUS_API_KEY: FAKE_KEY, SAMPLE_MODE: 'true' }).sampleMode, true);
+test('live mode never falls back silently: missing keys are named, sample mode is suggested', () => {
+  assert.equal(readConfig({ SAMPLE_MODE: 'true' }).sampleMode, true);
+  assert.equal(configProblem(readConfig({ SAMPLE_MODE: 'true' })), null);
+  const none = readConfig({});
+  assert.equal(none.sampleMode, false);
+  assert.deepEqual(none.missing, ['NEBIUS_API_KEY', 'TAVILY_API_KEY']);
+  assert.match(configProblem(none), /NEBIUS_API_KEY and TAVILY_API_KEY/);
+  assert.match(configProblem(none), /npm run sample/);
+  assert.match(wiringFor(none, 'x').error, /SAMPLE_MODE=true/);
+  const half = readConfig({ NEBIUS_API_KEY: FAKE_KEY });
+  assert.deepEqual(half.missing, ['TAVILY_API_KEY']);
+  assert.ok(!configProblem(half).includes(FAKE_KEY), 'a key never appears in messages');
+  const full = readConfig({ NEBIUS_API_KEY: FAKE_KEY, TAVILY_API_KEY: FAKE_KEY });
+  assert.equal(configProblem(full), null);
+  assert.ok(!JSON.stringify(publicConfig(full)).includes(FAKE_KEY), 'public config carries no keys');
 });
 
 // Scripted Nemotron: answers by role, misbehaving on purpose to exercise every guard.

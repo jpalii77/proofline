@@ -8,11 +8,18 @@ import { createSampleIO, findSample, loadSamples } from './io/sample.mjs';
 import { createTokenFactoryClient, DEFAULT_BASE_URL, DEFAULT_REASONING_MODEL } from './llm.mjs';
 import { createTavilyClient } from './tavily.mjs';
 
+const REQUIRED_LIVE_KEYS = ['NEBIUS_API_KEY', 'TAVILY_API_KEY'];
+
+/**
+ * SAMPLE_MODE=true  -> recorded data, no keys, no network.
+ * anything else     -> live mode, which needs NEBIUS_API_KEY and TAVILY_API_KEY.
+ * Live mode never falls back silently: `missing` lists absent keys and callers refuse to start.
+ */
 export function readConfig(env = process.env) {
-  const sampleMode = String(env.SAMPLE_MODE ?? '').toLowerCase() === 'true' || !env.NEBIUS_API_KEY;
+  const sampleMode = ['true', '1', 'yes'].includes(String(env.SAMPLE_MODE ?? '').trim().toLowerCase());
   return {
     sampleMode,
-    sampleForced: String(env.SAMPLE_MODE ?? '').toLowerCase() === 'true',
+    missing: sampleMode ? [] : REQUIRED_LIVE_KEYS.filter((k) => !String(env[k] ?? '').trim()),
     port: Number(env.PORT) || 8787,
     nebius: {
       apiKey: env.NEBIUS_API_KEY || '',
@@ -23,6 +30,16 @@ export function readConfig(env = process.env) {
     tavilyKey: env.TAVILY_API_KEY || '',
     nominatimContact: env.NOMINATIM_CONTACT || '',
   };
+}
+
+/** A clear, key-free explanation of why live mode cannot start, or null when it can. */
+export function configProblem(cfg) {
+  if (cfg.sampleMode || !cfg.missing.length) return null;
+  return [
+    `Live mode needs ${cfg.missing.join(' and ')} in the environment (not set).`,
+    'Export them in your shell (see .env.example), or try the app without keys:',
+    '  npm run sample        (same as SAMPLE_MODE=true npm start)',
+  ].join('\n');
 }
 
 /** Public, key-free description of the current setup (safe to send to the browser). */
@@ -46,6 +63,8 @@ export function wiringFor(cfg, query, { fetchImpl, pace = false } = {}) {
       query: sample.input,
     };
   }
+  const problem = configProblem(cfg);
+  if (problem) return { error: problem };
   const llm = createTokenFactoryClient({ ...cfg.nebius, fetchImpl });
   const tavily = cfg.tavilyKey ? createTavilyClient({ apiKey: cfg.tavilyKey, fetchImpl }) : null;
   return {

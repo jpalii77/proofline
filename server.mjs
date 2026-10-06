@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { runAgent } from './src/agent/pipeline.mjs';
 import { gateClaim } from './src/claims.mjs';
 import { observed } from './src/io/observed.mjs';
-import { publicConfig, readConfig, wiringFor } from './src/runtime.mjs';
+import { configProblem, publicConfig, readConfig, wiringFor } from './src/runtime.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public');
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
@@ -97,6 +97,8 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false } = {
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const cfg = readConfig();
+  const problem = configProblem(cfg);
+  if (problem) { console.error(`Proofline cannot start in live mode.\n${problem}`); process.exit(1); }
   createServer(cfg, { pace: !process.argv.includes('--fast') }).listen(cfg.port, () => {
     const mode = cfg.sampleMode ? 'SAMPLE_MODE (recorded data, no keys)' : `live · ${cfg.nebius.reasoningModel}`;
     console.log(`Proofline on http://localhost:${cfg.port}  [${mode}]`);

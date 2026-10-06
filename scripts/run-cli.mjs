@@ -1,9 +1,11 @@
 // Run the agent from the terminal: npm run cli -- "Lumen Coffee Roasters, Izmir"
 import { runAgent } from '../src/agent/pipeline.mjs';
-import { readConfig, wiringFor } from '../src/runtime.mjs';
+import { configProblem, readConfig, wiringFor } from '../src/runtime.mjs';
 
 const query = process.argv.slice(2).join(' ') || 'Lumen Coffee Roasters, Izmir';
 const cfg = readConfig();
+const problem = configProblem(cfg);
+if (problem) { console.error(problem); process.exit(1); }
 const w = wiringFor(cfg, query);
 if (w.error) { console.error(w.error); process.exit(1); }
 

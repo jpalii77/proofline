@@ -10,6 +10,7 @@
     "sample": "SAMPLE_MODE=true node server.mjs",
     "test": "node --test tests/",
     "cli": "node scripts/run-cli.mjs",
+    "cli:sample": "SAMPLE_MODE=true node scripts/run-cli.mjs",
     "models": "node scripts/list-models.mjs"
   }
 }
