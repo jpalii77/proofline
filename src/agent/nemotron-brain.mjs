@@ -43,7 +43,7 @@ Schema: {"claims": [{"type": catalog type, "rationale": string citing the observ
       tier: 'fast',
       system: `Rewrite each verified claim as one short, friendly sentence for the business owner (no jargon). ${RULES}
 Do not add numbers, dates or facts not in the claim or its evidence. Schema: {"claims": [{"id": string, "owner_text": string}]}`,
-      user: { business: ctx.name || ctx.domain, claims },
+      user: { business: ctx.displayName || ctx.name || ctx.domain, claims },
     }),
 
     write: ({ ctx, claims }) => llm.chat({

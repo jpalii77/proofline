@@ -104,7 +104,7 @@ export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
     write: ({ ctx, claims }) => {
       const issues = claims.filter((c) => CLAIM_TYPES[c.type]?.tone !== 'good');
       const goods = claims.filter((c) => CLAIM_TYPES[c.type]?.tone === 'good');
-      const name = ctx.name || ctx.domain;
+      const name = ctx.displayName || ctx.name || ctx.domain;
       const owner_summary = issues.length
         ? `${name} has ${issues.length} verified issue${issues.length > 1 ? 's' : ''} online${goods.length ? `, and ${goods.length} thing${goods.length > 1 ? 's' : ''} already working` : ''}. Each item below links to the check that proves it.`
         : `${name} looks healthy online. Every item below links to the check that proves it.`;

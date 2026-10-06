@@ -120,7 +120,7 @@ function renderReport(r) {
     h('div', { class: 'biz' },
       h('div', {},
         h('h2', {}, 'Digital health card'),
-        h('h3', {}, r.ctx.name || r.ctx.domain),
+        h('h3', {}, r.ctx.displayName || r.ctx.name || r.ctx.domain),
         h('div', { class: 'facts' }, [r.ctx.domain, r.ctx.city, r.ctx.phone].filter(Boolean).map((f) => h('span', {}, f)))),
       h('div', { class: 'overall' }, h('div', { class: `grade g-${card.grade}` }, card.grade), h('small', {}, card.overall == null ? 'not graded' : `${card.overall}/100`))),
     h('div', { class: 'areas' }, Object.values(card.areas).map((a) => h('div', { class: 'area' }, h('span', {}, a.label), h('b', { class: `g-${a.grade}` }, a.grade)))),

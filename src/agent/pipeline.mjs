@@ -6,6 +6,7 @@
 
 import { CHECKS, discoveryQuery, runCheck } from '../checks.mjs';
 import { buildClaim, catalogForPrompt, gateClaim } from '../claims.mjs';
+import { displayName } from '../display-name.mjs';
 import { invalidHostSentence, isValidHostname } from '../hostname.mjs';
 import { observed } from '../io/observed.mjs';
 import { domainsIn, extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
@@ -116,6 +117,11 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
   };
   if (ctx.phone && !grounding.phones.includes(phoneKey(ctx.phone))) { guard.push(`phone ${ctx.phone} not seen in search results`); ctx.phone = null; }
   ctx.userGivenDomain = !!(parsed.domain && ctx.domain === parsed.domain);
+  // Name for the card: the planner's proper name, else a search-result title, else the query minus the
+  // city, title-cased. Display only; checks keep using ctx.name.
+  ctx.displayName = (parsed.domain && !plan.name)
+    ? ctx.domain
+    : displayName({ raw: parsed.name || parsed.raw, planName: plan.name, city: ctx.city, results: discovery.results || [] }) || ctx.name || ctx.domain;
 
   if (!ctx.domain && !ctx.name) {
     step('plan', { model: planOut.model, ms: planOut.ms, reasoning: plan.reasoning || '', ctx, guard });
