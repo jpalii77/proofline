@@ -13,8 +13,8 @@ pitch draft** for the person who wants to help them.
 ![Report](docs/screenshots/2-report.jpg)
 
 > Built for the Nebius × NVIDIA Global AI Hackathon (track: Best Apps and Agents).
-> Status: first working version. Sample mode runs end to end; live mode is wired and tested against
-> a fake network, and will be tried against the real APIs once keys are in place.
+> **Try it: <https://proofline-demo.dwelltime-yayin.workers.dev>** — recorded examples run instantly; live search is rate-limited (see
+> [Public demo](#public-demo)).
 
 ---
 
@@ -222,13 +222,85 @@ src/platforms.mjs          listing / social / directory hosts that are never an 
 src/hostname.mjs           offline hostname + public-suffix check
 src/claims.mjs             claim catalog + gate
 src/io/real.mjs            live DNS / HTTP / TLS / Nominatim / Tavily, SSRF guard
+src/io/net-node.mjs        Node DNS + TLS handshake (local)
+src/io/net-worker.mjs      Workers DNS-over-HTTPS + TLS trust/CT expiry, per-run request budget
+src/web/app.mjs            public demo API (samples, capped live search, cache, self-test)
+src/web/store.mjs          in-memory demo state (tests); worker/index.mjs has the Durable Object
+worker/index.mjs           Cloudflare Workers entry + DemoState Durable Object
+src/display-name.mjs       proper business name for the card title
 src/io/sample.mjs          recorded I/O for SAMPLE_MODE
 src/llm.mjs, src/tavily.mjs    API clients (plain fetch, no SDK)
 public/                    single-page UI (no framework)
 tests/                     node:test suites
 ```
 
-## Deployment (planned)
+## Public demo
+
+**Demo: <https://proofline-demo.dwelltime-yayin.workers.dev>** · host self-test: <https://proofline-demo.dwelltime-yayin.workers.dev/api/selftest>
+
+The demo runs on **Cloudflare Workers** (free plan) as the worker `proofline-demo`
+([`wrangler.jsonc`](wrangler.jsonc), entry [`worker/index.mjs`](worker/index.mjs), app
+[`src/web/app.mjs`](src/web/app.mjs)). It opens in recorded mode:
+
+| Mode | What runs | Cost | Limits |
+| --- | --- | --- | --- |
+| **Recorded examples** (default) | The four fictional businesses from `fixtures/sample/`, same agent and gate, rule-based stand-in for the model | none | none |
+| **Live search** | Real Tavily search + NVIDIA Nemotron on Nebius Token Factory + live DNS / HTTP / TLS / OpenStreetMap checks | trial credit | see below |
+
+Live search is rate-limited to protect a small trial credit. All limits are Worker vars, so they can
+change without a code change:
+
+| Var | Default | Meaning |
+| --- | --- | --- |
+| `LIVE_GLOBAL_PER_DAY` | 20 | live runs per UTC day, all visitors together |
+| `LIVE_IP_PER_DAY` | 3 | live runs per visitor per UTC day (counted by a salted, per-day IP hash; IPs are never stored) |
+| `LIVE_CACHE_HOURS` | 24 | an identical query (case and spacing ignored) is answered from cache, without new API calls or quota |
+| `LIVE_REQUEST_BUDGET` | 40 | outbound check requests per live run (the free plan allows 50 per request) |
+| `LIVE_RECHECK_GLOBAL_PER_DAY` / `LIVE_RECHECK_IP_PER_DAY` | 100 / 15 | “Re-run proof” on live runs |
+| `LIVE_ENABLED` | `true` | `false` switches live search off |
+
+When a cap is hit the page says so (“Live quota used up today — try a recorded example”). Counters,
+the cache and recent live runs live in a SQLite-backed Durable Object (`DemoState`), which the free
+plan includes. Until both API keys are set on the worker, live search answers “Live mode is not
+configured on this demo yet” and the recorded examples keep working.
+
+### Setting the keys (owner only)
+
+Run from the project folder; the values go from the macOS keychain straight to Cloudflare and are
+never printed or committed:
+
+```bash
+security find-generic-password -s proofline-nebius -w | npx wrangler secret put NEBIUS_API_KEY
+security find-generic-password -s proofline-tavily -w | npx wrangler secret put TAVILY_API_KEY
+```
+
+### What differs on Workers
+
+Workers have no `getaddrinfo` and no raw TLS peer-certificate API, so two checks gather the same
+evidence another way, behind a small adapter ([`src/io/net-worker.mjs`](src/io/net-worker.mjs);
+local Node keeps [`src/io/net-node.mjs`](src/io/net-node.mjs)):
+
+| Check | Local Node | Cloudflare Workers |
+| --- | --- | --- |
+| `dns.resolves` | system resolver | DNS-over-HTTPS (Cloudflare 1.1.1.1), same A/AAAA and NXDOMAIN rule |
+| `tls.cert_valid` | the certificate from the TLS handshake | trust: Workers' own TLS client must accept the certificate when fetching the site; expiry: newest unexpired, non-revoked certificate for that exact host in Certificate Transparency logs (Cert Spotter). The evidence says “expiry read from Certificate Transparency logs” |
+| SSRF guard | system resolver | DNS-over-HTTPS (and Cloudflare itself refuses private destinations) |
+| `http.*`, `page.*`, `osm.listed`, Tavily, Nemotron | `fetch` | same code, same timeouts and redirect handling |
+
+Measured on the deployed worker with `/api/selftest` (fixed public test hosts, no keys, no model
+calls) and compared with local Node: example.com resolves and loads on both, a made-up name has no
+records on both, `http://github.com` upgrades on both, example.com's certificate shows the same days
+left (80 on 6 Oct 2026) on both, and expired / self-signed / wrong-host certificates (badssl.com) fail
+`tls.cert_valid` on both. Two honest differences remain: on Workers an untrusted certificate is
+reported as “rejected by Cloudflare's TLS client (HTTP 526)” without the exact reason or expiry date
+Node shows, and the expiry date of a trusted certificate comes from CT logs, which can in rare cases
+differ from the certificate actually served (for example right after a renewal that is not deployed
+yet).
+
+If a live run uses up its request budget, the remaining checks are reported as “not checked”
+(inconclusive), never as “site down”, so the gate drops the claims that depend on them.
+
+## Deployment (other hosts)
 
 The app is a single Node process with no dependencies, so any container host works.
 
@@ -245,7 +317,7 @@ CMD ["node", "server.mjs"]
   from it with `PORT=8080`, and pass `NEBIUS_API_KEY` / `TAVILY_API_KEY` as secrets.
 - **Any VM:** `node server.mjs` behind a reverse proxy with TLS.
 
-Not yet deployed; steps will be verified before submission.
+The public demo above uses Cloudflare Workers instead; these container steps are not verified.
 
 ## Roadmap
 

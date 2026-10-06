@@ -89,7 +89,9 @@ export function createWorkerNet({ fetchImpl = globalThis.fetch, timeoutMs = 8000
       try {
         const res = await fetchImpl(`https://${host}/`, { method: 'GET', redirect: 'manual', signal: AbortSignal.timeout(t) });
         res.body?.cancel().catch(() => {});
-        if (res.status === 526 || res.status === 525) { authorized = false; authorizationError = `HTTP ${res.status} from the TLS layer`; }
+        // Workers' TLS client answers 526 (invalid certificate) or 525 (handshake failed) itself
+        // for expired, self-signed and wrong-host certificates (tested against badssl.com).
+        if (res.status === 526 || res.status === 525) { authorized = false; authorizationError = `rejected by Cloudflare's TLS client (HTTP ${res.status}: ${res.status === 526 ? 'invalid certificate' : 'handshake failed'})`; }
         else authorized = true;
       } catch (e) {
         const msg = e.cause?.message || e.message || String(e);

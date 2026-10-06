@@ -61,6 +61,11 @@ test('TLS on Workers: trust from the handshake, expiry from CT logs, source labe
   const bad = await runCheck(io, 'tls.cert_valid', { host: 'bad.example' });
   assert.equal(bad.pass, false);
   assert.match(bad.summary, /not trusted/);
+  const f526 = fakeNet({ dns: { 'self.example': { A: ['93.184.216.36'] } }, https: { 'self.example': 526 } });
+  const io526 = createRealIO({ net: createWorkerNet({ fetchImpl: f526 }), fetchImpl: f526 });
+  const r526 = await runCheck(io526, 'tls.cert_valid', { host: 'self.example' });
+  assert.equal(r526.pass, false);
+  assert.match(r526.summary, /invalid certificate/);
 });
 
 test('CT issuance picker ignores revoked, expired and other-host certificates', () => {

@@ -4,6 +4,7 @@
 //   GET  /api/run?q=...          SSE trace of a recorded sample (free, unlimited)
 //   GET  /api/run?q=...&live=1   SSE trace of a live run: cached for 24 h per query, else rate-limited
 //   POST /api/recheck            { runId, claimId } -> re-runs that claim's proof right now
+//   GET  /api/selftest           network checks against fixed public test hosts (how this host behaves)
 //
 // Live runs spend a small trial credit, so they are capped per day (globally and per visitor) and
 // identical queries are answered from cache. Keys come from the environment (Worker secrets) and
@@ -12,6 +13,7 @@
 import { createNemotronBrain } from '../agent/nemotron-brain.mjs';
 import { runAgent } from '../agent/pipeline.mjs';
 import { createSampleBrain } from '../agent/sample-brain.mjs';
+import { runCheck } from '../checks.mjs';
 import { gateClaim } from '../claims.mjs';
 import { budgetFetch, createWorkerNet } from '../io/net-worker.mjs';
 import { observed } from '../io/observed.mjs';
@@ -201,6 +203,31 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
     return json({ id: again.id, verdict: again.verdict, dropReason: again.dropReason, evidence: again.evidence, checkedAt: again.checkedAt });
   }
 
+  // Host self-test: the network checks against a fixed list of public test hosts (no user input,
+  // no API keys, no model calls), so anyone can see how DNS / HTTP / TLS behave on this host.
+  const SELFTEST = [
+    ['dns.resolves', { host: 'example.com' }],
+    ['dns.resolves', { host: 'proofline-selftest-does-not-exist.example.com' }],
+    ['http.reachable', { url: 'https://example.com/' }],
+    ['http.https_redirect', { host: 'github.com' }],
+    ['tls.cert_valid', { host: 'example.com', minDays: 1 }],
+    ['tls.cert_valid', { host: 'expired.badssl.com' }],
+    ['tls.cert_valid', { host: 'self-signed.badssl.com' }],
+    ['tls.cert_valid', { host: 'wrong.host.badssl.com' }],
+  ];
+  async function selftest(request) {
+    const quota = await store.take({ scope: 'selftest', ipHash: await visitor(request), globalCap: 200, ipCap: 10 });
+    if (!quota.ok) return json({ error: 'Self-test limit reached for today.' }, 429);
+    const ioFetch = budgetFetch(fetchImpl, 40);
+    const io = createRealIO({ net: createWorkerNet({ fetchImpl: ioFetch }), fetchImpl: ioFetch });
+    const results = [];
+    for (const [check, params] of SELFTEST) {
+      const r = await runCheck(io, check, params);
+      results.push({ check, params, pass: r.pass, summary: r.summary });
+    }
+    return json({ host: io.host, requests: ioFetch.used(), results });
+  }
+
   /** Handles /api/*; returns null for anything else (static assets). */
   return async function handle(request, ctx) {
     const url = new URL(request.url);
@@ -217,6 +244,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
         return sse.response;
       }
       if (request.method === 'POST' && url.pathname === '/api/recheck') return await recheck(request);
+      if (request.method === 'GET' && url.pathname === '/api/selftest') return await selftest(request);
       return json({ error: 'not found' }, 404);
     } catch (err) {
       return json({ error: err.message }, 500);
