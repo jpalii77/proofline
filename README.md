@@ -121,7 +121,7 @@ git clone <this repo> proofline && cd proofline
 npm run sample        # SAMPLE_MODE: recorded data, no keys, no network
 # open http://localhost:8787
 npm test              # node:test suites, no network
-npm run cli -- "Lumen Coffee Roasters, Izmir"   # same agent in the terminal
+npm run cli:sample -- "Lumen Coffee Roasters, Izmir"   # same agent in the terminal
 ```
 
 ### SAMPLE_MODE
