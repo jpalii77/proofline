@@ -21,19 +21,50 @@ let source = null;
 let runId = null;
 let timer = null;
 
+let demo = null;
+const liveMode = () => !!demo && document.querySelector('input[name="mode"]:checked')?.value === 'live';
+
+function setLeft(n) {
+  if (!demo?.live) return;
+  demo.left = n;
+  $('#left').textContent = n > 0 ? `${n} left today · Nemotron + Tavily` : 'quota used up today';
+}
+
+function setModeNote() {
+  const note = $('#mode-note');
+  if (!demo) return;
+  note.hidden = false;
+  if (!liveMode()) note.textContent = 'Recorded mode replays four fictional businesses, each with a planted wrong claim for the gate to catch. Pick one below.';
+  else if (!demo.live) note.textContent = 'Live mode is not configured on this demo yet — try a recorded example.';
+  else note.textContent = `Live search calls NVIDIA Nemotron on Nebius Token Factory and Tavily for real. To protect a small trial credit: ${demo.limits.perVisitor} checks per visitor and ${demo.limits.perDay} in total per day; the same query within ${demo.limits.cacheHours} h is answered from cache.`;
+  $('#q').placeholder = liveMode() ? 'Business name, city — or a domain' : 'Pick an example below, or switch to Live search';
+}
+
 async function boot() {
   const cfg = await fetch('/api/config').then((r) => r.json()).catch(() => null);
   const mode = $('#mode');
   if (!cfg) { mode.textContent = 'offline'; return; }
-  if (cfg.sampleMode) mode.textContent = 'Sample mode · recorded data, no keys';
+  demo = cfg.demo || null;
+  if (demo) {
+    mode.textContent = demo.live ? 'Public demo · recorded examples + limited live search' : 'Public demo · recorded examples';
+    $('#modes').hidden = false;
+    if (!demo.live) $('#left').textContent = 'not configured yet';
+    else setLeft(demo.left);
+    document.querySelectorAll('input[name="mode"]').forEach((r) => r.addEventListener('change', setModeNote));
+  } else if (cfg.sampleMode) mode.textContent = 'Sample mode · recorded data, no keys';
   else { mode.textContent = `Live · ${cfg.models.reasoning} on Nebius Token Factory${cfg.tavily ? ' · Tavily' : ''}`; mode.classList.add('live'); }
   const box = $('#samples');
   for (const s of cfg.samples) {
-    box.append(h('button', { type: 'button', class: 'chip', onclick: () => { $('#q').value = s.input; start(s.input); } },
-      h('b', {}, s.input), h('small', {}, s.blurb)));
+    box.append(h('button', { type: 'button', class: 'chip', onclick: () => {
+      if (demo) { document.querySelector('input[name="mode"][value="sample"]').checked = true; setModeNote(); }
+      $('#q').value = s.input; start(s.input);
+    } }, h('b', {}, s.input), h('small', {}, s.blurb)));
   }
-  if (!cfg.sampleMode) box.prepend(h('p', { class: 'samples-note' }, 'Recorded examples (fictional businesses):'));
-  const q = new URLSearchParams(location.search).get('q');
+  if (!cfg.sampleMode || demo) box.prepend(h('p', { class: 'samples-note' }, 'Recorded examples (fictional businesses):'));
+  const params = new URLSearchParams(location.search);
+  if (demo && params.get('live') === '1') document.querySelector('input[name="mode"][value="live"]').checked = true;
+  setModeNote();
+  const q = params.get('q');
   if (q) { $('#q').value = q; start(q); }
 }
 
@@ -68,13 +99,15 @@ function start(query) {
   $('#go').disabled = true;
   const t0 = performance.now();
   timer = setInterval(() => { $('#clock').textContent = `${((performance.now() - t0) / 1000).toFixed(1)} s`; }, 100);
-  history.replaceState(null, '', `?q=${encodeURIComponent(query)}`);
+  const live = liveMode();
+  history.replaceState(null, '', `?q=${encodeURIComponent(query)}${live ? '&live=1' : ''}`);
   if (window.matchMedia('(max-width: 880px)').matches) $('#workspace').scrollIntoView({ behavior: 'smooth' });
 
-  source = new EventSource(`/api/run?q=${encodeURIComponent(query)}`);
+  source = new EventSource(`/api/run?q=${encodeURIComponent(query)}${live ? '&live=1' : ''}`);
   const on = (type, fn) => source.addEventListener(type, (m) => { const e = JSON.parse(m.data); if (STAGE_OF[type]) setStage(STAGE_OF[type]); fn(e); });
 
-  on('run', (e) => { runId = e.runId; });
+  on('run', (e) => { runId = e.runId; if (typeof e.left === 'number') setLeft(e.left); });
+  on('cached', (e) => event('cache', [h('b', {}, 'Answered from cache'), h('span', { class: 'meta' }, `same query ran live ${e.ageMinutes < 60 ? `${e.ageMinutes} min` : `${Math.round(e.ageMinutes / 60)} h`} ago · no new API calls · Re-run proof checks again now`)]));
   on('start', (e) => event('start', [h('b', {}, e.query), h('span', { class: 'meta' }, `reasoning: ${e.models.reasoning} · fast: ${e.models.fast}`)]));
   on('intake', (e) => event('intake', `Parsed as ${e.parsed.domain ? `domain ${e.parsed.domain}` : `“${e.parsed.name}”${e.parsed.city ? ` in ${e.parsed.city}` : ''}`}`));
   on('discover', (e) => event('tavily', [h('b', {}, `${e.results.length} web result(s)`), h('span', { class: 'meta' }, e.error || e.query)]));
@@ -93,7 +126,7 @@ function start(query) {
   on('write', (e) => event('write', [h('b', {}, `Pitch: ${e.kept} cited finding(s)`), e.removed.length ? h('span', { class: 'meta' }, `${e.removed.length} uncited sentence(s) removed`) : null]));
   on('done', (e) => { finish(); document.querySelectorAll('#stages li').forEach((li) => { li.classList.add('done'); li.classList.remove('active'); }); renderReport(e.report); });
   source.addEventListener('error', (m) => {
-    if (m.data) { const e = JSON.parse(m.data); renderError(e.message); }
+    if (m.data) { const e = JSON.parse(m.data); renderError(e.message); if (/live (quota|checks)/i.test(e.message)) setLeft(0); }
     else if (source.readyState === EventSource.CLOSED || !runId) { /* stream ended */ }
     finish();
   });

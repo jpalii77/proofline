@@ -29,6 +29,12 @@
         <input id="q" name="q" maxlength="200" placeholder="Business name, city — or a domain" required>
         <button id="go" type="submit">Check it</button>
       </form>
+      <fieldset id="modes" class="modes" hidden>
+        <legend class="sr-only">Mode</legend>
+        <label><input type="radio" name="mode" value="sample" checked><span><b>Recorded examples</b><small>instant · free</small></span></label>
+        <label><input type="radio" name="mode" value="live"><span><b>Live search</b><small id="left">Nemotron + Tavily</small></span></label>
+      </fieldset>
+      <p id="mode-note" class="mode-note" hidden></p>
       <div id="samples" class="samples" aria-label="Examples"></div>
     </section>
 
