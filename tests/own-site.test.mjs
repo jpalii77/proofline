@@ -156,3 +156,81 @@ test('rename needs a search-result tie: a name mismatch alone on an unverified d
   const tied = await gateClaim(fakeIO({ results: [tie], pages }), claim);
   assert.equal(tied.verdict, 'verified');
 });
+
+// ---- Second live run (6 Oct 16:35, "sakal kafe ankara") -------------------------------------
+// The planner chose "a.ayranc" as the website: the neighbourhood "A.Ayrancı" (Aşağı Ayrancı) read as
+// a domain. It does not exist (ENOTFOUND), and that became a verified "a.ayranc does not load", a
+// Website grade of F and a pitch built on it. Nothing in the results ever showed it as a web address.
+const AYRANCI = [
+  { title: 'Sakal Kafe - Ankara | Instagram', url: 'https://www.instagram.com/sakal.kafe.ayranci/', content: 'Sakal Kafe · @sakal.kafe.ayranci · A.Ayrancı Mah. Çankaya/Ankara · bilgi@sakalkafe-mail.example yazın' },
+  { title: 'Sakal Kafe, A.Ayrancı - Menulio', url: 'https://menulio.com.tr/sakal-kafe', content: 'Sakal Kafe, A.Ayrancı, Ankara. Menüyü görüntüleyin. menu.pdf' },
+];
+
+test('a.ayranc (6 Oct 16:35): address text read as a domain gives "no own website", not "site down"', async () => {
+  const fetched = [];
+  const base = fakeIO({ results: AYRANCI });
+  const io = {
+    ...base,
+    async dnsLookup(host) { return host === 'a.ayranc' ? { error: 'getaddrinfo ENOTFOUND a.ayranc' } : base.dnsLookup(host); },
+    async fetchPage(url, o) { fetched.push(url); return base.fetchPage(url, o); },
+  };
+  const events = [];
+  const { report } = await runAgent({
+    query: 'sakal kafe ankara', io, brain: scriptedBrain({ domain: 'a.ayranc', claims: ['site_unreachable', 'on_map'] }), emit: (e) => events.push(e),
+  });
+
+  // The fragment never becomes grounding, and the planner's pick is dropped with a readable reason.
+  const discover = events.find((e) => e.type === 'discover');
+  assert.ok(discover);
+  const plan = events.find((e) => e.type === 'plan');
+  assert.equal(plan.ctx.domain, null);
+  assert.equal(plan.ctx.ownSite, false);
+  assert.match(plan.guard.join(' '), /a\.ayranc is not a valid web address \(unknown ending \.ayranc\) — no own website found/);
+  assert.ok(!fetched.some((u) => u.includes('a.ayranc')), 'a.ayranc is never fetched');
+
+  // No site claim survives; the "down" claim is rejected with the reason; "no own website" is the finding.
+  for (const c of report.verified) assert.ok(!SITE_TYPES.has(c.type), `site claim ${c.type} must not be kept`);
+  const down = report.rejected.find((r) => r.type === 'site_unreachable');
+  assert.ok(down, 'site_unreachable is rejected');
+  assert.match(down.reason, /a\.ayranc is not a valid web address \(unknown ending \.ayranc\) — no own website found/);
+  assert.ok(report.verified.some((c) => c.type === 'no_own_website'), 'no own website found');
+  assert.ok(!report.verified.some((c) => /does not load/.test(c.statement)));
+  assert.notEqual(report.card.areas.reach.grade, 'F', 'a site that never existed is not a failing site');
+});
+
+test('gate: a site claim on an invalid address is dropped with the reason, without probing it', async () => {
+  const fetched = [];
+  const base = fakeIO({ results: AYRANCI });
+  const io = { ...base, async fetchPage(url, o) { fetched.push(url); return base.fetchPage(url, o); } };
+  const { claim } = buildClaim('site_unreachable', { name: 'Sakal Kafe', city: 'Ankara', domain: 'a.ayranc' });
+  const g = await gateClaim(io, claim);
+  assert.equal(g.verdict, 'dropped');
+  assert.equal(g.dropReason, "The domain is the business's own website: expected pass, got fail — a.ayranc is not a valid web address (unknown ending .ayranc) — no own website found");
+  assert.ok(g.evidence[1].skipped);
+  assert.equal(fetched.length, 0);
+});
+
+test('a valid domain that only the model named, and that does not load, is not "down"', async () => {
+  // Planner side: not in the results as a web address, so it is dropped before any check.
+  const events = [];
+  const { report } = await runAgent({
+    query: 'Sakal Kafe, Ankara', io: fakeIO({ results: AYRANCI }), brain: scriptedBrain({ domain: 'sakalkafe.com.tr', claims: ['site_unreachable'] }), emit: (e) => events.push(e),
+  });
+  assert.match(events.find((e) => e.type === 'plan').guard.join(' '), /sakalkafe\.com\.tr never appeared as a web address .*only the model named it/);
+  assert.ok(!report.verified.some((c) => c.type === 'site_unreachable'));
+  assert.ok(report.verified.some((c) => c.type === 'no_own_website'));
+
+  // Gate side: the same claim built directly is dropped, because nothing showed the site existed.
+  const { claim } = buildClaim('site_unreachable', { name: 'Sakal Kafe', city: 'Ankara', domain: 'sakalkafe.com.tr' });
+  const g = await gateClaim(fakeIO({ results: AYRANCI }), claim);
+  assert.equal(g.verdict, 'dropped');
+  assert.match(g.dropReason, /sakalkafe\.com\.tr does not load and never appeared as a web address in the search results — no own website found/);
+});
+
+test('"down" stays a finding when search results show the site existed for this business', async () => {
+  const results = [{ title: 'Sakal Kafe — Kızılay, Ankara', url: 'https://rehber.example/sakal-kafe', content: 'Sakal Kafe · web: www.sakalkafe.com.tr · 0312 555 12 34' }];
+  const { claim } = buildClaim('site_unreachable', { name: 'Sakal Kafe', city: 'Ankara', domain: 'sakalkafe.com.tr' });
+  const g = await gateClaim(fakeIO({ results }), claim);
+  assert.equal(g.verdict, 'verified');
+  assert.match(g.evidence[0].summary, /tied to “Sakal Kafe”/);
+});
