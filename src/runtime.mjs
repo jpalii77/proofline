@@ -56,7 +56,7 @@ export function publicConfig(cfg) {
 export function wiringFor(cfg, query, { fetchImpl, pace = false } = {}) {
   if (cfg.sampleMode) {
     const sample = findSample(loadSamples(), query);
-    if (!sample) return { error: 'Sample mode knows three fictional businesses. Pick one of the examples, or add keys for live mode.' };
+    if (!sample) return { error: 'Sample mode knows four fictional businesses. Pick one of the examples, or add keys for live mode.' };
     return {
       io: createSampleIO(sample, { latency: pace ? [60, 240] : null }),
       brain: createSampleBrain(sample, { thinkMs: pace ? 650 : 0 }),

@@ -17,8 +17,9 @@ async function run(id) {
   return { ...out, events, sample: s };
 }
 
-test('three fictional samples are bundled and findable by name, domain or id', () => {
-  assert.equal(samples.length, 3);
+test('four fictional samples are bundled and findable by name, domain or id', () => {
+  assert.equal(samples.length, 4);
+  assert.equal(findSample(samples, 'Kuzey Kafe')?.id, 'kuzey');
   assert.equal(findSample(samples, 'lumen coffee')?.id, 'lumen');
   assert.equal(findSample(samples, 'harbordental.example')?.id, 'harbor');
   assert.equal(findSample(samples, 'atlas')?.id, 'atlas');
@@ -60,6 +61,14 @@ test('Atlas: renamed, closure signal, one timeout does not make the site "down"'
   assert.equal(reach.pass, true);
 });
 
+test('Kuzey: a QR-menu platform is not the café’s website; site claims are dropped, “no own website” is kept', async () => {
+  const { report } = await run('kuzey');
+  assert.equal(report.ctx.ownSite, false);
+  assert.deepEqual(report.verified.map((c) => c.type).sort(), ['no_own_website', 'on_map']);
+  for (const d of report.dropped) assert.match(d.dropReason, /qrmenu\.example is a listing platform/, d.type);
+  assert.equal(report.card.areas.reach.grade, 'D');
+});
+
 test('pitch keeps only findings that cite verified claims', async () => {
   for (const s of samples) {
     const { report } = await run(s.id);
@@ -86,7 +95,7 @@ test('HTTP server streams the run over SSE and re-runs a proof on demand', async
   try {
     const conf = await fetch(`${base}/api/config`).then((r) => r.json());
     assert.equal(conf.sampleMode, true);
-    assert.equal(conf.samples.length, 3);
+    assert.equal(conf.samples.length, 4);
     assert.ok(!JSON.stringify(conf).match(/key/i), 'config must not mention keys');
 
     const sse = await fetch(`${base}/api/run?q=${encodeURIComponent('Harbor Dental Studio')}`).then((r) => r.text());

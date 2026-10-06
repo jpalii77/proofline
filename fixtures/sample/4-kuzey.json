@@ -1,0 +1,42 @@
+{
+  "id": "kuzey",
+  "input": "Kuzey Kafe, Eskişehir",
+  "name": "Kuzey Kafe",
+  "city": "Eskişehir",
+  "domain": "qrmenu.example",
+  "listedPhone": "+90 222 555 40 18",
+  "blurb": "Café with no website of its own, only a QR-menu page and Instagram. The planner mistakes the menu platform for its site.",
+  "planted": [
+    { "type": "no_contact_path", "rationale": "The homepage at qrmenu.example has no contact form or tap-to-call link." },
+    { "type": "phone_unconfirmed", "rationale": "+90 222 555 40 18 is not on qrmenu.example." },
+    { "type": "possibly_renamed", "rationale": "qrmenu.example calls itself “QRMenu”, not “Kuzey Kafe”; the café may have been renamed." }
+  ],
+  "io": {
+    "dns": { "qrmenu.example": { "a": ["192.0.2.90"], "aaaa": [] } },
+    "pages": {
+      "https://qrmenu.example/": {
+        "status": 200, "finalUrl": "https://qrmenu.example/",
+        "chain": [{ "url": "https://qrmenu.example/", "status": 200 }],
+        "body": "<html><head><title>QRMenu | Digital menus for cafés and restaurants</title><meta property=\"og:site_name\" content=\"QRMenu\"></head><body><h1>Your QR menu in five minutes</h1><p>Contactless menus for cafés and restaurants.</p></body></html>"
+      },
+      "http://qrmenu.example/": {
+        "status": 200, "finalUrl": "https://qrmenu.example/",
+        "chain": [{ "url": "http://qrmenu.example/", "status": 301 }, { "url": "https://qrmenu.example/", "status": 200 }],
+        "body": ""
+      }
+    },
+    "tls": { "qrmenu.example": { "daysFromNow": 180, "issuer": "Let's Encrypt", "authorized": true } },
+    "nominatim": {
+      "results": [{ "name": "Kuzey Kafe", "display_name": "Kuzey Kafe, Adalar, Odunpazarı, Eskişehir, Türkiye", "lat": "39.7667", "lon": "30.5256", "osm_type": "node", "osm_id": 900000004, "phone": null, "website": null }]
+    },
+    "search": {
+      "discover": {
+        "results": [
+          { "title": "Kuzey Kafe Menü — QRMenu", "url": "https://qrmenu.example/kuzey-kafe", "content": "Kuzey Kafe, Adalar, Eskişehir. See the menu. Tel: +90 222 555 40 18" },
+          { "title": "Kuzey Kafe (@kuzeykafe) • Instagram", "url": "https://www.instagram.com/kuzeykafe/", "content": "Kuzey Kafe · Adalar, Eskişehir · Menu: qrmenu.example/kuzey-kafe" }
+        ]
+      },
+      "closure": { "results": [ { "title": "Eskişehir'de Porsuk kenarında kahve", "url": "https://foodblog.example/eskisehir-kahve", "content": "Kuzey Kafe is still our pick on the riverside." } ] }
+    }
+  }
+}

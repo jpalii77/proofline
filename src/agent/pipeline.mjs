@@ -113,7 +113,7 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     const own = await runCheck(gatherIO, 'site.own_site', { host: ctx.domain, name: ctx.name, city: ctx.city, query: searchQuery, userGiven: ctx.userGivenDomain });
     observations.push(own);
     if (own.pass === true) ctx.ownSite = true;
-    else guard.push(`${ctx.domain} is not used as the business's own website — ${own.summary}. Website checks are skipped for it`);
+    else guard.push(`${own.summary} — website checks skipped`);
   }
   if (!ctx.ownSite && ctx.name) {
     const found = await runCheck(gatherIO, 'web.own_site_found', { name: ctx.name, city: ctx.city, query: searchQuery });
