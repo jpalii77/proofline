@@ -1,5 +1,7 @@
 // Small, dependency-free text helpers: folding, similarity, phones, hosts.
 
+import { isValidHostname } from './hostname.mjs';
+
 const FOLD_MAP = { ı: 'i', İ: 'i', ş: 's', Ş: 's', ğ: 'g', Ğ: 'g', ç: 'c', Ç: 'c', ö: 'o', Ö: 'o', ü: 'u', Ü: 'u' };
 
 /** Lowercase, strip accents (incl. Turkish letters), collapse non-alphanumerics to single spaces. */
@@ -101,12 +103,19 @@ export function headings(html) {
   return [...String(html || '').matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => visibleText(m[1])).filter(Boolean);
 }
 
-/** Domain-looking strings in free text ("Website: sakalkafe.com.tr"), normalised, file names skipped. */
+/**
+ * Web addresses written in free text ("Website: sakalkafe.com.tr", "https://x.com/menu"), normalised.
+ * Only whole tokens count: a match glued to letters ("A.Ayrancı" -> "a.ayranc"), an email
+ * ("info@x.com"), an @handle ("@sakal.kafe") or a path segment ("instagram.com/kafe.tr") is not a
+ * web address. The ending must be a real
+ * public suffix (see hostname.mjs), which also rules out file names ("menu.pdf").
+ */
 export function domainsIn(text) {
   const out = new Set();
-  for (const m of String(text || '').matchAll(/\b([a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,})\b/gi)) {
+  const re = /(?<![\p{L}\p{N}@._%+-])(?<![^/]\/)((?:[a-z0-9-]+\.)+[a-z0-9-]{2,})(?![\p{L}\p{N}_@-]|\.[\p{L}\p{N}])/giu;
+  for (const m of String(text || '').matchAll(re)) {
     const d = normalizeHost(m[1]);
-    if (d && !/\.(png|jpe?g|gif|webp|svg|html?|php|pdf)$/.test(d)) out.add(d);
+    if (d && isValidHostname(d)) out.add(d);
   }
   return [...out];
 }
