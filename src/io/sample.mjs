@@ -23,21 +23,26 @@ export function findSample(samples, query) {
     || null;
 }
 
-export function createSampleIO(sample) {
+// latency: optional (ms range) so the demo trace streams like a live run. Off in tests.
+export function createSampleIO(sample, { latency = null } = {}) {
   const io = sample.io || {};
+  const wait = () => (latency ? new Promise((r) => setTimeout(r, latency[0] + Math.random() * (latency[1] - latency[0]))) : null);
   const notRecorded = (what) => ({ error: `not recorded in sample: ${what}` });
   return {
     mode: 'sample',
     async dnsLookup(host) {
+      await wait();
       return io.dns?.[host] || { a: [], aaaa: [], error: 'ENOTFOUND' };
     },
     async fetchPage(url, { attempt = 0 } = {}) {
+      await wait();
       const rec = io.pages?.[url];
       if (!rec) return { status: null, finalUrl: url, chain: [], error: 'ENOTFOUND' };
       if (Array.isArray(rec.attempts)) return rec.attempts[Math.min(attempt, rec.attempts.length - 1)];
       return rec;
     },
     async tlsCert(host) {
+      await wait();
       const rec = io.tls?.[host];
       if (!rec) return notRecorded(`tls ${host}`);
       if (rec.error) return rec;
@@ -45,9 +50,11 @@ export function createSampleIO(sample) {
       return { ...rec, validTo: new Date(Date.now() + rec.daysFromNow * 86400000).toISOString() };
     },
     async nominatim() {
+      await wait();
       return io.nominatim || { results: [] };
     },
     async search(query, { purpose = 'discover' } = {}) {
+      await wait();
       return io.search?.[purpose] || { results: [] };
     },
   };

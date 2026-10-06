@@ -36,11 +36,15 @@ export function publicConfig(cfg) {
 }
 
 /** Returns { io, brain } for one run, or { error }. */
-export function wiringFor(cfg, query, { fetchImpl } = {}) {
+export function wiringFor(cfg, query, { fetchImpl, pace = false } = {}) {
   if (cfg.sampleMode) {
     const sample = findSample(loadSamples(), query);
     if (!sample) return { error: 'Sample mode knows three fictional businesses. Pick one of the examples, or add keys for live mode.' };
-    return { io: createSampleIO(sample), brain: createSampleBrain(sample), query: sample.input };
+    return {
+      io: createSampleIO(sample, { latency: pace ? [60, 240] : null }),
+      brain: createSampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
+      query: sample.input,
+    };
   }
   const llm = createTokenFactoryClient({ ...cfg.nebius, fetchImpl });
   const tavily = cfg.tavilyKey ? createTavilyClient({ apiKey: cfg.tavilyKey, fetchImpl }) : null;

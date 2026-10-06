@@ -59,8 +59,8 @@ function observationPlan(ctx) {
 /** Keep only words the owner can verify: numbers in a rewrite must already exist in the evidence. */
 export function numbersGrounded(text, claim) {
   const evidenceText = `${claim.statement} ${claim.evidence.map((e) => e.summary).join(' ')}`;
-  const nums = String(text).match(/\d+/g) || [];
-  return nums.every((n) => evidenceText.includes(n));
+  const known = new Set(evidenceText.match(/\d+/g) || []);
+  return (String(text).match(/\d+/g) || []).every((n) => known.has(n));
 }
 
 export async function runAgent({ query, io, brain, emit = () => {}, now = () => Date.now() }) {
@@ -181,6 +181,7 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     dropped,
     rejected,
     pitch,
+    pitchRemoved: uncited,
     stats: {
       proposed: claims.length, verified: verified.length, dropped: dropped.length,
       checksRun: observations.length + gated.reduce((n, g) => n + g.evidence.length, 0),

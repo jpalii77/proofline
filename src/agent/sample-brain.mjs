@@ -8,7 +8,7 @@
 import { CLAIM_TYPES } from '../claims.mjs';
 
 const MODEL = 'sample (rule-based)';
-const reply = (json) => Promise.resolve({ json, model: MODEL, ms: 0 });
+
 
 function obs(observations, id) {
   return observations.find((o) => o.check === id) || { pass: null };
@@ -44,7 +44,12 @@ const PITCH_LINE = {
   possibly_closed: 'a public listing says you may have closed',
 };
 
-export function createSampleBrain(sample) {
+export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
+  const reply = async (json) => {
+    const ms = thinkMs ? Math.round(thinkMs * (0.7 + Math.random() * 0.6)) : 0;
+    if (ms) await new Promise((r) => setTimeout(r, ms));
+    return { json, model: MODEL, ms };
+  };
   return {
     models: { reasoning: MODEL, fast: MODEL, provider: 'none (SAMPLE_MODE)' },
 
