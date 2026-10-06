@@ -14,6 +14,7 @@
     "LIVE_IP_PER_DAY": "3",
     "LIVE_CACHE_HOURS": "24",
     "LIVE_REQUEST_BUDGET": "40",
+    "LIVE_RUN_SECONDS": "90",
     "LIVE_RECHECK_GLOBAL_PER_DAY": "100",
     "LIVE_RECHECK_IP_PER_DAY": "15",
     "NOMINATIM_CONTACT": "github.com/jpalii77/proofline",

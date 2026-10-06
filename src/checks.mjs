@@ -7,6 +7,7 @@
 // Checks only read public business information. They never store personal data.
 
 import { invalidHostSentence, isValidHostname } from './hostname.mjs';
+import { isHostLimit } from './limits.mjs';
 import { classifyHost } from './platforms.mjs';
 import {
   canonName, domainsIn, extractPhones, fold, headings, metaContent, nameSimilarity, nameTokens, normalizeHost,
@@ -149,6 +150,10 @@ async function ownSiteVerdict(io, { host, name, results, searchError, userGiven 
   if (ties.length) {
     return { pass: true, summary: `${host} is tied to “${name}”: ${ties[0].how} (${ties[0].url})`, observed: { host, identity: id, ties } };
   }
+  if (!loaded && isHostLimit(p.error)) {
+    // Our host ran out of requests or time: that says nothing about the business's site.
+    return { pass: null, summary: `${host} not checked: ${p.error}`, observed: { host, ties, notChecked: true } };
+  }
   if (!loaded) {
     // Never shown to exist: an unreachable name is not "their site is down", it is no site at all.
     if (!searchError && !urlMentions(results, host).length) {
@@ -198,6 +203,8 @@ export const CHECKS = {
         const v = await ownSiteVerdict(io, { host, name, results });
         tried.push({ host, pass: v.pass, summary: v.summary });
         if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}`, observed: { host, tried, listings } };
+        // A candidate our host could not check leaves the question open: never "no website".
+        if (v.observed?.notChecked) return { pass: null, summary: `Not checked: ${v.summary}`, observed: { tried, listings } };
       }
       const unloaded = tried.filter((t) => t.pass === null).map((t) => t.host);
       return {
@@ -243,7 +250,7 @@ export const CHECKS = {
       }
       const last = attempts[attempts.length - 1];
       // Our own host ran out of outbound requests: that says nothing about the site.
-      if (attempts.some((a) => /budget/i.test(a.error || ''))) {
+      if (attempts.some((a) => isHostLimit(a.error))) {
         return { pass: null, summary: `Not checked: ${last.error}`, observed: { attempts } };
       }
       return {

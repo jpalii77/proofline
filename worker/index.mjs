@@ -6,6 +6,7 @@
 
 import { DurableObject } from 'cloudflare:workers';
 import { createWebApp } from '../src/web/app.mjs';
+import { injectShareMeta, SHARE_ID, SHARE_MS } from '../src/web/share.mjs';
 import { utcDay } from '../src/web/store.mjs';
 
 const SECURITY_HEADERS = {
@@ -15,6 +16,7 @@ const SECURITY_HEADERS = {
 };
 
 const DAYS_KEPT = 3 * 86400000;
+const REPORTS_KEPT = 3000;
 
 export class DemoState extends DurableObject {
   constructor(ctx, env) {
@@ -22,7 +24,8 @@ export class DemoState extends DurableObject {
     this.sql = ctx.storage.sql;
     this.sql.exec(`CREATE TABLE IF NOT EXISTS counts (k TEXT PRIMARY KEY, n INTEGER NOT NULL);
       CREATE TABLE IF NOT EXISTS cache (k TEXT PRIMARY KEY, at INTEGER NOT NULL, events TEXT NOT NULL);
-      CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, at INTEGER NOT NULL, data TEXT NOT NULL);`);
+      CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, at INTEGER NOT NULL, data TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS reports (id TEXT PRIMARY KEY, at INTEGER NOT NULL, data TEXT NOT NULL);`);
   }
 
   count(k) {
@@ -66,6 +69,18 @@ export class DemoState extends DurableObject {
     const row = this.sql.exec('SELECT data FROM runs WHERE id = ? AND at >= ?', id, Date.now() - maxAgeMs).toArray()[0];
     return row ? JSON.parse(row.data) : null;
   }
+
+  // Shared reports (/r/<id>): kept SHARE_DAYS, and at most REPORTS_KEPT rows (oldest go first).
+  putReport(id, record) {
+    this.sql.exec('INSERT OR REPLACE INTO reports (id, at, data) VALUES (?, ?, ?)', id, Date.now(), JSON.stringify(record));
+    this.sql.exec('DELETE FROM reports WHERE at < ?', Date.now() - SHARE_MS);
+    this.sql.exec('DELETE FROM reports WHERE id NOT IN (SELECT id FROM reports ORDER BY at DESC LIMIT ?)', REPORTS_KEPT);
+  }
+
+  getReport(id, maxAgeMs) {
+    const row = this.sql.exec('SELECT data FROM reports WHERE id = ? AND at >= ?', id, Date.now() - maxAgeMs).toArray()[0];
+    return row ? JSON.parse(row.data) : null;
+  }
 }
 
 function withHeaders(res, headers) {
@@ -74,12 +89,33 @@ function withHeaders(res, headers) {
   return out;
 }
 
+/** /r/<id>: the same page, with the shared report's name in the title and link-preview tags. */
+async function sharePage(request, env, store, id) {
+  const page = await env.ASSETS.fetch(new Request(new URL('/', request.url)));
+  const html = await page.text();
+  let record = null;
+  try { record = SHARE_ID.test(id) ? await store.getReport(id, SHARE_MS) : null; } catch { /* page shows the expired note */ }
+  return new Response(injectShareMeta(html, record), {
+    status: record ? 200 : 404,
+    headers: { ...SECURITY_HEADERS, 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' },
+  });
+}
+
 export default {
   async fetch(request, env, ctx) {
-    const store = env.DEMO_STATE.get(env.DEMO_STATE.idFromName('global'));
-    const app = createWebApp({ env, store, pace: true });
-    const res = await app(request, ctx);
-    if (res) return withHeaders(res, { 'x-content-type-options': 'nosniff' });
-    return withHeaders(await env.ASSETS.fetch(request), SECURITY_HEADERS);
+    try {
+      const store = env.DEMO_STATE.get(env.DEMO_STATE.idFromName('global'));
+      const url = new URL(request.url);
+      const share = /^\/r\/([^/]+)\/?$/.exec(url.pathname);
+      if (share && request.method === 'GET') return await sharePage(request, env, store, share[1]);
+      const app = createWebApp({ env, store, pace: true });
+      const res = await app(request, ctx);
+      if (res) return withHeaders(res, { 'x-content-type-options': 'nosniff' });
+      return withHeaders(await env.ASSETS.fetch(request), SECURITY_HEADERS);
+    } catch {
+      return new Response(JSON.stringify({ error: 'The demo host is busy. Try again in a minute.' }), {
+        status: 503, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'retry-after': '30' },
+      });
+    }
   },
 };

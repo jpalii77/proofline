@@ -4,6 +4,7 @@
 //   GET  /api/run?q=...          SSE trace of a recorded sample (free, unlimited)
 //   GET  /api/run?q=...&live=1   SSE trace of a live run: cached for 24 h per query, else rate-limited
 //   POST /api/recheck            { runId, claimId } -> re-runs that claim's proof right now
+//   GET  /api/report/<id>        a finished run, stored for /r/<id> (read-only share link, 14 days)
 //   GET  /api/selftest           network checks against fixed public test hosts (how this host behaves)
 //
 // Live runs spend a small trial credit, so they are capped per day (globally and per visitor) and
@@ -19,9 +20,11 @@ import { budgetFetch, createWorkerNet } from '../io/net-worker.mjs';
 import { observed } from '../io/observed.mjs';
 import { createRealIO } from '../io/real.mjs';
 import { createSampleIO, findSample, loadSamples } from '../io/sample.mjs';
+import { friendlyError } from '../limits.mjs';
 import { createTokenFactoryClient, DEFAULT_BASE_URL, DEFAULT_REASONING_MODEL } from '../llm.mjs';
 import { createTavilyClient } from '../tavily.mjs';
 import { fold } from '../text.mjs';
+import { newShareId, SHARE_ID, SHARE_MS, shareRecord } from './share.mjs';
 
 const HOUR = 3600000;
 
@@ -31,6 +34,7 @@ export const MESSAGES = {
   ipQuota: 'You have used your live checks for today — try a recorded example. They reset at 00:00 UTC.',
   notSample: 'Recorded mode knows four fictional businesses. Pick one of the examples, or switch to Live search.',
   empty: 'Enter a business name or a domain.',
+  reportMissing: 'This report link has expired or does not exist. Shared reports are kept for 14 days.',
 };
 
 const int = (v, d) => (v != null && String(v).trim() !== '' && Number.isFinite(Number(v)) ? Math.max(0, Math.floor(Number(v))) : d);
@@ -44,6 +48,7 @@ export function demoConfig(env = {}) {
     ipPerDay: int(env.LIVE_IP_PER_DAY, 3),
     cacheHours: int(env.LIVE_CACHE_HOURS, 24),
     requestBudget: int(env.LIVE_REQUEST_BUDGET, 40),
+    runSeconds: int(env.LIVE_RUN_SECONDS, 90),
     recheckGlobalPerDay: int(env.LIVE_RECHECK_GLOBAL_PER_DAY, 100),
     recheckIpPerDay: int(env.LIVE_RECHECK_IP_PER_DAY, 15),
     nebius: {
@@ -120,21 +125,35 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
     });
   }
 
+  /** Stores a finished run for /r/<id> and tells the page its link. Never fails the run. */
+  async function share(sse, { query, mode, events, at = now() }) {
+    try {
+      const id = newShareId();
+      const record = shareRecord({ id, query, mode, events, at });
+      if (!record) return;
+      await store.putReport(id, record);
+      sse.send({ type: 'share', id, path: `/r/${id}`, at: record.at, days: Math.round(SHARE_MS / 86400000) });
+    } catch { /* sharing is optional; the report is already on screen */ }
+  }
+
   function runSample(query, sse) {
     const sample = findSample(loadSamples(), query);
     if (!sample) { sse.send({ type: 'error', message: MESSAGES.notSample }); sse.close(); return null; }
     const runId = `s.${sample.id}.${rid('')}`;
     return (async () => {
+      const events = [];
+      const emit = (e) => { events.push(e); sse.send(e); };
       try {
-        sse.send({ type: 'run', runId, mode: 'sample' });
+        emit({ type: 'run', runId, mode: 'sample' });
         await runAgent({
           query: sample.input,
           io: createSampleIO(sample, { latency: pace ? [60, 240] : null }),
           brain: createSampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
-          emit: sse.send,
+          emit,
         });
+        await share(sse, { query: sample.input, mode: 'sample', events });
       } catch (err) {
-        sse.send({ type: 'error', message: `Agent failed: ${err.message}` });
+        sse.send({ type: 'error', message: friendlyError(err) });
       } finally { sse.close(); }
     })();
   }
@@ -147,8 +166,10 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
 
     const hit = await store.getCache(key, cfg.cacheHours * HOUR);
     if (hit) {
-      sse.send({ type: 'cached', at: hit.at, ageMinutes: Math.round((now() - hit.at) / 60000) });
+      const cachedEvent = { type: 'cached', at: hit.at, ageMinutes: Math.round((now() - hit.at) / 60000) };
+      sse.send(cachedEvent);
       for (const e of hit.events) sse.send(e);
+      await share(sse, { query, mode: 'live', events: [cachedEvent, ...hit.events], at: hit.at });
       return sse.close();
     }
 
@@ -161,14 +182,16 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
     try {
       emit({ type: 'run', runId, mode: 'live', left: Math.max(0, Math.min(cfg.globalPerDay - quota.global, cfg.ipPerDay - quota.ip)) });
       const { io, brain } = liveWiring();
-      const out = await runAgent({ query, io, brain, emit });
+      const out = await runAgent({ query, io, brain, emit, now, deadlineMs: cfg.runSeconds * 1000 });
       if (out.report) {
         await store.putRun(runId, { query, claims: [...out.report.verified, ...out.report.dropped].map(({ evidence, verdict, dropReason, ...plain }) => plain) }); // eslint-disable-line no-unused-vars
+        // A run that lost a model step is shown, but not cached: the next visitor gets a fresh try.
         const blob = JSON.stringify(events);
-        if (blob.length < 1_500_000) await store.putCache(key, events);
+        if (blob.length < 1_500_000 && !out.report.partial?.length) await store.putCache(key, events);
+        await share(sse, { query, mode: 'live', events });
       }
     } catch (err) {
-      sse.send({ type: 'error', message: `Agent failed: ${err.message}` });
+      sse.send({ type: 'error', message: friendlyError(err) });
     } finally { sse.close(); }
     return null;
   }
@@ -245,9 +268,15 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
       }
       if (request.method === 'POST' && url.pathname === '/api/recheck') return await recheck(request);
       if (request.method === 'GET' && url.pathname === '/api/selftest') return await selftest(request);
+      const rep = /^\/api\/report\/([^/]+)$/.exec(url.pathname);
+      if (request.method === 'GET' && rep) {
+        const record = SHARE_ID.test(rep[1]) ? await store.getReport(rep[1], SHARE_MS) : null;
+        return record ? json(record) : json({ error: MESSAGES.reportMissing }, 404);
+      }
       return json({ error: 'not found' }, 404);
     } catch (err) {
-      return json({ error: err.message }, 500);
+      // Host limits and outages get a plain sentence and a retryable status, never a bare 500.
+      return json({ error: friendlyError(err) }, 503);
     }
   };
 }

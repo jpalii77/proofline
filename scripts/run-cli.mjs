@@ -17,6 +17,7 @@ const { report, error } = await runAgent({
     if (e.type === 'observe') console.log(`observe  ${mark[e.pass]} ${e.check}  ${e.summary}`);
     if (e.type === 'gate') console.log(`gate     ${e.verdict === 'verified' ? 'KEEP' : 'DROP'} ${e.claimType}${e.dropReason ? `  (${e.dropReason})` : ''}`);
     if (e.type === 'write') console.log(`write    kept ${e.kept} finding(s), removed ${e.removed.length}`);
+    if (e.type === 'model') console.log(`model    ${e.role} · ${e.model} · ${e.ms} ms · ${e.usage ? `${e.usage.in ?? '?'} in / ${e.usage.out ?? '?'} out tokens` : 'no token usage'} · ${e.outcome}${e.detail ? ` (${e.detail})` : ''}`);
   },
 });
 if (error) process.exit(1);

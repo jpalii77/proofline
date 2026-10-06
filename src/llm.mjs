@@ -17,6 +17,35 @@ export function parseJsonReply(text) {
   return JSON.parse(t.slice(start, end + 1));
 }
 
+const num = (v) => {
+  const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : v;
+  return typeof n === 'number' && Number.isFinite(n) && n >= 0 ? Math.round(n) : null;
+};
+
+/**
+ * Token counts from the `usage` field of an OpenAI-compatible Chat Completions reply (Token Factory):
+ *   { prompt_tokens, completion_tokens, total_tokens, completion_tokens_details: { reasoning_tokens } }
+ * Also accepts input_tokens / output_tokens. Missing or malformed fields become null, never a guess.
+ * Returns null when the reply carried no usable usage at all.
+ */
+export function parseUsage(usage) {
+  if (!usage || typeof usage !== 'object') return null;
+  const tokensIn = num(usage.prompt_tokens ?? usage.input_tokens);
+  const tokensOut = num(usage.completion_tokens ?? usage.output_tokens);
+  let total = num(usage.total_tokens);
+  if (total === null && tokensIn !== null && tokensOut !== null) total = tokensIn + tokensOut;
+  const reasoning = num(usage.completion_tokens_details?.reasoning_tokens ?? usage.output_tokens_details?.reasoning_tokens);
+  if (tokensIn === null && tokensOut === null && total === null) return null;
+  return { in: tokensIn, out: tokensOut, total, reasoning };
+}
+
+/** An Error that still carries what is known about the call (model, latency, usage) for the trace. */
+function callError(message, call) {
+  const err = new Error(message);
+  err.call = call;
+  return err;
+}
+
 export function createTokenFactoryClient({
   apiKey, baseUrl = DEFAULT_BASE_URL, reasoningModel = DEFAULT_REASONING_MODEL, fastModel,
   fetchImpl = globalThis.fetch, timeoutMs = 60000,
@@ -28,33 +57,44 @@ export function createTokenFactoryClient({
   async function chat({ tier = 'reasoning', system, user, maxTokens = 1200, temperature = 0.2 }) {
     const model = models[tier] || models.reasoning;
     const started = Date.now();
-    const res = await fetchImpl(new URL('chat/completions', root), {
+    let res;
+    try {
+      res = await fetchImpl(new URL('chat/completions', root), {
       method: 'POST',
       headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        temperature,
-        max_tokens: maxTokens,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: typeof user === 'string' ? user : JSON.stringify(user) },
-        ],
-      }),
-      signal: AbortSignal.timeout(timeoutMs),
-    });
+        body: JSON.stringify({
+          model,
+          temperature,
+          max_tokens: maxTokens,
+          response_format: { type: 'json_object' },
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: typeof user === 'string' ? user : JSON.stringify(user) },
+          ],
+        }),
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+    } catch (e) {
+      const why = e.name === 'TimeoutError' ? `no answer within ${Math.round(timeoutMs / 1000)} s` : (e.message || String(e));
+      throw callError(`Token Factory: ${why}`, { model, ms: Date.now() - started, usage: null });
+    }
     if (!res.ok) {
       const body = await res.text().catch(() => '');
-      throw new Error(`Token Factory HTTP ${res.status}: ${body.slice(0, 200)}`);
+      throw callError(`Token Factory HTTP ${res.status}: ${body.slice(0, 200)}`, { model, ms: Date.now() - started, usage: null });
     }
-    const data = await res.json();
+    let data;
+    try { data = await res.json(); } catch {
+      throw callError('Token Factory reply was not JSON', { model, ms: Date.now() - started, usage: null });
+    }
+    const usage = parseUsage(data.usage);
+    const ms = Date.now() - started;
     const content = data.choices?.[0]?.message?.content ?? '';
-    return {
-      json: parseJsonReply(content),
-      model,
-      usage: data.usage || null,
-      ms: Date.now() - started,
-    };
+    let json;
+    try { json = parseJsonReply(content); } catch (e) {
+      const cut = data.choices?.[0]?.finish_reason === 'length' ? ' (reply cut off at the token limit)' : '';
+      throw callError(`model reply had no valid JSON${cut}: ${e.message}`, { model, ms, usage });
+    }
+    return { json, model, usage, ms };
   }
 
   async function listModels() {

@@ -62,6 +62,32 @@ flowchart LR
 Every step streams to the UI as a trace event, so you can watch *why* each line is true. Each claim
 card has a **Re-run proof** button that runs its checks again, right now.
 
+### What you see in the report
+
+| Feature | What it shows |
+| --- | --- |
+| **Digital health card** | Grades per area (website, security, contact, presence), computed by code from verified claims only |
+| **Verified / dropped claims** | Every claim with its proof; dropped claims stay on screen, struck through, with the check that failed |
+| **Model calls panel** | Every Nemotron call in the run: role (planner, claim proposer, owner rewrite, writer), tier (reasoning / fast), model ID, latency, tokens in / out (from the API's `usage` field), and what the code checks did with the answer: accepted, partly rejected (e.g. *“ssl_expiring_soon introduced a number not in the evidence (3)”*), rejected, or no answer. A run line sums it up: *“N model calls · X tokens · Y claims dropped by the gate”* |
+| **Share link** | Every finished run gets a read-only link, `/r/<id>`, kept 14 days, with a *Copy link* button. It replays the same trace and report, shows when it was generated, and holds only the business's public information and the proofs (no IP, no quota, no keys). Link previews show the business name and grade |
+| **Pitch draft** | A short seller draft where every finding cites a verified claim (click a citation to jump to its proof) |
+
+![Model calls panel (recorded example: rule-based stand-in, so no tokens)](docs/screenshots/5-model-calls.jpg)
+
+### When something fails
+
+Live runs depend on outside services, so every failure has a defined, honest outcome:
+
+| Failure | What happens |
+| --- | --- |
+| A Nemotron call errors, times out or returns unreadable JSON | The call is shown as **no answer** with the reason, and only that step degrades: no planner → code identifies the business from the query and search results; no proposer → only claims code can put to the gate by itself; no rewrite → the checked wording is kept; no writer → no pitch. A note says the run is partial. Nothing unproven is added in their place |
+| The run reaches its time limit (`LIVE_RUN_SECONDS`, default 90) | Remaining checks answer **not checked**, no new model call starts, and the gate drops every claim that depended on them. A timed-out run can never become “site is down” |
+| The host's request budget or Cloudflare's subrequest limit is hit | Same as above: **not checked**, never a finding |
+| Tavily search fails | The run continues from the query; search-based checks are inconclusive |
+| Anything unexpected on the server | A plain sentence and HTTP 503, never a stack trace or a bare 500. If the stream is cut, the page says the run stopped and that nothing was concluded |
+
+A partial live run is shown but not cached, so the next visitor with the same query gets a fresh try.
+
 ### Evidence checks
 
 | Check | What it proves |
@@ -133,7 +159,11 @@ and the prompts in [`src/agent/nemotron-brain.mjs`](src/agent/nemotron-brain.mjs
 | Writer | reasoning | same as planner | Owner summary + cited pitch |
 
 All calls ask for strict JSON (`response_format: json_object`); replies with `<think>` blocks or code
-fences are tolerated. The default reasoning model ID is taken from Nebius's Nemotron page. Run
+fences are tolerated. Each call's token counts come from the response's OpenAI-compatible `usage`
+field (`prompt_tokens`, `completion_tokens`, `total_tokens`, and `completion_tokens_details.reasoning_tokens`
+when present) via `parseUsage` in [`src/llm.mjs`](src/llm.mjs); a missing field is shown as unknown,
+never estimated. The recorded examples use a rule-based stand-in instead of the model, so their panel
+says “no tokens”. The default reasoning model ID is taken from Nebius's Nemotron page. Run
 `npm run models` with your key to list the exact Nemotron IDs (Nano / Super / Ultra) on your account
 and set them via environment variables.
 
@@ -212,7 +242,7 @@ Keys are read from the environment only. They are never logged, never sent to th
 ## Project layout
 
 ```
-server.mjs                 HTTP server: static UI, SSE trace stream, re-run proof endpoint
+server.mjs                 HTTP server: static UI, SSE trace stream, re-run proof, share links
 src/agent/pipeline.mjs     the agent loop and all guards
 src/agent/nemotron-brain.mjs   prompts for Nemotron on Token Factory
 src/agent/sample-brain.mjs     deterministic stand-in for SAMPLE_MODE
@@ -221,6 +251,8 @@ src/checks.mjs             the 12 evidence checks
 src/platforms.mjs          listing / social / directory hosts that are never an own website
 src/hostname.mjs           offline hostname + public-suffix check
 src/claims.mjs             claim catalog + gate
+src/limits.mjs             run time limit, host-limit detection, plain error messages
+src/web/share.mjs          read-only share links (/r/<id>): what is stored, link-preview tags
 src/io/real.mjs            live DNS / HTTP / TLS / Nominatim / Tavily, SSRF guard
 src/io/net-node.mjs        Node DNS + TLS handshake (local)
 src/io/net-worker.mjs      Workers DNS-over-HTTPS + TLS trust/CT expiry, per-run request budget
@@ -229,7 +261,7 @@ src/web/store.mjs          in-memory demo state (tests); worker/index.mjs has th
 worker/index.mjs           Cloudflare Workers entry + DemoState Durable Object
 src/display-name.mjs       proper business name for the card title
 src/io/sample.mjs          recorded I/O for SAMPLE_MODE
-src/llm.mjs, src/tavily.mjs    API clients (plain fetch, no SDK)
+src/llm.mjs, src/tavily.mjs    API clients (plain fetch, no SDK); token usage parsing
 public/                    single-page UI (no framework)
 tests/                     node:test suites
 ```
@@ -256,12 +288,14 @@ change without a code change:
 | `LIVE_IP_PER_DAY` | 3 | live runs per visitor per UTC day (counted by a salted, per-day IP hash; IPs are never stored) |
 | `LIVE_CACHE_HOURS` | 24 | an identical query (case and spacing ignored) is answered from cache, without new API calls or quota |
 | `LIVE_REQUEST_BUDGET` | 40 | outbound check requests per live run (the free plan allows 50 per request) |
+| `LIVE_RUN_SECONDS` | 90 | time limit for one live run; after it, checks are “not checked” and no new model call starts |
 | `LIVE_RECHECK_GLOBAL_PER_DAY` / `LIVE_RECHECK_IP_PER_DAY` | 100 / 15 | “Re-run proof” on live runs |
 | `LIVE_ENABLED` | `true` | `false` switches live search off |
 
 When a cap is hit the page says so (“Live quota used up today — try a recorded example”). Counters,
-the cache and recent live runs live in a SQLite-backed Durable Object (`DemoState`), which the free
-plan includes. Until both API keys are set on the worker, live search answers “Live mode is not
+the cache, recent live runs and shared reports (`/r/<id>`, 14 days, at most 3,000) live in a
+SQLite-backed Durable Object (`DemoState`), which the free plan includes. The local Node server keeps
+shared reports in memory, so they last until it restarts. Until both API keys are set on the worker, live search answers “Live mode is not
 configured on this demo yet” and the recorded examples keep working.
 
 ### Setting the keys (owner only)

@@ -2,6 +2,8 @@
 //   GET  /api/config            public setup (sample mode, model names, sample list)
 //   GET  /api/run?q=...         SSE: one event per agent step, final "done" carries the report
 //   POST /api/recheck           { runId, claimId } -> re-runs that claim's proof right now
+//   GET  /api/report/<id>       a finished run (for the read-only share link /r/<id>)
+//   GET  /r/<id>                the page, opened read-only on that report
 
 import fs from 'node:fs';
 import http from 'node:http';
@@ -10,15 +12,33 @@ import { fileURLToPath } from 'node:url';
 import { runAgent } from './src/agent/pipeline.mjs';
 import { gateClaim } from './src/claims.mjs';
 import { observed } from './src/io/observed.mjs';
+import { friendlyError } from './src/limits.mjs';
 import { configProblem, publicConfig, readConfig, wiringFor } from './src/runtime.mjs';
+import { injectShareMeta, newShareId, SHARE_ID, SHARE_MS, shareRecord } from './src/web/share.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
+const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:";
 
 // pace: in sample mode, add realistic latency so the trace streams like a live run (off in tests).
-export function createServer(cfg = readConfig(), { fetchImpl, pace = false } = {}) {
+// reports: shared runs kept in memory for SHARE_DAYS (at most maxReports); they vanish on restart.
+export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now = () => Date.now(), maxReports = 200 } = {}) {
   const runs = new Map(); // runId -> { io, claims }
+  const reports = new Map(); // shareId -> record
   let live = 0;
+
+  function getReport(id) {
+    const r = SHARE_ID.test(id) ? reports.get(id) : null;
+    if (r && now() - r.at > SHARE_MS) { reports.delete(id); return null; }
+    return r || null;
+  }
+
+  function sharePage(res, id) {
+    const record = getReport(id);
+    const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+    res.writeHead(record ? 200 : 404, { 'content-type': TYPES['.html'], 'x-content-type-options': 'nosniff', 'content-security-policy': CSP, 'cache-control': 'no-store' });
+    res.end(injectShareMeta(html, record));
+  }
 
   function remember(id, value) {
     runs.set(id, value);
@@ -40,7 +60,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false } = {
     res.writeHead(200, {
       'content-type': TYPES[path.extname(file)] || 'application/octet-stream',
       'x-content-type-options': 'nosniff',
-      'content-security-policy': "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:",
+      'content-security-policy': CSP,
     });
     fs.createReadStream(file).pipe(res);
   }
@@ -55,12 +75,23 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false } = {
 
     const runId = Math.random().toString(36).slice(2, 10);
     if (!cfg.sampleMode) live++;
+    const events = [];
+    const emit = (e) => { events.push(e); send(e); };
     try {
-      send({ type: 'run', runId });
-      const out = await runAgent({ query: wiring.query, io: wiring.io, brain: wiring.brain, emit: send });
-      if (out.report) remember(runId, { io: wiring.io, claims: [...out.report.verified, ...out.report.dropped] });
+      emit({ type: 'run', runId, mode: cfg.sampleMode ? 'sample' : 'live' });
+      const out = await runAgent({ query: wiring.query, io: wiring.io, brain: wiring.brain, emit });
+      if (out.report) {
+        remember(runId, { io: wiring.io, claims: [...out.report.verified, ...out.report.dropped] });
+        const id = newShareId();
+        const record = shareRecord({ id, query: wiring.query, mode: cfg.sampleMode ? 'sample' : 'live', events, at: now() });
+        if (record) {
+          reports.set(id, record);
+          if (reports.size > maxReports) reports.delete(reports.keys().next().value);
+          send({ type: 'share', id, path: `/r/${id}`, at: record.at, days: Math.round(SHARE_MS / 86400000) });
+        }
+      }
     } catch (err) {
-      send({ type: 'error', message: `Agent failed: ${err.message}` });
+      send({ type: 'error', message: friendlyError(err) });
     } finally {
       if (!cfg.sampleMode) live--;
       res.end();
@@ -86,10 +117,17 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false } = {
       if (req.method === 'GET' && url.pathname === '/api/config') return json(res, 200, publicConfig(cfg));
       if (req.method === 'GET' && url.pathname === '/api/run') return await handleRun(req, res, url);
       if (req.method === 'POST' && url.pathname === '/api/recheck') return await handleRecheck(req, res);
+      const rep = /^\/api\/report\/([^/]+)$/.exec(url.pathname);
+      if (req.method === 'GET' && rep) {
+        const record = getReport(rep[1]);
+        return record ? json(res, 200, record) : json(res, 404, { error: 'This report link has expired or does not exist. Shared reports are kept for 14 days.' });
+      }
+      const share = /^\/r\/([^/]+)\/?$/.exec(url.pathname);
+      if (req.method === 'GET' && share) return sharePage(res, share[1]);
       if (req.method === 'GET') return serveStatic(req, res, url.pathname);
       json(res, 405, { error: 'method not allowed' });
     } catch (err) {
-      if (!res.headersSent) json(res, 500, { error: err.message });
+      if (!res.headersSent) json(res, 503, { error: friendlyError(err) });
       else res.end();
     }
   });

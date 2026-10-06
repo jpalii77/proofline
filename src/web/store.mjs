@@ -1,15 +1,17 @@
-// Demo state: daily live-run quotas, a 24-hour cache of identical live queries, and recent live runs
-// (so "Re-run proof" works on any server instance). Two implementations with the same async API:
+// Demo state: daily live-run quotas, a 24-hour cache of identical live queries, recent live runs
+// (so "Re-run proof" works on any server instance) and shared reports (/r/<id>, see share.mjs).
+// Two implementations with the same async API:
 //   createMemoryStore()  in-process (tests, local Node)
 //   DemoState            Durable Object with SQLite (Cloudflare Workers, see worker/index.mjs)
 // IPs are never stored: callers pass a salted, per-day hash.
 
 export const utcDay = (t = Date.now()) => new Date(t).toISOString().slice(0, 10);
 
-export function createMemoryStore({ now = () => Date.now() } = {}) {
+export function createMemoryStore({ now = () => Date.now(), maxReports = 500 } = {}) {
   const counts = new Map();
   const cache = new Map();
   const runs = new Map();
+  const reports = new Map();
   const get = (k) => counts.get(k) || 0;
   return {
     async usage({ scope = 'run', ipHash }) {
@@ -40,6 +42,14 @@ export function createMemoryStore({ now = () => Date.now() } = {}) {
     async getRun(id, maxAgeMs) {
       const row = runs.get(id);
       return row && now() - row.at <= maxAgeMs ? row.data : null;
+    },
+    async putReport(id, record) {
+      reports.set(id, { at: now(), record });
+      if (reports.size > maxReports) reports.delete(reports.keys().next().value);
+    },
+    async getReport(id, maxAgeMs) {
+      const row = reports.get(id);
+      return row && now() - row.at <= maxAgeMs ? row.record : null;
     },
   };
 }

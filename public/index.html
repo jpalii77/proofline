@@ -3,14 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Proofline</title>
+  <title>Proofline — every claim comes with its proof</title>
   <meta name="description" content="An agent that builds a verified profile of a small business. Every claim carries a re-runnable proof; claims that fail are dropped.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121317" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Proofline">
+  <meta property="og:title" content="Proofline — every claim comes with its proof">
+  <meta property="og:description" content="An agent that builds a verified profile of a small business. Every claim carries a re-runnable proof; claims that fail are dropped.">
+  <meta property="og:image" content="https://proofline-demo.dwelltime-yayin.workers.dev/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Proofline: a claim with a green check, its proof, and a dropped claim struck through">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Proofline — every claim comes with its proof">
+  <meta name="twitter:description" content="An agent that builds a verified profile of a small business. Every claim carries a re-runnable proof; claims that fail are dropped.">
+  <meta name="twitter:image" content="https://proofline-demo.dwelltime-yayin.workers.dev/og.png">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
   <link rel="stylesheet" href="/app.css">
 </head>
 <body>
+  <a class="skip" href="#q">Skip to the search box</a>
   <header class="top">
     <a class="brand" href="/" aria-label="Proofline home">
       <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M9.5 14.2l3 3 6-6.4" fill="none" stroke="var(--good)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.5 21.5L28 28" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
@@ -20,13 +38,21 @@
   </header>
 
   <main>
+    <section id="shared-banner" class="shared-banner" hidden>
+      <div>
+        <p class="eyebrow">Shared Proofline report</p>
+        <p id="shared-when" class="shared-when">Loading…</p>
+      </div>
+      <a class="btn primary" href="/">Run your own check</a>
+    </section>
+
     <section class="hero">
       <p class="eyebrow">Business profile agent</p>
       <h1>Every claim comes with its proof.</h1>
       <p class="lede">Give it a small business. Proofline gathers its scattered web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim itself. Anything it cannot prove is dropped, in plain sight.</p>
       <form id="form" class="ask" autocomplete="off">
         <label for="q" class="sr-only">Business name and city, or a domain</label>
-        <input id="q" name="q" maxlength="200" placeholder="Business name, city — or a domain" required>
+        <input id="q" name="q" maxlength="200" placeholder="Name, city — or a domain" required>
         <button id="go" type="submit">Check it</button>
       </form>
       <fieldset id="modes" class="modes" hidden>
@@ -47,20 +73,15 @@
         <ol class="stages" id="stages">
           <li data-stage="plan">Plan</li><li data-stage="observe">Tools</li><li data-stage="propose">Claims</li><li data-stage="gate">Gate</li><li data-stage="verify">Verify</li><li data-stage="write">Write</li>
         </ol>
-        <ol id="events" class="events" aria-live="polite"></ol>
+        <ol id="events" class="events" aria-label="Trace events"></ol>
       </aside>
 
-      <article id="report" class="report" aria-live="polite">
-        <div class="placeholder" id="placeholder">
-          <div class="spinner" aria-hidden="true"></div>
-          <p>Working. The report appears once every claim has been through the gate.</p>
-        </div>
-      </article>
+      <article id="report" class="report" aria-live="polite"></article>
     </section>
   </main>
 
   <footer class="foot">
-    <p>Reads public business information only. Built for the Nebius × NVIDIA Global AI Hackathon · MIT licensed.</p>
+    <p>Reads public business information only. Built for the Nebius × NVIDIA Global AI Hackathon · <a href="https://github.com/jpalii77/proofline">Source on GitHub</a> · MIT licensed.</p>
   </footer>
   <script type="module" src="/app.js"></script>
 </body>

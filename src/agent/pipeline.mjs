@@ -9,6 +9,7 @@ import { buildClaim, catalogForPrompt, gateClaim } from '../claims.mjs';
 import { displayName } from '../display-name.mjs';
 import { invalidHostSentence, isValidHostname } from '../hostname.mjs';
 import { observed } from '../io/observed.mjs';
+import { withDeadline } from '../limits.mjs';
 import { domainsIn, extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
 
@@ -59,17 +60,90 @@ function observationPlan(ctx) {
   return plan;
 }
 
-/** Keep only words the owner can verify: numbers in a rewrite must already exist in the evidence. */
-export function numbersGrounded(text, claim) {
+/** Numbers in a rewrite that do not already exist in the claim or its evidence. */
+export function newNumbers(text, claim) {
   const evidenceText = `${claim.statement} ${claim.evidence.map((e) => e.summary).join(' ')}`;
   const known = new Set(evidenceText.match(/\d+/g) || []);
-  return (String(text).match(/\d+/g) || []).every((n) => known.has(n));
+  return [...new Set((String(text).match(/\d+/g) || []).filter((n) => !known.has(n)))];
 }
 
-export async function runAgent({ query, io, brain, emit = () => {}, now = () => Date.now() }) {
+/** Keep only words the owner can verify: numbers in a rewrite must already exist in the evidence. */
+export function numbersGrounded(text, claim) {
+  return newNumbers(text, claim).length === 0;
+}
+
+// Which model call does what. `tier` picks the model (reasoning = Nemotron Super, fast = Nano).
+export const MODEL_ROLES = {
+  plan: { tier: 'reasoning', role: 'Planner', task: 'which domain and phone belong to the business' },
+  propose: { tier: 'reasoning', role: 'Claim proposer', task: 'claims from the catalog, with a rationale' },
+  verify: { tier: 'fast', role: 'Owner rewrite', task: 'one plain sentence per verified claim' },
+  write: { tier: 'reasoning', role: 'Writer', task: 'owner summary and cited pitch' },
+};
+
+/** Totals for the run summary: "N model calls · X tokens · Y claims dropped by the gate". */
+export function modelTotals(calls) {
+  const known = calls.filter((c) => c.usage);
+  const sum = (k) => (known.some((c) => c.usage[k] != null) ? known.reduce((n, c) => n + (c.usage[k] || 0), 0) : null);
+  const tokensIn = sum('in');
+  const tokensOut = sum('out');
+  const total = known.some((c) => c.usage.total != null) ? known.reduce((n, c) => n + (c.usage.total ?? ((c.usage.in || 0) + (c.usage.out || 0))), 0) : null;
+  return {
+    calls: calls.filter((c) => !c.skipped).length,
+    failed: calls.filter((c) => c.outcome === 'failed').length,
+    tokensIn, tokensOut, tokens: total,
+    tokensKnown: known.length,
+    ms: calls.reduce((n, c) => n + (c.ms || 0), 0),
+  };
+}
+
+/**
+ * deadlineMs: optional wall-clock budget for the whole run (live demo). After it, network checks
+ * answer "not checked" and model calls are skipped; the run still finishes with what is proven.
+ */
+export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now = () => Date.now(), deadlineMs = null }) {
   const t0 = now();
+  const deadlineAt = deadlineMs ? t0 + deadlineMs : null;
+  const io = withDeadline(rawIO, deadlineAt, now);
   const step = (type, data) => emit({ t: now() - t0, ...data, type });
   const toolLog = (phase) => (c) => step('tool', { phase, tool: c.tool, args: c.args, ms: c.ms, error: c.error });
+  const partial = [];
+  const calls = [];
+
+  // One model call: never throws. A failure, timeout or unreadable reply becomes { json: null,
+  // error } and the step that needed it degrades (see each step below); nothing unproven is added.
+  async function ask(stage, args) {
+    const meta = MODEL_ROLES[stage];
+    const model = brain.models?.[meta.tier] || brain.models?.reasoning || 'unknown';
+    const left = deadlineAt ? deadlineAt - now() : null;
+    const call = { stage, role: meta.role, tier: meta.tier, task: meta.task, model, ms: 0, usage: null, outcome: 'accepted', detail: '' };
+    calls.push(call);
+    if (left !== null && left <= 1000) {
+      Object.assign(call, { skipped: true, outcome: 'failed', detail: 'skipped: run time limit reached' });
+      return { json: null, error: call.detail, call };
+    }
+    const started = now();
+    let timer;
+    try {
+      const work = Promise.resolve().then(() => brain[stage](args));
+      work.catch(() => {}); // a late failure after the time limit must not become an unhandled rejection
+      const out = left === null ? await work : await Promise.race([
+        work,
+        new Promise((_, reject) => { timer = setTimeout(() => reject(Object.assign(new Error(`no answer before the run time limit (${Math.round(left / 1000)} s left)`), { call: { model } })), left); }),
+      ]);
+      Object.assign(call, { model: out.model || model, ms: out.ms ?? now() - started, usage: out.usage || null });
+      return { json: out.json || {}, call };
+    } catch (err) {
+      Object.assign(call, {
+        model: err.call?.model || model,
+        ms: err.call?.ms ?? now() - started,
+        usage: err.call?.usage || null,
+        outcome: 'failed',
+        detail: String(err.message || err).slice(0, 240),
+      });
+      return { json: null, error: call.detail, call };
+    } finally { clearTimeout(timer); }
+  }
+  const modelEvent = (call) => step('model', { ...call });
 
   step('start', { query, mode: io.mode, models: brain.models });
 
@@ -81,17 +155,19 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
   // 2. Discover with Tavily (runtime web search)
   const gatherIO = observed(io, toolLog('gather'));
   const searchQuery = discoveryQuery(parsed);
-  const discovery = await gatherIO.search(searchQuery, { purpose: 'discover' });
+  const discovery = await gatherIO.search(searchQuery, { purpose: 'discover' }).catch((e) => ({ error: String(e?.message || e) }));
   step('discover', {
     query: searchQuery,
     results: (discovery.results || []).map((r) => ({ title: r.title, url: r.url, content: r.content })),
     error: discovery.error || null,
   });
+  if (discovery.error) partial.push(`Web search failed (${discovery.error}); the business was identified from the query alone.`);
   const grounding = groundingFrom(parsed, discovery);
 
   // 3. Plan (reasoning model): who is this business, which domain and phone are theirs?
-  const planOut = await brain.plan({ query, parsed, discovery: discovery.results || [], grounding });
+  const planOut = await ask('plan', { query, parsed, discovery: discovery.results || [], grounding });
   const plan = planOut.json || {};
+  if (planOut.error) partial.push(`Planner did not answer (${planOut.error}); code used the query and the search results instead.`);
   // Grounding guard: the model may choose, never invent. A domain must be a valid web address
   // (real ending) that the search results show as a web address; otherwise it is dropped here and
   // the reason stays in the trace.
@@ -116,6 +192,7 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     searchQuery,
   };
   if (ctx.phone && !grounding.phones.includes(phoneKey(ctx.phone))) { guard.push(`phone ${ctx.phone} not seen in search results`); ctx.phone = null; }
+  const modelRemoved = guard.length;
   ctx.userGivenDomain = !!(parsed.domain && ctx.domain === parsed.domain);
   // Name for the card: the planner's proper name, else a search-result title, else the query minus the
   // city, title-cased. Display only; checks keep using ctx.name.
@@ -123,8 +200,20 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     ? ctx.domain
     : displayName({ raw: parsed.name || parsed.raw, planName: plan.name, city: ctx.city, results: discovery.results || [] }) || ctx.name || ctx.domain;
 
+  const planCall = planOut.call;
+  const settlePlan = () => {
+    if (planCall.outcome === 'failed') return;
+    const removed = guard.slice(0, modelRemoved);
+    const ownSiteGuard = guard.slice(modelRemoved).filter((g) => /website checks skipped/.test(g));
+    if (removed.length) Object.assign(planCall, { outcome: 'partial', detail: `guard removed: ${removed.join('; ')}` });
+    else if (ownSiteGuard.length && plan.domain) Object.assign(planCall, { outcome: 'partial', detail: `own-site guard: ${ownSiteGuard.join('; ')}` });
+    else planCall.detail = [ctx.domain && `domain ${ctx.domain}`, ctx.phone && `phone ${ctx.phone}`].filter(Boolean).join(' · ') || 'no domain or phone picked';
+  };
+
   if (!ctx.domain && !ctx.name) {
-    step('plan', { model: planOut.model, ms: planOut.ms, reasoning: plan.reasoning || '', ctx, guard });
+    settlePlan();
+    step('plan', { model: planCall.model, ms: planCall.ms, reasoning: plan.reasoning || '', ctx, guard });
+    modelEvent(planCall);
     step('error', { message: 'Could not identify the business. Try “Name, City” or a domain.' });
     return { error: 'unidentified' };
   }
@@ -149,7 +238,9 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
       ctx.ownSite = true;
     }
   }
-  step('plan', { model: planOut.model, ms: planOut.ms, reasoning: plan.reasoning || '', ctx, guard });
+  settlePlan();
+  step('plan', { model: planCall.model, ms: planCall.ms, reasoning: plan.reasoning || '', ctx, guard });
+  modelEvent(planCall);
 
   // 4. Gather observations
   for (const r of observations) step('observe', { check: r.check, title: r.title, params: r.params, pass: r.pass, summary: r.summary });
@@ -160,15 +251,16 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
   }
 
   // 5. Propose claims (reasoning model), only from the catalog
-  const proposeOut = await brain.propose({ ctx, observations, catalog: catalogForPrompt(), discovery: discovery.results || [] });
+  const proposeOut = await ask('propose', { ctx, observations, catalog: catalogForPrompt(), discovery: discovery.results || [] });
+  if (proposeOut.error) partial.push(`Claim proposer did not answer (${proposeOut.error}); only claims code can put to the gate by itself were checked.`);
   const proposals = Array.isArray(proposeOut.json?.claims) ? proposeOut.json.claims.slice(0, 16) : [];
   const claims = [];
   const rejected = [];
   const seen = new Set();
   for (const p of proposals) {
-    if (seen.has(p.type)) continue;
+    if (!p || typeof p !== 'object' || seen.has(p.type)) continue;
     seen.add(p.type);
-    const b = buildClaim(p.type, ctx, { rationale: p.rationale, proposedBy: proposeOut.model });
+    const b = buildClaim(p.type, ctx, { rationale: p.rationale, proposedBy: proposeOut.call.model });
     if (b.ok) claims.push(b.claim);
     else rejected.push({ type: p.type, reason: domainDropped && /missing .*domain/.test(b.reason) ? `${b.reason}: ${domainDropped}` : b.reason });
   }
@@ -179,7 +271,7 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     const b = buildClaim('no_own_website', ctx, { rationale: noSite.summary, proposedBy: 'code (own-site guard)' });
     if (b.ok) claims.push(b.claim);
   }
-  step('propose', { model: proposeOut.model, ms: proposeOut.ms, claims: claims.map((c) => ({ id: c.id, type: c.type, statement: c.statement, rationale: c.rationale })), rejected });
+  step('propose', { model: proposeOut.call.model, ms: proposeOut.call.ms, claims: claims.map((c) => ({ id: c.id, type: c.type, statement: c.statement, rationale: c.rationale })), rejected });
 
   // 6. Gate: re-observe from scratch and keep only claims whose proof holds
   const gateIO = observed(io, toolLog('gate'));
@@ -192,27 +284,51 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
   const verified = gated.filter((g) => g.verdict === 'verified');
   const dropped = gated.filter((g) => g.verdict === 'dropped');
 
+  const pc = proposeOut.call;
+  if (pc.outcome !== 'failed') {
+    const byModel = gated.filter((g) => g.proposedBy !== 'code (own-site guard)');
+    const kept = byModel.filter((g) => g.verdict === 'verified').length;
+    const lost = byModel.length - kept + rejected.length;
+    pc.outcome = !proposals.length || !lost ? 'accepted' : kept ? 'partial' : 'rejected';
+    pc.detail = `${proposals.length} proposed · ${kept} kept by the gate · ${byModel.length - kept} dropped by the gate${rejected.length ? ` · ${rejected.length} outside the catalog` : ''}`;
+  }
+  modelEvent(pc);
+
   // 7. Verify wording (fast model): plain-language line per claim, no new facts
-  const verifyOut = await brain.verify({ ctx, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, statement: c.statement, evidence: c.evidence.map((e) => e.summary) })) });
   const ownerLines = {};
   const rewordRejected = [];
-  for (const row of verifyOut.json?.claims || []) {
-    const c = verified.find((v) => v.id === row.id);
-    if (!c || !row.owner_text) continue;
-    if (numbersGrounded(row.owner_text, c)) ownerLines[c.id] = String(row.owner_text).slice(0, 280);
-    else rewordRejected.push({ id: c.id, text: row.owner_text, reason: 'introduced a number not in the evidence' });
+  let verifyCall = null;
+  if (verified.length) {
+    const verifyOut = await ask('verify', { ctx, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, statement: c.statement, evidence: c.evidence.map((e) => e.summary) })) });
+    verifyCall = verifyOut.call;
+    for (const row of Array.isArray(verifyOut.json?.claims) ? verifyOut.json.claims : []) {
+      const c = verified.find((v) => v.id === row?.id);
+      if (!c || !row.owner_text) continue;
+      const extra = newNumbers(row.owner_text, c);
+      if (!extra.length) ownerLines[c.id] = String(row.owner_text).slice(0, 280);
+      else rewordRejected.push({ id: c.id, text: String(row.owner_text).slice(0, 280), reason: `introduced a number not in the evidence (${extra.join(', ')})` });
+    }
+    if (verifyOut.error) partial.push(`Owner rewrite did not answer (${verifyOut.error}); claims are shown in their checked wording.`);
+    else {
+      const ok = Object.keys(ownerLines).length;
+      verifyCall.outcome = rewordRejected.length ? (ok ? 'partial' : 'rejected') : 'accepted';
+      verifyCall.detail = `${ok} rewrite(s) accepted${rewordRejected.length ? ` · ${rewordRejected.length} rejected: ${rewordRejected.map((r) => `${r.id} ${r.reason}`).join('; ')}` : ''}`;
+    }
   }
   for (const c of verified) c.ownerText = ownerLines[c.id] || c.statement;
-  step('verify', { model: verifyOut.model, ms: verifyOut.ms, rewritten: Object.keys(ownerLines).length, rejected: rewordRejected });
+  step('verify', { model: verifyCall?.model || brain.models?.fast || null, ms: verifyCall?.ms || 0, rewritten: Object.keys(ownerLines).length, rejected: rewordRejected, skipped: !verifyCall });
+  if (verifyCall) modelEvent(verifyCall);
 
   // 8. Write (reasoning model): owner summary + seller pitch that cites claim ids
-  const writeOut = await brain.write({ ctx, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, area: c.area, statement: c.statement })) });
+  const writeOut = await ask('write', { ctx, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, area: c.area, statement: c.statement })) });
+  if (writeOut.error) partial.push(`Writer did not answer (${writeOut.error}); no summary or pitch was written. The verified claims above stand on their own.`);
   const w = writeOut.json || {};
   const ids = new Set(verified.map((c) => c.id));
   const findings = [];
   const uncited = [];
   for (const f of Array.isArray(w.pitch?.findings) ? w.pitch.findings : []) {
-    const cites = (f.cites || []).filter(Boolean);
+    if (!f || typeof f !== 'object') continue;
+    const cites = (Array.isArray(f.cites) ? f.cites : []).filter(Boolean);
     if (cites.length && cites.every((id) => ids.has(id))) findings.push({ text: String(f.text).slice(0, 300), cites });
     else uncited.push({ text: f.text, cites, reason: cites.length ? 'cites a claim that did not pass the gate' : 'no citation' });
   }
@@ -223,9 +339,16 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     offer: String(w.pitch?.offer || '').slice(0, 400),
     closing: String(w.pitch?.closing || '').slice(0, 200),
   };
-  step('write', { model: writeOut.model, ms: writeOut.ms, kept: findings.length, removed: uncited });
+  const wc = writeOut.call;
+  if (wc.outcome !== 'failed') {
+    wc.outcome = uncited.length ? (findings.length ? 'partial' : 'rejected') : 'accepted';
+    wc.detail = `${findings.length} cited finding(s) kept${uncited.length ? ` · ${uncited.length} sentence(s) removed by citation lint` : ''}`;
+  }
+  step('write', { model: wc.model, ms: wc.ms, kept: findings.length, removed: uncited, failed: !!writeOut.error });
+  modelEvent(wc);
 
   const card = gradeCard(verified);
+  const models = { calls, totals: modelTotals(calls) };
   const report = {
     ctx,
     card,
@@ -235,13 +358,19 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     rejected,
     pitch,
     pitchRemoved: uncited,
+    models,
+    partial,
+    generatedAt: new Date(now()).toISOString(),
     stats: {
       proposed: claims.length, verified: verified.length, dropped: dropped.length,
       checksRun: observations.length + gated.reduce((n, g) => n + g.evidence.length, 0),
+      notChecked: [...observations, ...gated.flatMap((g) => g.evidence)].filter((e) => e.pass === null && !e.skipped).length,
+      modelCalls: models.totals.calls,
+      tokens: models.totals.tokens,
+      rewritesRejected: rewordRejected.length,
       ms: now() - t0,
     },
   };
   step('done', { report });
   return { report };
 }
-
