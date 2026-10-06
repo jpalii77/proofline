@@ -3,6 +3,7 @@
 
 import { createNemotronBrain } from './agent/nemotron-brain.mjs';
 import { createSampleBrain } from './agent/sample-brain.mjs';
+import { createNodeNet } from './io/net-node.mjs';
 import { createRealIO } from './io/real.mjs';
 import { createSampleIO, findSample, loadSamples } from './io/sample.mjs';
 import { createTokenFactoryClient, DEFAULT_BASE_URL, DEFAULT_REASONING_MODEL } from './llm.mjs';
@@ -68,7 +69,7 @@ export function wiringFor(cfg, query, { fetchImpl, pace = false } = {}) {
   const llm = createTokenFactoryClient({ ...cfg.nebius, fetchImpl });
   const tavily = cfg.tavilyKey ? createTavilyClient({ apiKey: cfg.tavilyKey, fetchImpl }) : null;
   return {
-    io: createRealIO({ tavily, nominatimContact: cfg.nominatimContact, fetchImpl }),
+    io: createRealIO({ net: createNodeNet(), tavily, nominatimContact: cfg.nominatimContact, fetchImpl }),
     brain: createNemotronBrain(llm),
     query,
   };

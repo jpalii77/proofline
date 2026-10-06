@@ -1,18 +1,11 @@
 // Recorded I/O for SAMPLE_MODE. Same interface as the live I/O, backed by fixtures/sample/*.json.
 // The businesses and domains in the fixtures are fictional (".example" is a reserved TLD).
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { fold } from '../text.mjs';
+import { SAMPLES } from './sample-data.mjs';
 
-const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'fixtures', 'sample');
-
-export function loadSamples(dir = DIR) {
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith('.json'))
-    .sort()
-    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
+export function loadSamples() {
+  return SAMPLES;
 }
 
 export function findSample(samples, query) {

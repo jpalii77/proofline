@@ -242,6 +242,10 @@ export const CHECKS = {
         }
       }
       const last = attempts[attempts.length - 1];
+      // Our own host ran out of outbound requests: that says nothing about the site.
+      if (attempts.some((a) => /budget/i.test(a.error || ''))) {
+        return { pass: null, summary: `Not checked: ${last.error}`, observed: { attempts } };
+      }
       return {
         pass: false,
         summary: `Failed twice: ${last.error || `HTTP ${last.status}`}`,
@@ -270,13 +274,19 @@ export const CHECKS = {
     async run(io, { host, minDays = 0 }) {
       const r = await io.tlsCert(host);
       if (r.error) return { pass: null, summary: `TLS handshake failed: ${r.error}`, observed: { error: r.error } };
+      const via = r.source === 'ct-log' ? ' (expiry read from Certificate Transparency logs)' : '';
+      if (!r.validTo) {
+        const observed = { validTo: null, authorized: r.authorized ?? null, authorizationError: r.authorizationError || null, source: r.source || null };
+        if (r.authorized === false) return { pass: false, summary: `Certificate is not trusted${r.authorizationError ? `: ${r.authorizationError}` : ''}`, observed };
+        return { pass: null, summary: 'Certificate expiry date not available', observed };
+      }
       const daysLeft = Math.floor((Date.parse(r.validTo) - Date.now()) / 86400000);
       const pass = !!r.authorized && daysLeft >= minDays;
       const when = daysLeft < 0 ? `expired ${-daysLeft} day(s) ago` : `expires in ${daysLeft} day(s)`;
       return {
         pass,
-        summary: `Certificate ${when}${minDays ? ` (needs ≥ ${minDays})` : ''}`,
-        observed: { validTo: r.validTo, daysLeft, issuer: r.issuer || null, authorized: !!r.authorized },
+        summary: `Certificate ${when}${minDays ? ` (needs ≥ ${minDays})` : ''}${r.authorized ? '' : `, not trusted${r.authorizationError ? `: ${r.authorizationError}` : ''}`}${via}`,
+        observed: { validTo: r.validTo, daysLeft, issuer: r.issuer || null, authorized: !!r.authorized, source: r.source || null },
       };
     },
   },
