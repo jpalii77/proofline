@@ -4,10 +4,10 @@
 // Code proves (every claim is re-checked by the gate before it can reach the report).
 // Every step is emitted as a trace event so the UI can show why each line is true.
 
-import { CHECKS, runCheck } from '../checks.mjs';
+import { CHECKS, discoveryQuery, runCheck } from '../checks.mjs';
 import { buildClaim, catalogForPrompt, gateClaim } from '../claims.mjs';
 import { observed } from '../io/observed.mjs';
-import { extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
+import { domainsIn, extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
 
 /** Parse "Name, City" or a bare domain. */
@@ -27,10 +27,7 @@ export function groundingFrom(parsed, discovery) {
   for (const r of discovery?.results || []) {
     const h = normalizeHost(r.url);
     if (h) domains.add(h);
-    for (const m of `${r.title} ${r.content}`.matchAll(/\b([a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,})\b/gi)) {
-      const d = normalizeHost(m[1]);
-      if (d && !/\.(png|jpg|html?)$/.test(d)) domains.add(d);
-    }
+    for (const d of domainsIn(`${r.title} ${r.content}`)) domains.add(d);
     for (const p of extractPhones(`${r.title} ${r.content}`)) phones.add(p);
   }
   return { domains: [...domains], phones: [...phones] };
@@ -38,7 +35,7 @@ export function groundingFrom(parsed, discovery) {
 
 function observationPlan(ctx) {
   const plan = [];
-  if (ctx.domain) {
+  if (ctx.domain && ctx.ownSite) {
     const url = `https://${ctx.domain}/`;
     plan.push(['dns.resolves', { host: ctx.domain }]);
     plan.push(['http.reachable', { url }]);
@@ -77,10 +74,10 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
 
   // 2. Discover with Tavily (runtime web search)
   const gatherIO = observed(io, toolLog('gather'));
-  const discoveryQuery = parsed.domain ? `${parsed.domain} business contact` : `${parsed.name} ${parsed.city || ''} official website phone`.trim();
-  const discovery = await gatherIO.search(discoveryQuery, { purpose: 'discover' });
+  const searchQuery = discoveryQuery(parsed);
+  const discovery = await gatherIO.search(searchQuery, { purpose: 'discover' });
   step('discover', {
-    query: discoveryQuery,
+    query: searchQuery,
     results: (discovery.results || []).map((r) => ({ title: r.title, url: r.url, content: r.content })),
     error: discovery.error || null,
   });
@@ -94,20 +91,44 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     city: plan.city || parsed.city || null,
     domain: normalizeHost(plan.domain) || parsed.domain || null,
     phone: plan.phone || null,
+    searchQuery,
   };
   // Grounding guard: the model may choose, never invent.
   const guard = [];
   if (ctx.domain && !grounding.domains.includes(ctx.domain)) { guard.push(`domain ${ctx.domain} not seen in input or search results`); ctx.domain = parsed.domain || null; }
   if (ctx.phone && !grounding.phones.includes(phoneKey(ctx.phone))) { guard.push(`phone ${ctx.phone} not seen in search results`); ctx.phone = null; }
-  step('plan', { model: planOut.model, ms: planOut.ms, reasoning: plan.reasoning || '', ctx, guard });
+  ctx.userGivenDomain = !!(parsed.domain && ctx.domain === parsed.domain);
 
   if (!ctx.domain && !ctx.name) {
+    step('plan', { model: planOut.model, ms: planOut.ms, reasoning: plan.reasoning || '', ctx, guard });
     step('error', { message: 'Could not identify the business. Try “Name, City” or a domain.' });
     return { error: 'unidentified' };
   }
 
-  // 4. Gather observations
+  // Own-site guard: a domain is the business's website only if it is not a listing platform and
+  // the evidence ties it to the business. Otherwise no site-dependent check runs against it.
   const observations = [];
+  ctx.ownSite = false;
+  if (ctx.domain) {
+    const own = await runCheck(gatherIO, 'site.own_site', { host: ctx.domain, name: ctx.name, city: ctx.city, query: searchQuery, userGiven: ctx.userGivenDomain });
+    observations.push(own);
+    if (own.pass === true) ctx.ownSite = true;
+    else guard.push(`${ctx.domain} is not used as the business's own website — ${own.summary}. Website checks are skipped for it`);
+  }
+  if (!ctx.ownSite && ctx.name) {
+    const found = await runCheck(gatherIO, 'web.own_site_found', { name: ctx.name, city: ctx.city, query: searchQuery });
+    observations.push(found);
+    const alt = found.pass === true ? found.observed.host : null;
+    if (alt && alt !== ctx.domain && grounding.domains.includes(alt)) {
+      guard.push(`using ${alt} instead: ${found.summary}`);
+      ctx.domain = alt;
+      ctx.ownSite = true;
+    }
+  }
+  step('plan', { model: planOut.model, ms: planOut.ms, reasoning: plan.reasoning || '', ctx, guard });
+
+  // 4. Gather observations
+  for (const r of observations) step('observe', { check: r.check, title: r.title, params: r.params, pass: r.pass, summary: r.summary });
   for (const [id, params] of observationPlan(ctx)) {
     const r = await runCheck(gatherIO, id, params);
     observations.push(r);
@@ -125,6 +146,13 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     seen.add(p.type);
     const b = buildClaim(p.type, ctx, { rationale: p.rationale, proposedBy: proposeOut.model });
     if (b.ok) claims.push(b.claim); else rejected.push({ type: p.type, reason: b.reason });
+  }
+  // "No own website" is a finding in its own right: if the evidence says so, it is put to the gate
+  // even when the model did not propose it.
+  const noSite = observations.find((o) => o.check === 'web.own_site_found' && o.pass === false);
+  if (noSite && !seen.has('no_own_website')) {
+    const b = buildClaim('no_own_website', ctx, { rationale: noSite.summary, proposedBy: 'code (own-site guard)' });
+    if (b.ok) claims.push(b.claim);
   }
   step('propose', { model: proposeOut.model, ms: proposeOut.ms, claims: claims.map((c) => ({ id: c.id, type: c.type, statement: c.statement, rationale: c.rationale })), rejected });
 

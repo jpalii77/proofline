@@ -6,9 +6,17 @@
 // inconclusive check: the gate treats null as "not proven".
 // Checks only read public business information. They never store personal data.
 
+import { classifyHost } from './platforms.mjs';
 import {
-  extractPhones, fold, metaContent, nameSimilarity, pageTitle, phoneKey, visibleText,
+  canonName, domainsIn, extractPhones, fold, headings, metaContent, nameSimilarity, nameTokens, normalizeHost,
+  pageTitle, phoneKey, visibleText,
 } from './text.mjs';
+
+/** The discovery search. The pipeline and the own-site checks use the same query. */
+export function discoveryQuery({ name, city, domain } = {}) {
+  if (!name && domain) return `${domain} business contact`;
+  return `${name || ''} ${city || ''} official website phone`.replace(/\s+/g, ' ').trim();
+}
 
 // Parking, for-sale, suspended and placeholder pages. Matched on the title and the visible text.
 const PARKED = [
@@ -41,7 +49,139 @@ async function page(io, url) {
   return { ...r, html, title: pageTitle(html), text: visibleText(html) };
 }
 
+// ---- Own-site eligibility -------------------------------------------------------------------
+// A domain is treated as the business's own website only if it is not a listing platform AND
+// the evidence ties it to the business: its homepage names the business, or a search result that
+// names the business points at it. Everything site-dependent rests on this.
+
+const NAME_MIN = 0.45;
+
+function namesBusiness(text, name) {
+  return nameSimilarity(name, text) >= NAME_MIN || (canonName(name).length > 2 && ` ${canonName(text)} `.includes(` ${canonName(name)} `));
+}
+
+/** Search results that tie `host` to the business (not counting path-based listing pages). */
+function searchTies(results, host, name) {
+  const ties = [];
+  for (const r of results || []) {
+    const rHost = normalizeHost(r.url);
+    const hay = `${r.title || ''} ${r.content || ''}`;
+    if (!namesBusiness(r.title || '', name) && !namesBusiness(hay, name)) continue;
+    let path = '/';
+    try { path = new URL(r.url).pathname; } catch { /* keep "/" */ }
+    if (rHost === host && /^\/?(index\.\w+)?$/.test(path)) ties.push({ url: r.url, how: 'its homepage is a search result that names the business' });
+    else if (rHost !== host && domainsIn(hay).includes(host)) ties.push({ url: r.url, how: 'a search result about the business names this domain' });
+  }
+  return ties;
+}
+
+/** Does the homepage itself say whose site this is? Title, og:site_name, <h1>, then body text. */
+function pageIdentity(p, name) {
+  const fields = [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x])]
+    .filter(([, v]) => v);
+  let best = { field: null, value: '', score: 0 };
+  for (const [field, value] of fields) {
+    const score = nameSimilarity(name, value);
+    if (score > best.score) best = { field, value, score };
+  }
+  if (best.score >= NAME_MIN) return { identified: true, ...best };
+  if (canonName(name).length > 2 && ` ${canonName(p.text.slice(0, 20000))} `.includes(` ${canonName(name)} `)) {
+    return { identified: true, field: 'body', value: name, score: best.score };
+  }
+  return { identified: false, ...best };
+}
+
+function hostLabelNames(sub, name) {
+  const label = fold(sub).replace(/ /g, '');
+  const tokens = nameTokens(name).filter((t) => t.length >= 3);
+  return tokens.length > 0 && tokens.every((t) => label.includes(t));
+}
+
+/**
+ * Verdict for one candidate host. `results` are discovery search results (already fetched).
+ * needSearchTie: the page alone is not enough, a search result must tie the domain to the business.
+ */
+async function ownSiteVerdict(io, { host, name, results, searchError, userGiven = false, needSearchTie = false }) {
+  const cls = classifyHost(host);
+  if (cls.kind === 'platform') {
+    return { pass: false, summary: `${host} is a listing platform (${cls.label}), not the business's own website`, observed: { host, platform: cls.label } };
+  }
+  if (cls.kind === 'builder' && !(cls.sub && name && hostLabelNames(cls.sub, name))) {
+    return { pass: false, summary: `${host} is a site-builder address that does not name the business, so it is not treated as its own website`, observed: { host, builder: cls.matched } };
+  }
+  if (userGiven) return { pass: true, summary: `${host} was given by the user as the business's website`, observed: { host, userGiven: true } };
+  if (!name) return { pass: null, summary: 'No business name to check the site against', observed: { host } };
+
+  const ties = searchTies(results, host, name);
+  if (needSearchTie) {
+    return ties.length
+      ? { pass: true, summary: `${host} is tied to “${name}”: ${ties[0].how} (${ties[0].url})`, observed: { host, ties } }
+      : { pass: searchError ? null : false, summary: searchError ? `Search failed: ${searchError}` : `No search result ties ${host} to “${name}”; a different name on an unverified site is not evidence of a rename`, observed: { host, ties } };
+  }
+
+  const p = await page(io, `https://${host}/`);
+  const loaded = okStatus(p.status);
+  const id = loaded ? pageIdentity(p, name) : { identified: false };
+  if (id.identified) {
+    return { pass: true, summary: `${host} names the business (${id.field}: “${id.value}”)`, observed: { host, identity: id, ties } };
+  }
+  if (ties.length) {
+    return { pass: true, summary: `${host} is tied to “${name}”: ${ties[0].how} (${ties[0].url})`, observed: { host, identity: id, ties } };
+  }
+  if (!loaded) return { pass: null, summary: `${host} did not load and no search result ties it to “${name}”`, observed: { host, ties } };
+  return {
+    pass: false,
+    summary: `${host} does not identify “${name}” (page says “${id.value || p.title || 'untitled'}”) and no search result ties it to the business`,
+    observed: { host, identity: id, ties },
+  };
+}
+
 export const CHECKS = {
+  'site.own_site': {
+    title: "The domain is the business's own website",
+    async run(io, { host, name, city, query, userGiven = false, needSearchTie = false }) {
+      const cls = classifyHost(host);
+      if (cls.kind === 'platform' || userGiven || !name) return ownSiteVerdict(io, { host, name, userGiven, needSearchTie });
+      const s = await io.search(query || discoveryQuery({ name, city }), { purpose: 'discover' });
+      return ownSiteVerdict(io, { host, name, results: s.results || [], searchError: s.error || null, needSearchTie });
+    },
+  },
+
+  'web.own_site_found': {
+    title: 'Search results lead to a website of its own',
+    // Looks at every non-platform domain in the discovery results; listings are kept as presence.
+    async run(io, { name, city, query, max = 5 }) {
+      if (!name) return { pass: null, summary: 'No business name to search for', observed: {} };
+      const s = await io.search(query || discoveryQuery({ name, city }), { purpose: 'discover' });
+      if (s.error) return { pass: null, summary: `Search failed: ${s.error}`, observed: {} };
+      const results = s.results || [];
+      if (!results.length) return { pass: null, summary: 'Search returned nothing; cannot say whether a website exists', observed: { results: 0 } };
+      const listings = [];
+      const candidates = [];
+      for (const r of results) {
+        if (!namesBusiness(`${r.title || ''} ${r.content || ''}`, name) && !namesBusiness(r.title || '', name)) continue;
+        for (const h of [normalizeHost(r.url), ...domainsIn(`${r.title || ''} ${r.content || ''}`)]) {
+          if (!h) continue;
+          if (classifyHost(h).kind === 'platform') { if (h === normalizeHost(r.url)) listings.push(r.url); continue; }
+          if (!candidates.includes(h)) candidates.push(h);
+        }
+      }
+      const tried = [];
+      for (const host of candidates.slice(0, max)) {
+        const v = await ownSiteVerdict(io, { host, name, results });
+        tried.push({ host, pass: v.pass, summary: v.summary });
+        if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}`, observed: { host, tried, listings } };
+      }
+      const unloaded = tried.filter((t) => t.pass === null).map((t) => t.host);
+      return {
+        pass: false,
+        summary: `No website of its own among ${results.length} search result(s)${listings.length ? `; listings only: ${[...new Set(listings)].slice(0, 4).join(', ')}` : ''}${unloaded.length ? `; ${unloaded.join(', ')} did not load and nothing ties it to the business` : ''}`,
+        observed: { tried, listings },
+      };
+    },
+  },
+
+
   'dns.resolves': {
     title: 'Domain resolves in DNS',
     async run(io, { host }) {

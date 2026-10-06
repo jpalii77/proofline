@@ -96,6 +96,26 @@ export function metaContent(html, prop) {
   return m ? decodeEntities(m[1]).trim() : '';
 }
 
+/** Text of every <h1> on the page. */
+export function headings(html) {
+  return [...String(html || '').matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => visibleText(m[1])).filter(Boolean);
+}
+
+/** Domain-looking strings in free text ("Website: sakalkafe.com.tr"), normalised, file names skipped. */
+export function domainsIn(text) {
+  const out = new Set();
+  for (const m of String(text || '').matchAll(/\b([a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,})\b/gi)) {
+    const d = normalizeHost(m[1]);
+    if (d && !/\.(png|jpe?g|gif|webp|svg|html?|php|pdf)$/.test(d)) out.add(d);
+  }
+  return [...out];
+}
+
+/** fold() plus one spelling for café words, so "Sakal Café" and "sakal kafe" compare equal. */
+export function canonName(s) {
+  return fold(s).replace(/\b(cafe|caffe|kafe|kafesi|cafesi)\b/g, 'kafe');
+}
+
 export function visibleText(html) {
   return decodeEntities(
     String(html || '')

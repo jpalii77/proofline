@@ -11,7 +11,8 @@ function io(pages) {
     async tlsCert() { return { error: 'timeout' }; },
     async dnsLookup() { return { a: [] }; },
     async nominatim() { return { results: [] }; },
-    async search() { return { results: [] }; },
+    // A directory entry about Corner Shop that names shop.example: ties the domain to the business.
+    async search() { return { results: [{ title: 'Corner Shop, Izmir', url: 'https://dir.example/izmir/corner-shop', content: 'Corner Shop · shop.example · +90 232 555 01 47' }] }; },
   };
 }
 

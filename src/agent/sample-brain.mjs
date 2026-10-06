@@ -29,6 +29,7 @@ const OWNER_TEXT = {
   not_on_map: 'You are missing from OpenStreetMap, which many map apps reuse.',
   possibly_closed: 'A public page says you may have closed. If you are open, that page needs correcting.',
   possibly_renamed: 'Your website shows a different name than your listings; customers may get confused.',
+  no_own_website: 'You have no website of your own yet; people only find you on listing and menu platforms.',
 };
 
 const PITCH_LINE = {
@@ -42,6 +43,7 @@ const PITCH_LINE = {
   not_on_map: 'you are missing from OpenStreetMap',
   possibly_renamed: 'your site and your listings use different names',
   possibly_closed: 'a public listing says you may have closed',
+  no_own_website: 'you have no website of your own yet; searches only lead to listing and menu platforms',
 };
 
 export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
@@ -68,7 +70,7 @@ export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
     propose: ({ ctx, observations }) => {
       const claims = [];
       const add = (type, rationale) => claims.push({ type, rationale });
-      if (ctx.domain) {
+      if (ctx.domain && ctx.ownSite) {
         const reach = obs(observations, 'http.reachable');
         const parked = obs(observations, 'page.not_parked');
         if (reach.pass === false) add('site_unreachable', reach.summary);
@@ -86,6 +88,7 @@ export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
         if (ph.pass === false) add('phone_unconfirmed', ph.summary);
         if (parked.pass && obs(observations, 'page.name_match').pass === false) add('possibly_renamed', obs(observations, 'page.name_match').summary);
       }
+      if (obs(observations, 'web.own_site_found').pass === false) add('no_own_website', obs(observations, 'web.own_site_found').summary);
       const map = obs(observations, 'osm.listed');
       if (map.pass === true) add('on_map', map.summary);
       if (map.pass === false) add('not_on_map', map.summary);

@@ -6,6 +6,16 @@
 
 import { runCheck } from './checks.mjs';
 
+// Every claim about "the business's website" first re-proves that the domain IS its website:
+// not a listing platform, and tied to the business by its own page or by search results.
+// A rename claim needs the stronger tie (search results), since a name mismatch on an
+// unverified domain usually just means it is somebody else's site.
+const ownSite = (c, extra = {}) => ({
+  check: 'site.own_site',
+  params: { host: c.domain, name: c.name || null, city: c.city || null, query: c.searchQuery || null, userGiven: !!c.userGivenDomain, ...extra },
+  expect: true,
+});
+
 /**
  * Each type:
  *   area      which part of the health card it affects
@@ -18,6 +28,7 @@ export const CLAIM_TYPES = {
   site_online: {
     area: 'reach', tone: 'good', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'http.reachable', params: { url: `https://${c.domain}/` }, expect: true },
       { check: 'page.not_parked', params: { url: `https://${c.domain}/` }, expect: true },
     ],
@@ -26,6 +37,7 @@ export const CLAIM_TYPES = {
   site_unreachable: {
     area: 'reach', tone: 'issue', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'http.reachable', params: { url: `https://${c.domain}/` }, expect: false },
     ],
     statement: (c) => `${c.domain} does not load (two attempts failed).`,
@@ -33,6 +45,7 @@ export const CLAIM_TYPES = {
   domain_parked: {
     area: 'reach', tone: 'issue', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'http.reachable', params: { url: `https://${c.domain}/` }, expect: true },
       { check: 'page.not_parked', params: { url: `https://${c.domain}/` }, expect: false },
     ],
@@ -41,6 +54,7 @@ export const CLAIM_TYPES = {
   https_healthy: {
     area: 'security', tone: 'good', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'tls.cert_valid', params: { host: c.domain, minDays: 30 }, expect: true },
       { check: 'http.https_redirect', params: { host: c.domain }, expect: true },
     ],
@@ -49,6 +63,7 @@ export const CLAIM_TYPES = {
   ssl_expiring_soon: {
     area: 'security', tone: 'issue', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'tls.cert_valid', params: { host: c.domain, minDays: 0 }, expect: true },
       { check: 'tls.cert_valid', params: { host: c.domain, minDays: 30 }, expect: false },
     ],
@@ -57,6 +72,7 @@ export const CLAIM_TYPES = {
   ssl_invalid: {
     area: 'security', tone: 'issue', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'tls.cert_valid', params: { host: c.domain, minDays: 0 }, expect: false },
     ],
     statement: (c) => `The security certificate of ${c.domain} is expired or invalid; browsers show a warning.`,
@@ -64,6 +80,7 @@ export const CLAIM_TYPES = {
   no_https_redirect: {
     area: 'security', tone: 'issue', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'http.https_redirect', params: { host: c.domain }, expect: false },
     ],
     statement: (c) => `Typing ${c.domain} without https keeps visitors on an insecure connection.`,
@@ -71,6 +88,7 @@ export const CLAIM_TYPES = {
   no_contact_path: {
     area: 'contact', tone: 'issue', needs: ['domain'],
     proof: (c) => [
+      ownSite(c),
       { check: 'page.contact_path', params: { url: `https://${c.domain}/` }, expect: false },
     ],
     statement: () => 'The homepage has no contact form, email link, tap-to-call or WhatsApp link.',
@@ -78,6 +96,7 @@ export const CLAIM_TYPES = {
   phone_confirmed: {
     area: 'contact', tone: 'good', needs: ['domain', 'phone'],
     proof: (c) => [
+      ownSite(c),
       { check: 'page.phone_listed', params: { url: `https://${c.domain}/`, phone: c.phone }, expect: true },
     ],
     statement: (c) => `${c.phone} is the business's own number: it is listed on its website.`,
@@ -85,10 +104,18 @@ export const CLAIM_TYPES = {
   phone_unconfirmed: {
     area: 'contact', tone: 'risk', needs: ['domain', 'phone'],
     proof: (c) => [
+      ownSite(c),
       { check: 'http.reachable', params: { url: `https://${c.domain}/` }, expect: true },
       { check: 'page.phone_listed', params: { url: `https://${c.domain}/`, phone: c.phone }, expect: false },
     ],
     statement: (c) => `${c.phone} (from listings) is not on the business's own site; it may be outdated.`,
+  },
+  no_own_website: {
+    area: 'reach', tone: 'issue', needs: ['name'],
+    proof: (c) => [
+      { check: 'web.own_site_found', params: { name: c.name, city: c.city || null, query: c.searchQuery || null }, expect: false },
+    ],
+    statement: (c) => `No website of its own was found for ${c.name}; it shows up only on listings and platforms.`,
   },
   on_map: {
     area: 'presence', tone: 'good', needs: ['name'],
@@ -114,6 +141,7 @@ export const CLAIM_TYPES = {
   possibly_renamed: {
     area: 'presence', tone: 'risk', needs: ['domain', 'name'],
     proof: (c) => [
+      ownSite(c, { needSearchTie: true }),
       { check: 'http.reachable', params: { url: `https://${c.domain}/` }, expect: true },
       { check: 'page.not_parked', params: { url: `https://${c.domain}/` }, expect: true },
       { check: 'page.name_match', params: { url: `https://${c.domain}/`, name: c.name }, expect: false },

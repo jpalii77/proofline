@@ -10,7 +10,7 @@ export const AREAS = {
 const PENALTY = {
   site_unreachable: 80, domain_parked: 80, ssl_invalid: 60,
   ssl_expiring_soon: 25, no_https_redirect: 20, no_contact_path: 40,
-  phone_unconfirmed: 20, not_on_map: 35, possibly_closed: 50, possibly_renamed: 25,
+  phone_unconfirmed: 20, not_on_map: 35, possibly_closed: 50, possibly_renamed: 25, no_own_website: 60,
 };
 
 function letter(score) {
