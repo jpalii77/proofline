@@ -55,7 +55,8 @@ test('TLS on Workers: trust from the handshake, expiry from CT logs, source labe
   const io = createRealIO({ net: createWorkerNet({ fetchImpl: f }), fetchImpl: f });
   const good = await runCheck(io, 'tls.cert_valid', { host: 'good.example', minDays: 30 });
   assert.equal(good.pass, true);
-  assert.equal(good.observed.daysLeft, 84);
+  // 84 or 85: the fixture date and the check's Date.now() can land in the same millisecond.
+  assert.ok([84, 85].includes(good.observed.daysLeft), `daysLeft ${good.observed.daysLeft}`);
   assert.equal(good.observed.source, 'ct-log');
   assert.match(good.summary, /Certificate Transparency/);
   const bad = await runCheck(io, 'tls.cert_valid', { host: 'bad.example' });
