@@ -39,7 +39,7 @@ flowchart LR
     Q[Business name / domain] --> I[Intake]
     I --> D[Discover<br/>Tavily search]
     D --> P[Plan<br/>Nemotron · reasoning]
-    P -->|grounding guard:<br/>domain & phone must<br/>appear in sources| G[Gather<br/>10 evidence checks]
+    P -->|grounding guard +<br/>own-site guard| G[Gather<br/>12 evidence checks]
     G --> C[Propose claims<br/>Nemotron · reasoning<br/>catalog only]
     C --> GATE{Gate<br/>re-run each claim's<br/>proof from scratch}
     GATE -->|all checks match| V[Verify wording<br/>Nemotron · fast<br/>no new numbers]
@@ -51,8 +51,8 @@ flowchart LR
 | Step | Who decides | What code enforces |
 | --- | --- | --- |
 | Discover | Tavily web search (live API call) | Results become the *allowed* domains and phones |
-| Plan | Nemotron (reasoning) picks the business's domain and phone | **Grounding guard:** a domain or phone not seen in the input or search results is removed |
-| Gather | Code runs 10 checks | Short timeouts, retries, SSRF guard, Nominatim rate limit |
+| Plan | Nemotron (reasoning) picks the business's domain and phone | **Grounding guard:** a domain or phone not seen in the input or search results is removed. **Own-site guard:** a listing platform, or a domain that does not identify the business, is never treated as its website; website checks are skipped and “no own website” is reported instead |
+| Gather | Code runs up to 12 checks | Short timeouts, retries, SSRF guard, Nominatim rate limit |
 | Propose | Nemotron (reasoning) chooses claims | **Catalog only:** every claim type names the checks that prove it |
 | Gate | Code | Re-observes from scratch. A claim survives only if every check returns exactly what the claim needs. Inconclusive = not proven |
 | Verify | Nemotron (fast) rewrites claims for the owner | A rewrite that adds a number not in the evidence is rejected |
@@ -66,6 +66,8 @@ card has a **Re-run proof** button that runs its checks again, right now.
 
 | Check | What it proves |
 | --- | --- |
+| `site.own_site` | The domain is the business's **own** website: not a listing platform (see below), and its homepage names the business (`og:site_name`, title, `<h1>` or body; Turkish letters, case and Kafe/Cafe/Café tolerated) or a search result about the business points at it. With `needSearchTie` only the search-result tie counts |
+| `web.own_site_found` | Some non-platform domain in the search results passes `site.own_site`. When none does, the business has listings only |
 | `dns.resolves` | The domain has address records |
 | `http.reachable` | The site answers over HTTPS — **two attempts**, so one timeout never becomes “site is down” |
 | `http.https_redirect` | Plain `http://` upgrades to HTTPS |
@@ -73,16 +75,35 @@ card has a **Re-run proof** button that runs its checks again, right now.
 | `page.not_parked` | Homepage is real, not a for-sale / parking / placeholder page |
 | `page.contact_path` | Form, email, tap-to-call or WhatsApp link exists |
 | `page.phone_listed` | A given phone number is on the business's own site (format-insensitive) |
-| `page.name_match` | Site name matches the business name (rename / change of hands signal) |
+| `page.name_match` | Site name matches the business name (same identity rule as `site.own_site`; a mismatch is the rename / change of hands signal) |
 | `osm.listed` | A matching place exists on OpenStreetMap (Nominatim) |
 | `web.no_closure_signal` | No search result names the business together with “permanently closed” (Tavily) |
+
+### Own website vs. listings
+
+A page about the business on a platform proves it is *present* there, never what “its website” has
+or lacks. [`src/platforms.mjs`](src/platforms.mjs) keeps a plain, commented list of such hosts:
+menu / QR-menu providers (menulio, …), delivery apps (yemeksepeti, getir, trendyol), review and
+directory sites (tripadvisor, foursquare, yelp, zomato), booking (booking, airbnb), marketplaces
+(sahibinden, armut, bionluk), social networks and link hubs (instagram, facebook, tiktok, x,
+linktr.ee) and maps (google.\*, maps.app.goo.gl). A path on such a host (`platform.com/sakal-kafe`)
+is a listing. Site builders (`*.wixsite.com`, `*.business.site`, …) count only when the subdomain
+itself names the business.
+
+Every claim about the website (`site_*`, `ssl_*`, `https_healthy`, `no_https_redirect`,
+`no_contact_path`, `phone_*`, `possibly_renamed`) starts its proof with `site.own_site`, so the gate
+drops it — with the reason, e.g. “menulio.com.tr is a listing platform … not the business's own
+website” — whatever the model proposed. `possibly_renamed` additionally needs a search result that
+ties the domain to the business: a different name on an unverified domain is somebody else's site,
+not a rename.
 
 ### Claim catalog
 
 `site_online`, `site_unreachable`, `domain_parked`, `https_healthy`, `ssl_expiring_soon`,
 `ssl_invalid`, `no_https_redirect`, `no_contact_path`, `phone_confirmed`, `phone_unconfirmed`,
-`on_map`, `not_on_map`, `possibly_closed`, `possibly_renamed` — each defined in
-[`src/claims.mjs`](src/claims.mjs) with its proof.
+`no_own_website`, `on_map`, `not_on_map`, `possibly_closed`, `possibly_renamed` — each defined in
+[`src/claims.mjs`](src/claims.mjs) with its proof. `no_own_website` is also put to the gate by code
+when the evidence shows listings only, even if the model did not propose it.
 
 ## Where NVIDIA Nemotron and Nebius Token Factory are used
 
@@ -93,7 +114,7 @@ and the prompts in [`src/agent/nemotron-brain.mjs`](src/agent/nemotron-brain.mjs
 | Role | Tier | Default model | Why |
 | --- | --- | --- | --- |
 | Planner | reasoning | `nvidia/nemotron-3-super-120b-a12b` | Disambiguate the business from noisy search results |
-| Claim proposer | reasoning | same | Map 10 observations to catalog claims, with rationale |
+| Claim proposer | reasoning | same | Map the observations to catalog claims, with rationale |
 | Verifier | fast | `NEBIUS_FAST_MODEL` (e.g. a Nemotron Nano ID) | Cheap, many short rewrites |
 | Writer | reasoning | same as planner | Owner summary + cited pitch |
 
@@ -126,7 +147,7 @@ npm run cli:sample -- "Lumen Coffee Roasters, Izmir"   # same agent in the termi
 
 ### SAMPLE_MODE
 
-With `SAMPLE_MODE=true` the app runs end to end on three
+With `SAMPLE_MODE=true` the app runs end to end on four
 **fictional** businesses recorded in [`fixtures/sample/`](fixtures/sample) (`.example` domains,
 TEST-NET addresses). The model is replaced by a deterministic rule-based stand-in with the same
 interface, clearly labelled `sample (rule-based)` in the trace.
@@ -139,6 +160,7 @@ the gate drop it:
 | Lumen Coffee Roasters | Certificate expires in 9 days, no contact path, phone confirmed | “Site is down” |
 | Harbor Dental Studio | Domain shows a for-sale page; listed phone not on site | “Certificate invalid” |
 | Atlas Bike Repair | Renamed site, closure signal, no HTTPS redirect; first request times out | “Phone confirmed” |
+| Kuzey Kafe | No website of its own, only a QR-menu page and Instagram; the planner mistakes the menu platform for its site | “No contact path”, “phone not on its site”, “renamed” — all made against the platform page |
 
 ### Live mode
 
@@ -181,7 +203,8 @@ src/agent/pipeline.mjs     the agent loop and all guards
 src/agent/nemotron-brain.mjs   prompts for Nemotron on Token Factory
 src/agent/sample-brain.mjs     deterministic stand-in for SAMPLE_MODE
 src/agent/card.mjs         health-card grading
-src/checks.mjs             the 10 evidence checks
+src/checks.mjs             the 12 evidence checks
+src/platforms.mjs          listing / social / directory hosts that are never an own website
 src/claims.mjs             claim catalog + gate
 src/io/real.mjs            live DNS / HTTP / TLS / Nominatim / Tavily, SSRF guard
 src/io/sample.mjs          recorded I/O for SAMPLE_MODE
