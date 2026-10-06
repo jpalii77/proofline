@@ -163,8 +163,9 @@ function claimCard(c) {
 }
 
 function evidenceRow(e) {
-  return h('li', {}, e.matched ? h('span', { class: 'mark ok' }, '✓') : h('span', { class: 'mark no' }, '✗'),
-    h('div', {}, `${e.title} — expected ${e.expect ? 'pass' : 'fail'}: ${e.summary}`, h('code', {}, `${e.check}(${JSON.stringify(e.params)})`)));
+  const mark = e.skipped ? h('span', { class: 'mark na' }, '–') : e.matched ? h('span', { class: 'mark ok' }, '✓') : h('span', { class: 'mark no' }, '✗');
+  return h('li', {}, mark,
+    h('div', {}, e.skipped ? `${e.title} — ${e.summary}` : `${e.title} — expected ${e.expect ? 'pass' : 'fail'}: ${e.summary}`, h('code', {}, `${e.check}(${JSON.stringify(e.params)})`)));
 }
 
 async function rerun(c, list, out, btn) {

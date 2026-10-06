@@ -15,6 +15,8 @@ export function createNemotronBrain(llm) {
 Pick the business's own website domain and its main phone ONLY from the allowed lists. If unsure, use null.
 A listing is not a website: never pick a QR-menu/menu provider, delivery app, directory, review site, map, social network or link hub
 (e.g. menulio, yemeksepeti, tripadvisor, google maps, instagram, linktr.ee) as "domain". If the business only has listings, domain is null.
+"domain" must be a web address shown in the results (a result URL or an address like name.com.tr in the text). Address abbreviations
+("A.Ayrancı"), @handles, emails and file names are not domains.
 Code re-checks this choice and ignores a domain that is a platform or does not identify the business.
 Schema: {"name": string|null, "city": string|null, "domain": string|null, "phone": string|null, "reasoning": string (max 2 sentences)}`,
       user: {

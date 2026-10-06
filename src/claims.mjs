@@ -4,7 +4,7 @@
 // must come back with an exact result for the claim to survive. The gate re-runs those checks
 // itself, against a fresh observation; the model's word is never enough.
 
-import { runCheck } from './checks.mjs';
+import { CHECKS, runCheck } from './checks.mjs';
 
 // Every claim about "the business's website" first re-proves that the domain IS its website:
 // not a listing platform, and tied to the business by its own page or by search results.
@@ -178,14 +178,23 @@ export function buildClaim(type, ctx, extra = {}) {
 /**
  * The gate. Re-runs every check in the claim's proof on `io` and keeps the claim only if each
  * result equals its expectation. Inconclusive (null) never counts as a match.
+ * When the own-site step fails (invalid address, platform, not tied to the business), the domain is
+ * not the business's website, so the remaining site probes are skipped rather than run against it.
  */
 export async function gateClaim(io, claim) {
   const results = [];
+  let notOwn = null;
   for (const step of claim.proof) {
+    if (notOwn) {
+      results.push({ check: step.check, title: CHECKS[step.check]?.title || step.check, params: step.params, pass: null, skipped: true, summary: `skipped: ${notOwn.params?.host || 'the domain'} is not the business's own website`, expect: step.expect, matched: false });
+      continue;
+    }
     const r = await runCheck(io, step.check, step.params);
-    results.push({ ...r, expect: step.expect, matched: r.pass === step.expect });
+    const matched = r.pass === step.expect;
+    results.push({ ...r, expect: step.expect, matched });
+    if (step.check === 'site.own_site' && !matched) notOwn = r;
   }
-  const failed = results.filter((r) => !r.matched);
+  const failed = results.filter((r) => !r.matched && !r.skipped);
   return {
     ...claim,
     verdict: failed.length ? 'dropped' : 'verified',

@@ -6,6 +6,7 @@
 
 import { CHECKS, discoveryQuery, runCheck } from '../checks.mjs';
 import { buildClaim, catalogForPrompt, gateClaim } from '../claims.mjs';
+import { invalidHostSentence, isValidHostname } from '../hostname.mjs';
 import { observed } from '../io/observed.mjs';
 import { domainsIn, extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
@@ -14,19 +15,23 @@ import { gradeCard } from './card.mjs';
 export function intake(query) {
   const q = String(query || '').trim().slice(0, 200);
   if (!q) return { error: 'Enter a business name or a domain.' };
-  if (looksLikeDomain(q)) return { raw: q, domain: normalizeHost(q) };
+  if (looksLikeDomain(q) && isValidHostname(q)) return { raw: q, domain: normalizeHost(q) };
   const [name, ...rest] = q.split(',').map((s) => s.trim()).filter(Boolean);
   return { raw: q, name, city: rest.join(', ') || null };
 }
 
-/** Domains and phones that appear in search results: the only values the planner may pick. */
+/**
+ * Domains and phones that appear in search results: the only values the planner may pick.
+ * A domain counts only as a web address: a result URL or an address written in the text, with a real
+ * ending (see domainsIn). Text that merely looks like one (“A.Ayrancı”, an @handle) is not grounding.
+ */
 export function groundingFrom(parsed, discovery) {
   const domains = new Set();
   const phones = new Set();
   if (parsed.domain) domains.add(parsed.domain);
   for (const r of discovery?.results || []) {
     const h = normalizeHost(r.url);
-    if (h) domains.add(h);
+    if (h && isValidHostname(h)) domains.add(h);
     for (const d of domainsIn(`${r.title} ${r.content}`)) domains.add(d);
     for (const p of extractPhones(`${r.title} ${r.content}`)) phones.add(p);
   }
@@ -86,16 +91,29 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
   // 3. Plan (reasoning model): who is this business, which domain and phone are theirs?
   const planOut = await brain.plan({ query, parsed, discovery: discovery.results || [], grounding });
   const plan = planOut.json || {};
+  // Grounding guard: the model may choose, never invent. A domain must be a valid web address
+  // (real ending) that the search results show as a web address; otherwise it is dropped here and
+  // the reason stays in the trace.
+  const guard = [];
+  let domainDropped = null;
+  let planned = null;
+  if (plan.domain) {
+    const bad = invalidHostSentence(plan.domain);
+    if (bad) domainDropped = `${bad} — no own website found`;
+    else planned = normalizeHost(plan.domain);
+  }
+  if (planned && !grounding.domains.includes(planned)) {
+    domainDropped = `${planned} never appeared as a web address in the input or search results (only the model named it) — not used as the website`;
+    planned = null;
+  }
+  if (domainDropped) guard.push(domainDropped);
   const ctx = {
     name: plan.name || parsed.name || null,
     city: plan.city || parsed.city || null,
-    domain: normalizeHost(plan.domain) || parsed.domain || null,
+    domain: planned || parsed.domain || null,
     phone: plan.phone || null,
     searchQuery,
   };
-  // Grounding guard: the model may choose, never invent.
-  const guard = [];
-  if (ctx.domain && !grounding.domains.includes(ctx.domain)) { guard.push(`domain ${ctx.domain} not seen in input or search results`); ctx.domain = parsed.domain || null; }
   if (ctx.phone && !grounding.phones.includes(phoneKey(ctx.phone))) { guard.push(`phone ${ctx.phone} not seen in search results`); ctx.phone = null; }
   ctx.userGivenDomain = !!(parsed.domain && ctx.domain === parsed.domain);
 
@@ -145,7 +163,8 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
     if (seen.has(p.type)) continue;
     seen.add(p.type);
     const b = buildClaim(p.type, ctx, { rationale: p.rationale, proposedBy: proposeOut.model });
-    if (b.ok) claims.push(b.claim); else rejected.push({ type: p.type, reason: b.reason });
+    if (b.ok) claims.push(b.claim);
+    else rejected.push({ type: p.type, reason: domainDropped && /missing .*domain/.test(b.reason) ? `${b.reason}: ${domainDropped}` : b.reason });
   }
   // "No own website" is a finding in its own right: if the evidence says so, it is put to the gate
   // even when the model did not propose it.
@@ -162,7 +181,7 @@ export async function runAgent({ query, io, brain, emit = () => {}, now = () => 
   for (const c of claims) {
     const g = await gateClaim(gateIO, c);
     gated.push(g);
-    step('gate', { id: g.id, claimType: g.type, verdict: g.verdict, statement: g.statement, dropReason: g.dropReason, evidence: g.evidence.map((e) => ({ check: e.check, title: e.title, expect: e.expect, pass: e.pass, matched: e.matched, summary: e.summary })) });
+    step('gate', { id: g.id, claimType: g.type, verdict: g.verdict, statement: g.statement, dropReason: g.dropReason, evidence: g.evidence.map((e) => ({ check: e.check, title: e.title, expect: e.expect, pass: e.pass, matched: e.matched, skipped: !!e.skipped, summary: e.summary })) });
   }
   const verified = gated.filter((g) => g.verdict === 'verified');
   const dropped = gated.filter((g) => g.verdict === 'dropped');
