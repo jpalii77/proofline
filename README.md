@@ -51,7 +51,7 @@ flowchart LR
 | Step | Who decides | What code enforces |
 | --- | --- | --- |
 | Discover | Tavily web search (live API call) | Results become the *allowed* domains and phones |
-| Plan | Nemotron (reasoning) picks the business's domain and phone | **Grounding guard:** a domain or phone not seen in the input or search results is removed. **Own-site guard:** a listing platform, or a domain that does not identify the business, is never treated as its website; website checks are skipped and “no own website” is reported instead |
+| Plan | Nemotron (reasoning) picks the business's domain and phone | **Grounding guard:** a domain must be a valid web address with a real ending and must appear *as a web address* in the input or search results (a result URL or an address in the text); a phone must appear in the results. Anything else is removed, with the reason in the trace. **Own-site guard:** a listing platform, or a domain that does not identify the business, is never treated as its website; website checks are skipped and “no own website” is reported instead |
 | Gather | Code runs up to 12 checks | Short timeouts, retries, SSRF guard, Nominatim rate limit |
 | Propose | Nemotron (reasoning) chooses claims | **Catalog only:** every claim type names the checks that prove it |
 | Gate | Code | Re-observes from scratch. A claim survives only if every check returns exactly what the claim needs. Inconclusive = not proven |
@@ -66,7 +66,7 @@ card has a **Re-run proof** button that runs its checks again, right now.
 
 | Check | What it proves |
 | --- | --- |
-| `site.own_site` | The domain is the business's **own** website: not a listing platform (see below), and its homepage names the business (`og:site_name`, title, `<h1>` or body; Turkish letters, case and Kafe/Cafe/Café tolerated) or a search result about the business points at it. With `needSearchTie` only the search-result tie counts |
+| `site.own_site` | The domain is the business's **own** website: a valid web address (see below), not a listing platform, and its homepage names the business (`og:site_name`, title, `<h1>` or body; Turkish letters, case and Kafe/Cafe/Café tolerated) or a search result about the business points at it. With `needSearchTie` only the search-result tie counts |
 | `web.own_site_found` | Some non-platform domain in the search results passes `site.own_site`. When none does, the business has listings only |
 | `dns.resolves` | The domain has address records |
 | `http.reachable` | The site answers over HTTPS — **two attempts**, so one timeout never becomes “site is down” |
@@ -95,7 +95,21 @@ Every claim about the website (`site_*`, `ssl_*`, `https_healthy`, `no_https_red
 drops it — with the reason, e.g. “menulio.com.tr is a listing platform … not the business's own
 website” — whatever the model proposed. `possibly_renamed` additionally needs a search result that
 ties the domain to the business: a different name on an unverified domain is somebody else's site,
-not a rename.
+not a rename. Once `site.own_site` fails, the gate skips the remaining site probes for that claim.
+
+### Hostname and provenance rules
+
+- **Valid web address.** [`src/hostname.mjs`](src/hostname.mjs) checks the syntax and that the ending
+  is a real public suffix, from an embedded offline list (generic TLDs, every country code and
+  second-level registries such as `com.tr`, `gen.tr`, `av.tr`, `k12.tr`, `co.uk`, `com.au`). Address
+  abbreviations (“A.Ayrancı” read as `a.ayranc`), @handles, emails, file names (`menu.pdf`) and IP
+  addresses are rejected: “a.ayranc is not a valid web address (unknown ending .ayranc) — no own
+  website found”.
+- **Provenance.** Only web addresses found in the search results count: a result's URL, or an address
+  written as a whole token in its text. A domain only the model named is dropped.
+- **“Down” needs a site that existed.** `site_unreachable` holds only when a search result about the
+  business showed the address *and* both attempts fail. A name that never appeared and does not
+  resolve means “no own website found”, not “the site is down”.
 
 ### Claim catalog
 
@@ -205,6 +219,7 @@ src/agent/sample-brain.mjs     deterministic stand-in for SAMPLE_MODE
 src/agent/card.mjs         health-card grading
 src/checks.mjs             the 12 evidence checks
 src/platforms.mjs          listing / social / directory hosts that are never an own website
+src/hostname.mjs           offline hostname + public-suffix check
 src/claims.mjs             claim catalog + gate
 src/io/real.mjs            live DNS / HTTP / TLS / Nominatim / Tavily, SSRF guard
 src/io/sample.mjs          recorded I/O for SAMPLE_MODE
