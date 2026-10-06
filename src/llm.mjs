@@ -59,7 +59,10 @@ export function createTokenFactoryClient({
 
   async function listModels() {
     const res = await fetchImpl(new URL('models', root), { headers: { authorization: `Bearer ${apiKey}` } });
-    if (!res.ok) throw new Error(`Token Factory HTTP ${res.status}`);
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new Error(`Token Factory HTTP ${res.status} at ${root}: ${body.slice(0, 200)}`);
+    }
     const data = await res.json();
     return (data.data || []).map((m) => m.id);
   }
