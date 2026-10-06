@@ -37,7 +37,7 @@ function setModeNote() {
   if (!liveMode()) note.textContent = 'Recorded mode replays four fictional businesses, each with a planted wrong claim for the gate to catch. Pick one below.';
   else if (!demo.live) note.textContent = 'Live mode is not configured on this demo yet — try a recorded example.';
   else note.textContent = `Live search calls NVIDIA Nemotron on Nebius Token Factory and Tavily for real. To protect a small trial credit: ${demo.limits.perVisitor} checks per visitor and ${demo.limits.perDay} in total per day; the same query within ${demo.limits.cacheHours} h is answered from cache.`;
-  $('#q').placeholder = liveMode() ? 'Business name, city — or a domain' : 'Pick an example below, or switch to Live search';
+  $('#q').placeholder = liveMode() ? 'Business name, city — or a domain' : 'Pick an example below';
 }
 
 async function boot() {
