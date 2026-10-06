@@ -1,0 +1,48 @@
+{
+  "id": "atlas",
+  "input": "Atlas Bike Repair, Beşiktaş",
+  "name": "Atlas Bike Repair",
+  "city": "Beşiktaş, Istanbul",
+  "domain": "atlasbike.example",
+  "listedPhone": "+90 212 555 30 61",
+  "blurb": "Bike shop that may have changed hands: the site now carries another name and number, and a directory marks it closed.",
+  "planted": [
+    { "type": "phone_confirmed", "rationale": "The directory phone looks like the shop's main line." }
+  ],
+  "io": {
+    "dns": { "atlasbike.example": { "a": ["192.0.2.18"], "aaaa": [] } },
+    "pages": {
+      "https://atlasbike.example/": {
+        "attempts": [
+          { "status": null, "finalUrl": "https://atlasbike.example/", "chain": [], "error": "timeout" },
+          {
+            "status": 200, "finalUrl": "https://atlasbike.example/",
+            "chain": [{ "url": "https://atlasbike.example/", "status": 200 }],
+            "body": "<html><head><title>Velo Atölye | Bisiklet Bakım ve Tamir</title><meta property=\"og:site_name\" content=\"Velo Atölye\"></head><body><h1>Velo Atölye — yeni adımız, aynı tezgâh</h1><p>Randevu için WhatsApp: <a href=\"https://wa.me/902125557712\">0212 555 77 12</a></p></body></html>"
+          }
+        ]
+      },
+      "http://atlasbike.example/": {
+        "status": 200, "finalUrl": "http://atlasbike.example/",
+        "chain": [{ "url": "http://atlasbike.example/", "status": 200 }],
+        "body": "<html><head><title>Velo Atölye</title></head><body></body></html>"
+      }
+    },
+    "tls": { "atlasbike.example": { "daysFromNow": 143, "issuer": "Let's Encrypt", "authorized": true } },
+    "nominatim": {
+      "results": [{ "name": "Velo Atölye", "display_name": "Velo Atölye, Ihlamurdere Caddesi, Beşiktaş, İstanbul, Türkiye", "lat": "41.0461", "lon": "29.0040", "osm_type": "node", "osm_id": 900000003, "phone": null, "website": null }]
+    },
+    "search": {
+      "discover": {
+        "results": [
+          { "title": "Atlas Bike Repair — Beşiktaş", "url": "https://listings.example/istanbul/atlas-bike-repair", "content": "Atlas Bike Repair, Ihlamurdere Cd., Beşiktaş. atlasbike.example · +90 212 555 30 61" }
+        ]
+      },
+      "closure": {
+        "results": [
+          { "title": "Atlas Bike Repair — Permanently closed", "url": "https://listings.example/istanbul/atlas-bike-repair", "content": "This place is marked as permanently closed by a visitor." }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "lumen",
+  "input": "Lumen Coffee Roasters, Izmir",
+  "name": "Lumen Coffee Roasters",
+  "city": "Izmir",
+  "domain": "lumencoffee.example",
+  "listedPhone": "+90 232 555 01 47",
+  "blurb": "Café with a working site, but a certificate about to expire and no contact button. A stale review claims the site is down.",
+  "planted": [
+    { "type": "site_unreachable", "rationale": "A 2024 directory review says “their website is down, couldn't order beans”." }
+  ],
+  "io": {
+    "dns": { "lumencoffee.example": { "a": ["192.0.2.41"], "aaaa": [] } },
+    "pages": {
+      "https://lumencoffee.example/": {
+        "status": 200, "finalUrl": "https://lumencoffee.example/",
+        "chain": [{ "url": "https://lumencoffee.example/", "status": 200 }],
+        "body": "<html><head><title>Lumen Coffee Roasters — Specialty coffee in Alsancak</title><meta property=\"og:site_name\" content=\"Lumen Coffee Roasters\"></head><body><h1>Roasted on Kıbrıs Şehitleri Street since 2017</h1><p>Single-origin beans, roasted every Tuesday. Visit the shop or call 0232 555 01 47.</p><footer>Open 08:00–20:00 · Alsancak, İzmir</footer></body></html>"
+      },
+      "http://lumencoffee.example/": {
+        "status": 200, "finalUrl": "https://lumencoffee.example/",
+        "chain": [{ "url": "http://lumencoffee.example/", "status": 301 }, { "url": "https://lumencoffee.example/", "status": 200 }],
+        "body": ""
+      }
+    },
+    "tls": { "lumencoffee.example": { "daysFromNow": 9, "issuer": "Let's Encrypt", "authorized": true } },
+    "nominatim": {
+      "results": [{ "name": "Lumen Coffee Roasters", "display_name": "Lumen Coffee Roasters, Kıbrıs Şehitleri Caddesi, Alsancak, Konak, İzmir, Türkiye", "lat": "38.4371", "lon": "27.1427", "osm_type": "node", "osm_id": 900000001, "phone": "+90 232 555 01 47", "website": "https://lumencoffee.example" }]
+    },
+    "search": {
+      "discover": {
+        "results": [
+          { "title": "Lumen Coffee Roasters — Specialty coffee in Alsancak", "url": "https://lumencoffee.example/", "content": "Single-origin beans roasted every Tuesday in Alsancak, İzmir. Call +90 232 555 01 47." },
+          { "title": "Lumen Coffee Roasters reviews — CityGuide (2024)", "url": "https://cityguide.example/izmir/lumen-coffee", "content": "Great flat white. One star off: their website is down, couldn't order beans online. Phone +90 232 555 01 47." }
+        ]
+      },
+      "closure": { "results": [ { "title": "Best coffee in Alsancak 2026", "url": "https://foodblog.example/alsancak-coffee", "content": "Lumen Coffee Roasters is still our favourite roastery in Alsancak." } ] }
+    }
+  }
+}

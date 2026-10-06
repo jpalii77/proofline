@@ -1,0 +1,15 @@
+{
+  "name": "proofline",
+  "version": "0.1.0",
+  "description": "An agent that builds a verified profile of a small business from its scattered web traces. Every claim carries a re-runnable proof; claims that fail their proof are dropped.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.mjs",
+    "sample": "SAMPLE_MODE=true node server.mjs",
+    "test": "node --test tests/",
+    "cli": "node scripts/run-cli.mjs",
+    "models": "node scripts/list-models.mjs"
+  }
+}
