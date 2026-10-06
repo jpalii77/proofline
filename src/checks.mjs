@@ -75,16 +75,24 @@ function searchTies(results, host, name) {
   return ties;
 }
 
+function tokensContained(name, text) {
+  const want = nameTokens(name);
+  const have = new Set(nameTokens(text));
+  return want.length > 0 && want.every((t) => have.has(t));
+}
+
 /** Does the homepage itself say whose site this is? Title, og:site_name, <h1>, then body text. */
-function pageIdentity(p, name) {
+function pageIdentity(p, name, min = NAME_MIN) {
   const fields = [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x])]
     .filter(([, v]) => v);
   let best = { field: null, value: '', score: 0 };
   for (const [field, value] of fields) {
-    const score = nameSimilarity(name, value);
+    // A long title ("Sakal Café — Kahve & Kahvaltı, Ankara") still names the business when it
+    // contains every distinctive word of the name.
+    const score = tokensContained(name, value) ? 1 : nameSimilarity(name, value);
     if (score > best.score) best = { field, value, score };
   }
-  if (best.score >= NAME_MIN) return { identified: true, ...best };
+  if (best.score >= min) return { identified: true, ...best };
   if (canonName(name).length > 2 && ` ${canonName(p.text.slice(0, 20000))} `.includes(` ${canonName(name)} `)) {
     return { identified: true, field: 'body', value: name, score: best.score };
   }
@@ -310,12 +318,15 @@ export const CHECKS = {
     async run(io, { url, name, min = 0.45 }) {
       const p = await page(io, url);
       if (!okStatus(p.status)) return { pass: null, summary: 'Page did not load', observed: { status: p.status ?? null } };
-      const siteName = metaContent(p.html, 'og:site_name') || p.title;
-      const score = nameSimilarity(name, siteName);
+      // Same identity rule as site.own_site: og:site_name, title, <h1>, then the body text.
+      const id = pageIdentity(p, name, min);
+      const siteName = id.value || metaContent(p.html, 'og:site_name') || p.title;
       return {
-        pass: score >= min,
-        summary: `“${siteName || 'untitled'}” vs “${name}”: similarity ${score.toFixed(2)} (needs ≥ ${min})`,
-        observed: { site_name: siteName, score: Number(score.toFixed(3)) },
+        pass: id.identified,
+        summary: id.identified
+          ? `The site names “${name}” (${id.field}: “${siteName}”)`
+          : `“${siteName || 'untitled'}” vs “${name}”: similarity ${id.score.toFixed(2)} (needs ≥ ${min}), name not found on the page`,
+        observed: { site_name: siteName, field: id.field, score: Number(id.score.toFixed(3)) },
       };
     },
   },
