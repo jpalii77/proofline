@@ -26,6 +26,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
   <link rel="stylesheet" href="/app.css">
+  <link rel="modulepreload" href="/gate.js">
+  <link rel="modulepreload" href="/gate-data.js">
 </head>
 <body>
   <a class="skip" href="#q">Skip to the search box</a>
@@ -34,7 +36,7 @@
       <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M9.5 14.2l3 3 6-6.4" fill="none" stroke="var(--good)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.5 21.5L28 28" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
       <span>Proofline</span>
     </a>
-    <span id="mode" class="pill">…</span>
+    <span id="mode" class="pill" hidden>…</span>
   </header>
 
   <main>
@@ -47,21 +49,32 @@
     </section>
 
     <section class="hero">
-      <p class="eyebrow">Business profile agent</p>
-      <h1>Every claim comes with its proof.</h1>
-      <p class="lede">Give it a small business. Proofline gathers its scattered web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim itself. Anything it cannot prove is dropped, in plain sight.</p>
-      <form id="form" class="ask" autocomplete="off">
-        <label for="q" class="sr-only">Business name and city, or a domain</label>
-        <input id="q" name="q" maxlength="200" placeholder="Name, city — or a domain" required>
-        <button id="go" type="submit">Check it</button>
-      </form>
-      <fieldset id="modes" class="modes" hidden>
-        <legend class="sr-only">Mode</legend>
-        <label><input type="radio" name="mode" value="sample" checked><span><b>Recorded examples</b><small>instant · free</small></span></label>
-        <label><input type="radio" name="mode" value="live"><span><b>Live search</b><small id="left">Nemotron + Tavily</small></span></label>
-      </fieldset>
-      <p id="mode-note" class="mode-note" hidden></p>
-      <div id="samples" class="samples" aria-label="Examples"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">Business profile agent<span class="wide"> · NVIDIA Nemotron on Nebius</span></p>
+        <h1>Every claim comes with its proof.</h1>
+        <p class="lede">Give it a small business. Proofline gathers its scattered web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim itself. Anything it cannot prove is dropped, in plain sight.</p>
+      </div>
+      <div class="hero-ask">
+        <form id="form" class="ask" autocomplete="off">
+          <label for="q" class="sr-only">Business name and city, or a domain</label>
+          <input id="q" name="q" maxlength="200" placeholder="Name, city — or a domain" required>
+          <button id="go" type="submit">Check it</button>
+        </form>
+        <fieldset id="modes" class="modes" hidden>
+          <legend class="sr-only">Mode</legend>
+          <label><input type="radio" name="mode" value="sample" checked><span><b>Recorded examples</b><small>instant · free</small></span></label>
+          <label><input type="radio" name="mode" value="live"><span><b>Live search</b><small id="left">Nemotron + Tavily</small></span></label>
+        </fieldset>
+        <p id="mode-note" class="mode-note" hidden></p>
+        <div id="samples" class="samples" aria-label="Examples"></div>
+      </div>
+      <figure class="hero-visual" id="hero-visual">
+        <div class="hero-stage" id="hero-stage"></div>
+        <figcaption class="stage-caption">
+          <span>Claims from the recorded examples, put through the gate.</span>
+          <button type="button" id="hero-pause" class="stage-toggle" aria-pressed="false">Pause</button>
+        </figcaption>
+      </figure>
     </section>
 
     <section id="workspace" class="workspace" hidden>

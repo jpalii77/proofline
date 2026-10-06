@@ -1,5 +1,8 @@
 // Proofline UI. Plain DOM, no framework. All text from the server is set with textContent.
 
+import { createGateStage } from './gate.js';
+import { gateSummary, laneFromGate, lanesFromEvents, lanesFromReport, MINI, SHORT } from './gate-data.js';
+
 const $ = (s) => document.querySelector(s);
 function h(tag, attrs = {}, ...kids) {
   const el = document.createElement(tag);
@@ -33,6 +36,47 @@ let timer = null;
 let run = null; // { events, share, report, ended }
 
 let demo = null;
+let stage = null; // the run's gate visual
+let hero = null; // the landing page's gate visual
+let replaying = false; // shared links replay a finished trace: no animation, straight to the result
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Landing visual: real claims from the recorded examples (fixtures/sample), with the gate's real verdicts.
+const ok = (check) => ({ check, matched: true });
+const bad = (check) => ({ check, matched: false });
+const HERO_CLAIMS = [
+  { id: 'h1', claimType: 'site_online', label: 'Site loads, real content', verdict: 'verified', evidence: [ok('site.own_site'), ok('http.reachable'), ok('page.not_parked')], statement: 'lumencoffee.example loads and shows real content.' },
+  { id: 'h2', claimType: 'site_unreachable', label: 'Site does not load', verdict: 'dropped', dropReason: 'Website answers over HTTPS: expected fail, got pass — loaded with HTTP 200', evidence: [ok('site.own_site'), bad('http.reachable')], statement: 'lumencoffee.example does not load (two attempts failed).' },
+  { id: 'h3', claimType: 'ssl_expiring_soon', label: 'Cert expires in 9 days', verdict: 'verified', evidence: [ok('site.own_site'), ok('tls.cert_valid')], statement: 'The security certificate of lumencoffee.example expires within 30 days.' },
+  { id: 'h4', claimType: 'possibly_renamed', label: 'Site carries another name', verdict: 'dropped', dropReason: 'qrmenu.example is a listing platform (QR-menu provider), not the business’s own website', evidence: [bad('site.own_site'), ok('http.reachable'), ok('page.name_match')], statement: 'The site at qrmenu.example uses a different name than “Kuzey Kafe”.' },
+  { id: 'h5', claimType: 'on_map', label: 'Listed on OpenStreetMap', verdict: 'verified', evidence: [ok('osm.listed')], statement: 'Lumen Coffee Roasters is listed on OpenStreetMap.' },
+  { id: 'h6', claimType: 'phone_confirmed', label: 'Phone is on its own site', verdict: 'dropped', dropReason: 'The phone number appears on the official site: expected pass, got fail — the site lists another number', evidence: [ok('site.own_site'), bad('page.phone_listed')], statement: '+90 212 555 30 61 is the business’s own number.' },
+  { id: 'h7', claimType: 'no_contact_path', label: 'No contact link on site', verdict: 'verified', evidence: [ok('site.own_site'), ok('page.contact_path')], statement: 'The homepage has no contact form, email link, tap-to-call or WhatsApp link.' },
+];
+
+function startHero() {
+  const box = $('#hero-stage');
+  if (!box || hero) return;
+  hero = createGateStage({ loop: true, spacing: 1050, ariaLabel: 'Animation: claim cards pass through three proof gates. Four proven claims are pinned as verified; three without proof turn grey and are dropped.' });
+  box.append(hero.el);
+  for (const c of HERO_CLAIMS) hero.add({ ...laneFromGate(c), label: c.label });
+  hero.close();
+  const btn = $('#hero-pause');
+  if (reducedMotion()) { btn.hidden = true; return; }
+  btn.addEventListener('click', () => {
+    const p = !hero.paused;
+    hero.setPaused(p);
+    btn.setAttribute('aria-pressed', String(p));
+    btn.textContent = p ? 'Play' : 'Pause';
+  });
+}
+
+function stopHero() {
+  if (!hero) return;
+  hero.destroy();
+  hero = null;
+  $('#hero-visual').hidden = true;
+}
 const liveMode = () => !!demo && document.querySelector('input[name="mode"]:checked')?.value === 'live';
 const fmt = (n) => (n == null ? '—' : Number(n).toLocaleString('en-US'));
 const secs = (ms) => `${(ms / 1000).toFixed(ms < 10000 ? 1 : 0)} s`;
@@ -57,8 +101,10 @@ function setModeNote() {
 async function boot() {
   const shared = SHARE_PATH.exec(location.pathname);
   if (shared) return openShared(shared[1]);
+  startHero();
   const cfg = await fetch('/api/config').then((r) => (r.ok ? r.json() : null)).catch(() => null);
   const mode = $('#mode');
+  mode.hidden = false;
   if (!cfg) {
     mode.textContent = 'offline';
     $('#samples').replaceChildren(h('p', { class: 'samples-note', role: 'alert' }, 'The demo server did not answer. Check your connection and reload the page.'));
@@ -99,6 +145,7 @@ function setStage(stage) {
   });
   const ph = $('#report .placeholder p');
   if (ph && WORKING[stage]) ph.textContent = WORKING[stage];
+  if (run?.gateStatus && !run.gateStarted && WORKING[stage]) run.gateStatus.textContent = WORKING[stage];
 }
 
 function event(tag, body, cls = '') {
@@ -113,6 +160,10 @@ const markOf = (pass) => (pass === true ? h('span', { class: 'mark ok', 'aria-la
 function tokensText(u) {
   if (!u) return 'tokens not reported';
   return `${fmt(u.in)} in → ${fmt(u.out)} out tokens${u.reasoning ? ` (${fmt(u.reasoning)} reasoning)` : ''}`;
+}
+
+function gateTrace(e) {
+  event(e.verdict === 'verified' ? 'kept' : 'dropped', [h('b', {}, e.statement), e.dropReason ? h('span', { class: 'meta' }, e.dropReason) : h('span', { class: 'meta' }, `${e.evidence.length} check(s) re-run, all matched`)], e.verdict === 'verified' ? 'pass' : 'fail drop');
 }
 
 // One handler per trace event. Used by the live stream and by the shared-report replay.
@@ -135,17 +186,71 @@ const HANDLERS = {
   ], `model o-${e.outcome}`),
   tool: (e) => { if (e.phase === 'gather') event(TOOL_LABEL[e.tool] || e.tool, h('span', { class: 'meta flat' }, `${shortArgs(e.args)} · ${e.ms} ms${e.error ? ` · ${e.error}` : ''}`)); },
   observe: (e) => event('check', [markOf(e.pass), h('b', {}, e.title), h('span', { class: 'meta' }, e.summary)], e.pass === true ? 'pass' : e.pass === false ? 'fail' : 'na'),
-  propose: (e) => event('claims', [h('b', {}, `${e.claims.length} claim(s) to the gate`), e.rejected.length ? h('span', { class: 'meta' }, `${e.rejected.length} outside the catalog, refused`) : null]),
-  gate: (e) => event(e.verdict === 'verified' ? 'kept' : 'dropped', [h('b', {}, e.statement), e.dropReason ? h('span', { class: 'meta' }, e.dropReason) : h('span', { class: 'meta' }, `${e.evidence.length} check(s) re-run, all matched`)], e.verdict === 'verified' ? 'pass' : 'fail drop'),
+  propose: (e) => {
+    event('claims', [h('b', {}, `${e.claims.length} claim(s) to the gate`), e.rejected.length ? h('span', { class: 'meta' }, `${e.rejected.length} outside the catalog, refused`) : null]);
+    openGate(e.claims);
+  },
+  gate: (e) => gateEvent(e),
   verify: (e) => event('verify', [h('b', {}, e.skipped ? 'No verified claims to rewrite' : `${e.rewritten} owner line(s)`), e.rejected.length ? h('span', { class: 'meta warn' }, `${e.rejected.length} rewrite(s) rejected: ${e.rejected.map((r) => r.reason).join('; ')}`) : null]),
   write: (e) => event('write', [h('b', {}, e.failed ? 'Pitch not written' : `Pitch: ${e.kept} cited finding(s)`), e.removed.length ? h('span', { class: 'meta' }, `${e.removed.length} uncited sentence(s) removed`) : null]),
   done: (e) => {
     run.report = e.report;
     document.querySelectorAll('#stages li').forEach((li) => { li.classList.add('done'); li.classList.remove('active'); });
-    renderReport(e.report);
+    if (stage && !replaying) {
+      // let the last cards land, then the report takes over (the gate stays in it, settled)
+      const mine = run;
+      stage.close();
+      stage.whenSettled(() => { if (run === mine) renderReport(e.report); });
+    } else renderReport(e.report);
   },
   share: (e) => { run.share = e; renderShare(); },
 };
+
+// ---- The gate, live ----------------------------------------------------------------------------
+
+function gateBlock(body, extra) {
+  return h('section', { class: 'block gate-block', 'aria-labelledby': 'gate-h' },
+    h('div', { class: 'gate-head' },
+      h('div', {}, h('h2', { id: 'gate-h' }, 'The gate'), h('p', { class: 'gate-sub' }, 'Every claim’s proof is re-run from scratch. Only exact matches pass.')),
+      extra),
+    body);
+}
+
+// The gate block is on screen from the start of a run (same size throughout, so nothing jumps);
+// claims join its queue when the model proposes them.
+function gateShell(text) {
+  stage?.destroy();
+  stage = createGateStage({ onPick: pickClaim });
+  const status = h('p', { class: 'gate-status', role: 'status' }, text);
+  const skip = h('button', { type: 'button', class: 'btn ghost small', onclick: () => stage?.settleNow() }, 'Skip animation');
+  run.gateStatus = status;
+  run.gateStarted = false;
+  $('#report').replaceChildren(gateBlock(h('div', { class: 'gate-body' }, stage.el, status), skip));
+}
+
+function openGate(claims) {
+  if (!run || replaying) return;
+  if (!stage) gateShell('');
+  run.gateStarted = true;
+  run.gateStatus.textContent = claims.length ? `${claims.length} proposed claim${claims.length === 1 ? '' : 's'} at the gate` : 'The model proposed no claim from the catalog, so nothing goes to the gate.';
+  stage.seed(claims.map((c) => ({ id: c.id, label: SHORT[c.type] || c.statement, mini: MINI[c.type], statement: c.statement })));
+}
+
+function gateEvent(e) {
+  gateTrace(e);
+  if (!stage || replaying) return;
+  stage.add(laneFromGate(e));
+  if (run.gateStatus) run.gateStatus.textContent = 'Re-running each claim’s proof from scratch. Proven claims pass; the rest stop at the line that failed them.';
+}
+
+function pickClaim(lane) {
+  const el = document.getElementById(`claim-${lane.id}`);
+  if (!el) return;
+  el.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'center' });
+  el.querySelector('details').open = true;
+  el.focus({ preventScroll: true });
+  el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1200);
+}
 
 function dispatch(type, e) {
   if (!run) return;
@@ -157,6 +262,9 @@ function dispatch(type, e) {
 function resetWorkspace(placeholder = 'Working. The report appears once every claim has been through the gate.') {
   if (source) source.close();
   clearInterval(timer);
+  stage?.destroy();
+  stage = null;
+  stopHero();
   run = { events: [], share: null, report: null, ended: false };
   runId = null;
   $('#workspace').hidden = false;
@@ -164,12 +272,14 @@ function resetWorkspace(placeholder = 'Working. The report appears once every cl
   document.body.classList.add('ran');
   $('#events').replaceChildren();
   $('#clock').textContent = '0.0 s';
-  $('#report').replaceChildren(h('div', { class: 'placeholder', role: 'status' }, h('div', { class: 'spinner', 'aria-hidden': 'true' }), h('p', {}, placeholder)));
+  if (document.body.classList.contains('shared')) $('#report').replaceChildren(h('div', { class: 'placeholder', role: 'status' }, h('div', { class: 'spinner', 'aria-hidden': 'true' }), h('p', {}, placeholder)));
+  else gateShell(placeholder);
   $('#report').setAttribute('aria-busy', 'true');
 }
 
 function start(query) {
   resetWorkspace();
+  document.body.classList.add('running');
   setStage('plan');
   $('#go').disabled = true;
   $('#go').textContent = 'Checking…';
@@ -218,10 +328,13 @@ function shortArgs(args) {
 const FINAL_ERROR = /knows four fictional|enter a business|quota|checks for today|not configured|could not identify|expired or does not exist/i;
 
 function renderError(msg, query) {
+  document.body.classList.remove('running');
   const actions = [];
   if (query && !FINAL_ERROR.test(msg)) actions.push(h('button', { type: 'button', class: 'btn', onclick: () => start(query) }, 'Try again'));
   if (document.querySelector('#samples .chip')) actions.push(h('button', { type: 'button', class: 'btn ghost', onclick: () => { $('#samples').scrollIntoView({ behavior: 'smooth', block: 'center' }); $('#samples .chip')?.focus({ preventScroll: true }); } }, 'Pick a recorded example'));
   const box = h('div', { class: 'error-box', role: 'alert' }, h('p', {}, msg), actions.length ? h('div', { class: 'actions' }, actions) : null);
+  stage?.destroy();
+  stage = null;
   $('#report').replaceChildren(box);
   $('.trace').hidden = !run?.events.length;
   document.querySelectorAll('#stages li').forEach((li) => li.classList.remove('active'));
@@ -259,7 +372,7 @@ function modelSummary(r, calls) {
 
 function modelPanel(r, calls) {
   const sample = calls.length > 0 && calls.every((c) => /sample/.test(c.model));
-  return h('section', { class: 'block models', 'aria-labelledby': 'models-h' },
+  return h('section', { class: 'block models', id: 'models', 'aria-labelledby': 'models-h' },
     h('div', { class: 'models-head' },
       h('h2', { id: 'models-h' }, 'Model calls'),
       h('p', {}, sample
@@ -281,38 +394,87 @@ function modelPanel(r, calls) {
 
 // ---- Report ---------------------------------------------------------------------------------
 
+const GRADE_WORD = { A: 'Strong', B: 'Good', C: 'Needs work', D: 'Weak', F: 'Failing', '–': 'Not graded' };
+
+function gradeRing(grade, score) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 88 88');
+  svg.setAttribute('aria-hidden', 'true');
+  const ring = (cls, dash) => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', '44'); c.setAttribute('cy', '44'); c.setAttribute('r', '39');
+    c.setAttribute('class', cls);
+    if (dash != null) { c.setAttribute('pathLength', '100'); c.setAttribute('stroke-dasharray', `${dash} 100`); }
+    return c;
+  };
+  svg.append(ring('track'), ring('arc', score == null ? 0 : Math.max(2, score)));
+  return h('div', { class: `ring g-${grade}`, role: 'img', 'aria-label': `Overall grade ${grade}${score == null ? '' : `, ${score} out of 100`}` }, svg, h('b', { 'aria-hidden': 'true' }, grade));
+}
+
+function areaTile(a) {
+  const graded = a.score != null;
+  return h('div', { class: `area${graded ? '' : ' none'}` },
+    h('div', { class: 'area-top' }, h('span', {}, a.label), h('b', { class: `g-${a.grade}` }, graded ? a.grade : '–')),
+    h('div', { class: 'bar', 'aria-hidden': 'true' }, graded ? h('i', { class: `g-${a.grade}`, style: null, 'data-w': a.score }) : null),
+    h('small', {}, graded ? `${a.score}/100` : 'no verified claim'));
+}
+
 function renderReport(r) {
+  document.body.classList.remove('running');
   const card = r.card;
   const root = $('#report');
-  root.replaceChildren();
-  root.removeAttribute('aria-busy');
   const calls = r.models?.calls || legacyCalls(run?.events || []);
   const at = r.generatedAt || run?.events.find((e) => e.type === 'cached')?.at || null;
+  const fromEvents = lanesFromEvents(run?.events || []);
+  const lanes = fromEvents.length ? fromEvents : lanesFromReport(r);
+  const live = stage; // the stage that just ran, settled, moves into the report as it is
+  stage = null;
+  root.replaceChildren();
+  root.removeAttribute('aria-busy');
 
+  const areas = Object.values(card.areas).map(areaTile);
   root.append(h('section', { class: 'block card' },
     h('div', { class: 'biz' },
-      h('div', {},
+      h('div', { class: 'biz-id' },
         h('h2', {}, 'Digital health card'),
         h('h3', {}, r.ctx.displayName || r.ctx.name || r.ctx.domain),
         h('div', { class: 'facts' }, [r.ctx.domain, r.ctx.city, r.ctx.phone].filter(Boolean).map((f) => h('span', {}, f))),
         at ? h('p', { class: 'generated' }, `Generated ${when(at)}`) : null),
-      h('div', { class: 'overall' }, h('div', { class: `grade g-${card.grade}`, 'aria-label': `Overall grade ${card.grade}` }, card.grade), h('small', {}, card.overall == null ? 'not graded' : `${card.overall}/100`))),
-    h('div', { class: 'areas' }, Object.values(card.areas).map((a) => h('div', { class: 'area' }, h('span', {}, a.label), h('b', { class: `g-${a.grade}` }, a.grade)))),
+      h('div', { class: 'overall' }, gradeRing(card.grade, card.overall), h('small', {}, GRADE_WORD[card.grade] || ''))),
+    h('div', { class: 'areas' }, areas),
     r.summary ? h('p', { class: 'summary' }, r.summary) : null,
-    h('p', { class: 'run-line' }, modelSummary(r, calls)),
+    h('a', { class: 'run-line', href: '#models' }, h('span', {}, modelSummary(r, calls)), h('span', { class: 'run-go', 'aria-hidden': 'true' }, '↓')),
     h('div', { class: 'stats' },
-      h('span', { class: 'stat' }, `${r.stats.proposed} proposed`),
-      h('span', { class: 'stat' }, `${r.stats.verified} verified`),
-      h('span', { class: 'stat' }, `${r.stats.dropped} dropped`),
-      h('span', { class: 'stat' }, `${r.stats.checksRun} checks run`),
-      r.stats.notChecked ? h('span', { class: 'stat' }, `${r.stats.notChecked} not checked`) : null,
-      h('span', { class: 'stat' }, `${(r.stats.ms / 1000).toFixed(1)} s`)),
+      h('span', { class: 'stat' }, h('b', {}, r.stats.proposed), ' proposed'),
+      h('span', { class: 'stat good' }, h('b', {}, r.stats.verified), ' verified'),
+      h('span', { class: 'stat drop' }, h('b', {}, r.stats.dropped), ' dropped'),
+      h('span', { class: 'stat' }, h('b', {}, r.stats.checksRun), ' checks run'),
+      r.stats.notChecked ? h('span', { class: 'stat' }, h('b', {}, r.stats.notChecked), ' not checked') : null,
+      h('span', { class: 'stat' }, h('b', {}, (r.stats.ms / 1000).toFixed(1)), ' s')),
     h('div', { id: 'share-slot' })));
+  root.querySelectorAll('.bar i').forEach((i) => { i.style.width = `${i.dataset.w}%`; });
   renderShare();
 
   if (r.partial?.length) {
     root.append(h('div', { class: 'notice', role: 'note' }, h('b', {}, 'Partial run. '), 'Some steps did not finish; nothing unproven was added in their place.', h('ul', {}, r.partial.map((p) => h('li', {}, p)))));
   }
+
+  // The gate, settled: what was proposed, what passed, what was dropped and why.
+  const sum = gateSummary(lanes);
+  const tally = h('p', { class: 'gate-tally' }, h('b', {}, sum.proposed), ' proposed → ', h('b', { class: 'good' }, sum.kept), ' verified · ', h('b', { class: 'drop' }, sum.dropped), ' dropped');
+  if (lanes.length) {
+    const st = live || createGateStage({ onPick: pickClaim, instant: true });
+    root.append(gateBlock(h('div', { class: 'gate-body settled' }, st.el, h('p', { class: 'gate-hint' }, 'Select a card to see its proof. Hover or focus a dropped one for the reason.')), tally));
+    if (!live) { for (const l of lanes) st.add(l); st.close(); }
+    st.whenSettled(() => {});
+    st.settleNow();
+  } else {
+    live?.destroy();
+    root.append(gateBlock(h('p', { class: 'empty' }, 'No claim reached the gate in this run, so there was nothing to prove or drop.'), tally));
+  }
+
+  root.append(modelPanel(r, calls));
 
   root.append(h('div', { class: 'section-head' }, h('h2', {}, 'Verified claims'), h('p', {}, 'Each one passed its proof twice: once when gathered, again at the gate.')));
   const order = { issue: 0, risk: 1, good: 2 };
@@ -326,8 +488,6 @@ function renderReport(r) {
 
   root.append(h('div', { class: 'section-head' }, h('h2', {}, 'Pitch draft'), h('p', {}, 'For the seller. Every finding cites a verified claim.')));
   root.append(pitchBlock(r));
-
-  root.append(modelPanel(r, calls));
 }
 
 function renderShare() {
@@ -414,6 +574,7 @@ function pitchBlock(r) {
 
 async function openShared(id) {
   document.body.classList.add('shared');
+  $('#mode').hidden = false;
   $('#mode').textContent = 'Shared report · read-only';
   $('#shared-banner').hidden = false;
   resetWorkspace('Loading the shared report…');
@@ -427,7 +588,8 @@ async function openShared(id) {
   } catch { problem = 'Could not load the report. Check your connection and reload the page.'; }
   if (!record) { renderError(problem); $('#shared-when').textContent = 'Link not available'; return; }
   $('#shared-when').textContent = `${record.mode === 'sample' ? 'Recorded example (fictional business)' : 'Live search'} · generated ${when(record.at)}`;
-  for (const e of record.events) dispatch(e.type, e);
+  replaying = true;
+  try { for (const e of record.events) dispatch(e.type, e); } finally { replaying = false; }
   run.share = { id: record.id, path: `/r/${record.id}`, at: record.at, days: 14 };
   renderShare();
   const last = record.events.find((e) => e.type === 'done')?.report;
