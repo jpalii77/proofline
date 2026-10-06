@@ -16,7 +16,8 @@
     "LIVE_REQUEST_BUDGET": "40",
     "LIVE_RECHECK_GLOBAL_PER_DAY": "100",
     "LIVE_RECHECK_IP_PER_DAY": "15",
-    "NOMINATIM_CONTACT": "github.com/jpalii77/proofline"
+    "NOMINATIM_CONTACT": "github.com/jpalii77/proofline",
+    "NEBIUS_FAST_MODEL": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
   },
   // Daily live-run counters + 24 h query cache. SQLite-backed Durable Objects work on the free plan.
   "durable_objects": { "bindings": [{ "name": "DEMO_STATE", "class_name": "DemoState" }] },
