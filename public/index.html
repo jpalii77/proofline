@@ -24,55 +24,64 @@
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
   <link rel="stylesheet" href="/app.css">
+  <link rel="modulepreload" href="/i18n.js">
   <link rel="modulepreload" href="/gate.js">
   <link rel="modulepreload" href="/gate-data.js">
+  <link rel="modulepreload" href="/tour.js">
 </head>
 <body>
-  <a class="skip" href="#q">Skip to the search box</a>
+  <a class="skip" href="#q" data-i18n="skip">Skip to the search box</a>
   <header class="top">
-    <a class="brand" href="/" aria-label="Proofline home">
+    <a class="brand" href="/" aria-label="Proofline home" data-i18n-attr="aria-label:brand.home">
       <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M9.5 14.2l3 3 6-6.4" fill="none" stroke="var(--good)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.5 21.5L28 28" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
       <span>Proofline</span>
     </a>
     <span id="mode" class="pill" hidden>…</span>
+    <button type="button" id="tour-btn" class="tour-btn" aria-haspopup="dialog"><span data-i18n="tour.openShort">How it works</span><span class="tour-time">(<span data-i18n="tour.time">30 s</span>)</span></button>
+    <div class="lang" role="group" aria-label="Language" data-i18n-attr="aria-label:lang.label">
+      <button type="button" data-lang="en" lang="en" aria-pressed="true" aria-label="EN, English">EN</button>
+      <span class="lang-sep" aria-hidden="true">·</span>
+      <button type="button" data-lang="tr" lang="tr" aria-pressed="false" aria-label="TR, Türkçe">TR</button>
+    </div>
   </header>
 
   <main>
     <section id="shared-banner" class="shared-banner" hidden>
       <div>
-        <p class="eyebrow">Shared Proofline report</p>
-        <p id="shared-when" class="shared-when">Loading…</p>
+        <p class="eyebrow" data-i18n="shared.eyebrow">Shared Proofline report</p>
+        <p id="shared-when" class="shared-when" data-i18n="shared.loading">Loading…</p>
       </div>
-      <a class="btn primary" href="/">Run your own check</a>
+      <a class="btn primary" href="/" data-i18n="shared.cta">Run your own check</a>
     </section>
 
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Business profile agent<span class="wide"> · NVIDIA Nemotron on Nebius</span></p>
-        <h1>Every claim comes with its proof.</h1>
-        <p class="lede">Give it a small business. Proofline gathers its scattered web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim itself. Anything it cannot prove is dropped, in plain sight.</p>
+        <p class="eyebrow"><span data-i18n="hero.eyebrow">Business profile agent</span><span class="wide"> · NVIDIA Nemotron on Nebius</span></p>
+        <h1 data-i18n="hero.title">Every claim comes with its proof.</h1>
+        <p class="lede" data-i18n="hero.lede">Give it a small business. Proofline gathers its scattered web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim itself. Anything it cannot prove is dropped, in plain sight.</p>
       </div>
       <div class="hero-ask">
-        <form id="form" class="ask" autocomplete="off">
-          <label for="q" class="sr-only">Business name and city, or a domain</label>
-          <input id="q" name="q" maxlength="200" placeholder="Name, city — or a domain" required>
-          <button id="go" type="submit">Check it</button>
+        <form id="form" class="ask" autocomplete="off" novalidate>
+          <label for="q" class="sr-only" data-i18n="ask.label">Business name and city, or a domain</label>
+          <input id="q" name="q" maxlength="200" placeholder="Name, city — or a domain" data-i18n-attr="placeholder:ask.placeholder" aria-describedby="ask-hint" required>
+          <button id="go" type="submit" data-i18n="ask.go">Check it</button>
         </form>
+        <p id="ask-hint" class="ask-hint" role="status" hidden></p>
         <fieldset id="modes" class="modes" hidden>
-          <legend class="sr-only">Mode</legend>
-          <label><input type="radio" name="mode" value="sample" checked><span><b>Recorded examples</b><small>instant · free</small></span></label>
-          <label><input type="radio" name="mode" value="live"><span><b>Live search</b><small id="left">Nemotron + Tavily</small></span></label>
+          <legend class="sr-only" data-i18n="modes.legend">Mode</legend>
+          <label><input type="radio" name="mode" value="sample" checked><span><b data-i18n="modes.sample">Recorded examples</b><small data-i18n="modes.sampleNote">instant · free</small></span></label>
+          <label><input type="radio" name="mode" value="live"><span><b data-i18n="modes.live">Live search</b><small id="left">Nemotron + Tavily</small></span></label>
         </fieldset>
         <p id="mode-note" class="mode-note" hidden></p>
-        <div id="samples" class="samples" aria-label="Examples"></div>
+        <div id="samples" class="samples" role="group" aria-label="Examples" data-i18n-attr="aria-label:samples.label"></div>
       </div>
       <figure class="hero-visual" id="hero-visual">
         <div class="hero-stage" id="hero-stage"></div>
         <figcaption class="stage-caption">
-          <span>Claims from the recorded examples, put through the gate.</span>
-          <button type="button" id="hero-pause" class="stage-toggle" aria-pressed="false">Pause</button>
+          <span data-i18n="stage.caption">Claims from the recorded examples, put through the gate.</span>
+          <button type="button" id="hero-pause" class="stage-toggle" aria-pressed="false" data-i18n="stage.pause">Pause</button>
         </figcaption>
       </figure>
     </section>
@@ -80,13 +89,13 @@
     <section id="workspace" class="workspace" hidden>
       <aside class="trace" aria-labelledby="trace-h">
         <div class="trace-head">
-          <h2 id="trace-h">Agent trace</h2>
+          <h2 id="trace-h" data-i18n="trace.title">Agent trace</h2>
           <span id="clock" class="mono muted">0.0 s</span>
         </div>
         <ol class="stages" id="stages">
-          <li data-stage="plan">Plan</li><li data-stage="observe">Tools</li><li data-stage="propose">Claims</li><li data-stage="gate">Gate</li><li data-stage="verify">Verify</li><li data-stage="write">Write</li>
+          <li data-stage="plan" data-i18n="stages.plan">Plan</li><li data-stage="observe" data-i18n="stages.observe">Tools</li><li data-stage="propose" data-i18n="stages.propose">Claims</li><li data-stage="gate" data-i18n="stages.gate">Gate</li><li data-stage="verify" data-i18n="stages.verify">Verify</li><li data-stage="write" data-i18n="stages.write">Write</li>
         </ol>
-        <ol id="events" class="events" aria-label="Trace events"></ol>
+        <ol id="events" class="events" aria-label="Trace events" data-i18n-attr="aria-label:trace.events"></ol>
       </aside>
 
       <article id="report" class="report" aria-live="polite"></article>
@@ -94,7 +103,7 @@
   </main>
 
   <footer class="foot">
-    <p>Reads public business information only. Built for the Nebius × NVIDIA Global AI Hackathon · <a href="https://github.com/jpalii77/proofline">Source on GitHub</a> · MIT licensed.</p>
+    <p><span data-i18n="foot.text">Reads public business information only. Built for the Nebius × NVIDIA Global AI Hackathon</span> · <a href="https://github.com/jpalii77/proofline" data-i18n="foot.source">Source on GitHub</a> · <span data-i18n="foot.license">MIT licensed.</span></p>
   </footer>
   <script type="module" src="/app.js"></script>
 </body>

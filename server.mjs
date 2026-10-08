@@ -66,7 +66,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
   }
 
   async function handleRun(req, res, url) {
-    const q = (url.searchParams.get('q') || '').slice(0, 200);
+    const q = (url.searchParams.get('q') || '').trim().slice(0, 200);
     const wiring = q ? wiringFor(cfg, q, { fetchImpl, pace }) : { error: 'Enter a business name or a domain.' };
     res.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive' });
     const send = (e) => res.write(`event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`);
@@ -103,6 +103,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
     for await (const chunk of req) { body += chunk; if (body.length > 2000) break; }
     let input;
     try { input = JSON.parse(body); } catch { return json(res, 400, { error: 'bad json' }); }
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return json(res, 400, { error: 'bad json' });
     const run = runs.get(input.runId);
     const claim = run?.claims.find((c) => c.id === input.claimId);
     if (!claim) return json(res, 404, { error: 'Run expired. Start a new check.' });
@@ -112,7 +113,8 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
   }
 
   return http.createServer(async (req, res) => {
-    const url = new URL(req.url, 'http://localhost');
+    let url;
+    try { url = new URL(req.url, 'http://localhost'); } catch { return json(res, 400, { error: 'bad request' }); }
     try {
       if (req.method === 'GET' && url.pathname === '/api/config') return json(res, 200, publicConfig(cfg));
       if (req.method === 'GET' && url.pathname === '/api/run') return await handleRun(req, res, url);
@@ -122,8 +124,8 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
         const record = getReport(rep[1]);
         return record ? json(res, 200, record) : json(res, 404, { error: 'This report link has expired or does not exist. Shared reports are kept for 14 days.' });
       }
-      const share = /^\/r\/([^/]+)\/?$/.exec(url.pathname);
-      if (req.method === 'GET' && share) return sharePage(res, share[1]);
+      const share = /^\/r(?:\/([^/]*))?\/?$/.exec(url.pathname);
+      if (req.method === 'GET' && share) return sharePage(res, share[1] || '');
       if (req.method === 'GET') return serveStatic(req, res, url.pathname);
       json(res, 405, { error: 'method not allowed' });
     } catch (err) {

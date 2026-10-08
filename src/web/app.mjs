@@ -199,6 +199,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
   async function recheck(request) {
     let input;
     try { input = JSON.parse((await request.text()).slice(0, 2000)); } catch { return json({ error: 'bad json' }, 400); }
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return json({ error: 'bad json' }, 400);
     const runId = String(input.runId || '');
     const claimId = String(input.claimId || '');
     let io;

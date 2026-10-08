@@ -13,6 +13,7 @@
 // the lists already filled by the previous round, and each list keeps its newest N cards.
 
 import { GATES } from './gate-data.js';
+import { t } from './i18n.js';
 
 const prefersReduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -204,17 +205,17 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
   field.setAttribute('aria-hidden', ariaLabel ? 'true' : 'false');
   root.append(field);
 
-  const lblQueue = el('span', 'gs-zone gs-zone-q', 'Proposed');
-  const lblKept = el('span', 'gs-zone gs-zone-k', 'Verified');
-  const lblDrop = el('span', 'gs-zone gs-zone-d', 'Dropped · no proof');
+  const lblQueue = el('span', 'gs-zone gs-zone-q', t('gate.zoneQueue'));
+  const lblKept = el('span', 'gs-zone gs-zone-k', t('gate.zoneKept'));
+  const lblDrop = el('span', 'gs-zone gs-zone-d', t('gate.zoneDropped'));
   const keptCount = el('b', 'gs-count', '0');
   const dropCount = el('b', 'gs-count', '0');
   lblKept.append(' ', keptCount);
   lblDrop.append(' ', dropCount);
   const gates = GATES.map((g) => {
     const pane = el('div', 'gs-gate');
-    const label = el('span', 'gs-gate-label', g.label);
-    pane.title = `${g.label}: ${g.checks.join(', ')}`;
+    const label = el('span', 'gs-gate-label', t(`gate.${g.key}`));
+    pane.title = `${t(`gate.${g.key}`)}: ${g.checks.join(', ')}`;
     field.append(pane, label);
     return { pane, label };
   });
@@ -252,8 +253,9 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
     const full = el('span', 'gs-full', label);
     const short = el('span', 'gs-mini', mini || label);
     text.append(full, short);
-    const stamp = el('span', 'gs-stamp', 'no proof');
+    const stamp = el('span', 'gs-stamp', t('gate.stamp'));
     const tip = el('span', 'gs-tip');
+    tip.dataset.why = t('gate.whyDropped');
     node.append(icon, text, stamp, tip);
     if (statement) node.title = statement;
     node.style.opacity = '0';
@@ -323,8 +325,10 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
       pane.style.width = `${g.w}px`;
       pane.style.height = `${g.h}px`;
       const gap = L.gates[1].x - L.gates[0].x;
-      label.textContent = gap >= 104 ? GATES[i].label : GATES[i].short;
+      // the full name only when the posts are far apart and it fits between them (Turkish names run longer)
       label.classList.toggle('tight', gap < 64);
+      label.textContent = t(`gate.${GATES[i].key}`);
+      if (gap < 104 || label.offsetWidth > gap - 8) label.textContent = t(`gate.${GATES[i].key}.short`);
       label.style.transform = `translate(calc(${g.x}px - 50%), ${L.labelY}px)`;
     });
     const place = (n, p) => { n.style.transform = `translate(${p.x}px, ${p.y}px)`; };
@@ -499,7 +503,9 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
       b.style.cssText = c.node.style.cssText;
       b.title = c.node.title;
       b.dataset.verdict = c.node.dataset.verdict;
-      b.setAttribute('aria-label', `${c.lane.verdict === 'verified' ? 'Verified' : 'Dropped'}: ${String(c.lane.statement).replace(/\.$/, '')}${c.lane.reason ? `. Why dropped: ${c.lane.reason}` : ''}. Show its proof.`);
+      const statement = String(c.lane.statement).replace(/\.$/, '');
+      const reason = c.lane.reason ? String(c.lane.reason).replace(/\.$/, '') : '';
+      b.setAttribute('aria-label', c.lane.verdict === 'verified' ? t('gate.cardVerified', { statement }) : reason ? t('gate.cardDroppedWhy', { statement, reason }) : t('gate.cardDropped', { statement }));
       b.append(...c.node.childNodes);
       const lane = c.lane;
       b.addEventListener('click', () => onPick(lane));

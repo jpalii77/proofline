@@ -11,8 +11,10 @@ export function loadSamples() {
 export function findSample(samples, query) {
   const q = fold(query);
   if (!q) return null;
+  // A part of a name counts from three characters on: "a" or "ka" must not open a random example.
+  const part = q.replace(/ /g, '').length >= 3;
   return samples.find((s) => s.id === query)
-    || samples.find((s) => [s.input, s.domain, s.name, ...(s.aliases || [])].some((x) => x && (fold(x) === q || fold(x).includes(q) || q.includes(fold(x)))))
+    || samples.find((s) => [s.input, s.domain, s.name, ...(s.aliases || [])].some((x) => x && (fold(x) === q || (part && fold(x).includes(q)) || q.includes(fold(x)))))
     || null;
 }
 

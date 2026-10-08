@@ -2,6 +2,8 @@
 // Pure functions, no DOM, so the mapping is tested against the report in Node (tests/gate-data.test.mjs).
 // The visual never invents an outcome: a lane is kept or dropped exactly as the gate event says.
 
+import { DICT, t } from './i18n.js';
+
 // Three gate lines, in the order a claim meets them. Every check belongs to exactly one.
 export const GATES = [
   { key: 'identity', label: 'Identity', short: 'Identity', checks: ['site.own_site', 'web.own_site_found', 'page.name_match'] },
@@ -18,43 +20,18 @@ export function gateOf(check) {
 }
 
 // Short card labels per claim type. No numbers or names: the full statement is always one hover away.
-export const SHORT = {
-  site_online: 'Site loads with real content',
-  site_unreachable: 'Site does not load',
-  domain_parked: 'Domain shows a for-sale page',
-  https_healthy: 'HTTPS is healthy',
-  ssl_expiring_soon: 'Certificate expires soon',
-  ssl_invalid: 'Certificate is invalid',
-  no_https_redirect: 'No redirect to HTTPS',
-  no_contact_path: 'No way to get in touch on site',
-  phone_confirmed: 'Phone is on its own site',
-  phone_unconfirmed: 'Listed phone may be outdated',
-  no_own_website: 'No website of its own',
-  on_map: 'Listed on OpenStreetMap',
-  not_on_map: 'Missing from OpenStreetMap',
-  possibly_closed: 'May have closed',
-  possibly_renamed: 'Site carries another name',
-};
+// The text lives in i18n.js ("short.<type>"); SHORT is the English table.
+const table = (prefix, lang = 'en') => Object.fromEntries(Object.entries(DICT[lang]).filter(([k]) => k.startsWith(prefix)).map(([k, v]) => [k.slice(prefix.length), v]));
+export const SHORT = table('short.');
 
 // Even shorter labels for narrow screens while a card is in flight (a card there is ~95 px of text).
 // The full label returns once the card lands in its list; the full statement is always on hover.
-export const MINI = {
-  site_online: 'Site loads',
-  site_unreachable: 'Site is down',
-  domain_parked: 'Domain for sale',
-  https_healthy: 'HTTPS healthy',
-  ssl_expiring_soon: 'Cert expiring',
-  ssl_invalid: 'Cert invalid',
-  no_https_redirect: 'No HTTPS redirect',
-  no_contact_path: 'No contact path',
-  phone_confirmed: 'Phone on own site',
-  phone_unconfirmed: 'Phone may be old',
-  no_own_website: 'No own website',
-  on_map: 'On the map',
-  not_on_map: 'Not on the map',
-  possibly_closed: 'May have closed',
-  possibly_renamed: 'Name differs',
-};
+export const MINI = table('mini.');
+
+/** The labels of one claim type in the current interface language (null for an unknown type). */
+export function shortLabel(type) { return type && SHORT[type] ? t(`short.${type}`) : null; }
+export function miniLabel(type) { return type && MINI[type] ? t(`mini.${type}`) : null; }
+export function labelTables(lang) { return { short: table('short.', lang), mini: table('mini.', lang) }; }
 
 /**
  * One lane per gate event, in trace order.
@@ -78,13 +55,13 @@ export function laneFromGate(e) {
   return {
     id: e.id,
     type: e.claimType || e.type || null,
-    label: SHORT[e.claimType || e.type] || e.statement,
-    mini: MINI[e.claimType || e.type] || SHORT[e.claimType || e.type] || e.statement,
+    label: shortLabel(e.claimType || e.type) || e.statement,
+    mini: miniLabel(e.claimType || e.type) || shortLabel(e.claimType || e.type) || e.statement,
     statement: e.statement,
     verdict: dropped ? 'dropped' : 'verified',
     touches,
     dropAt,
-    reason: dropped ? (e.dropReason || (failed ? `${failed.title}: ${failed.summary}` : 'not proven')) : null,
+    reason: dropped ? (e.dropReason || (failed ? `${failed.title}: ${failed.summary}` : t('gate.notProven'))) : null,
     failed,
   };
 }

@@ -106,8 +106,8 @@ export default {
     try {
       const store = env.DEMO_STATE.get(env.DEMO_STATE.idFromName('global'));
       const url = new URL(request.url);
-      const share = /^\/r\/([^/]+)\/?$/.exec(url.pathname);
-      if (share && request.method === 'GET') return await sharePage(request, env, store, share[1]);
+      const share = /^\/r(?:\/([^/]*))?\/?$/.exec(url.pathname);
+      if (share && request.method === 'GET') return await sharePage(request, env, store, share[1] || '');
       const app = createWebApp({ env, store, pace: true });
       const res = await app(request, ctx);
       if (res) return withHeaders(res, { 'x-content-type-options': 'nosniff' });
