@@ -178,7 +178,18 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
 
   const p = await page(io, `https://${host}/`);
   const loaded = okStatus(p.status);
-  const id = loaded ? pageIdentity(p, name) : { identified: false };
+  let id = loaded ? pageIdentity(p, name) : { identified: false };
+  const labelNames = hostLabelNames(host.split('.')[0], name);
+  // A mention in the body text is not ownership: an agency's homepage lists its clients (round 2: perfist.com
+  // names "Tarım Garaj"). Body text counts only when the address itself or a homepage search result agrees.
+  if (id.identified && id.field === 'body' && !labelNames && !ties.some((t) => /homepage/.test(t.how))) {
+    id = { ...id, identified: false, bodyOnly: true };
+  }
+  // A very large homepage may name the business only far down (round 2: petpal.com.tr, 6 MB). Then the address
+  // naming it counts, but only with a city, so the place rule below still has to tie it to that city.
+  if (loaded && !id.identified && labelNames && city && !looksLikeDomain(city)) {
+    id = { identified: true, field: 'address', value: host, score: id.score };
+  }
   if (id.identified || ties.length) {
     // A name alone can belong to a namesake elsewhere (petpal.com is a US network, not the Bursa shop):
     // with a city given, the page or a search result showing this site must name that city too.

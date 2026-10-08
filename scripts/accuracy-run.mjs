@@ -13,7 +13,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const onlyAt = args.indexOf('--only');
 const only = onlyAt > -1 ? Number(args[onlyAt + 1]) : Infinity;
-const listPath = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--only') || join(root, 'eval', 'businesses.json');
+// --round 2 writes runs/<date>-r2.json, so a second round on the same day never overwrites the first.
+const roundAt = args.indexOf('--round');
+const round = roundAt > -1 ? String(args[roundAt + 1] || '').replace(/[^0-9a-z]/gi, '') : '';
+const listPath = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--only' && args[i - 1] !== '--round') || join(root, 'eval', 'businesses.json');
 
 const cfg = readConfig();
 if (cfg.sampleMode) { console.error('Accuracy runs need live mode (unset SAMPLE_MODE).'); process.exit(1); }
@@ -24,7 +27,7 @@ const list = JSON.parse(readFileSync(listPath, 'utf8')).slice(0, only);
 const day = new Date().toISOString().slice(0, 10);
 const outDir = join(root, 'eval', 'runs');
 mkdirSync(outDir, { recursive: true });
-const outPath = join(outDir, `${day}.json`);
+const outPath = join(outDir, `${day}${round ? `-r${round}` : ''}.json`);
 const results = [];
 const save = () => writeFileSync(outPath, JSON.stringify({ day, models: { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || null }, results }, null, 2) + '\n');
 

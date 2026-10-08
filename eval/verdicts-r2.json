@@ -1,0 +1,34 @@
+{
+  "run": "eval/runs/2026-10-08-r2.json",
+  "checkedBy": "Independent re-check outside Proofline on 2026-10-08: openssl s_client (certificate end date), curl (HTTP to HTTPS redirect, page load, full homepage HTML), Nominatim search by name and by name + city, direct fetch of the business's real domain where the agent picked another one.",
+  "verdicts": {
+    "hicret": { "site_online": "right", "https_healthy": "right (37 days, 301 to https)", "phone_confirmed": "right (0531 211 19 00 is on the homepage)", "not_on_map": "right (the shop is in Kayseri; OSM's two 'Hicret Kuruyemiş' entries are in Kocaeli and Gaziantep)" },
+    "zekitriko": { "site_online": "right", "https_healthy": "right (78 days)", "not_on_map": "right" },
+    "elleshoes": { "site_online": "right", "https_healthy": "right (35 days)", "not_on_map": "right" },
+    "onlineciftci": { "site_online": "right", "https_healthy": "right (38 days)", "not_on_map": "right" },
+    "peyman": { "site_online": "right", "https_healthy": "right (56 days)", "not_on_map": "right" },
+    "petpal": { "not_on_map": "right (no Petpal in Bursa on OSM; the only Petpal entries are abroad)" },
+    "sakal": { "no_own_website": "right (no site found by search or domain probes)", "on_map": "right ('Sakal Pub', Kavaklıdere, Çankaya, Ankara; found by the new retry without 'Kafe')" },
+    "naramica": { "not_on_map": "wrong: the statement is about 'NaraConcept' (Athens), a different business the planner substituted for the typed name 'Naramica'" },
+    "kaptan": { "site_online": "right", "https_healthy": "right (36 days)", "not_on_map": "right" },
+    "vatkalimon": { "site_online": "right (found by trying the address built from the name)", "https_healthy": "right (51 days)", "not_on_map": "right" },
+    "kampveotesi": { "site_online": "right", "https_healthy": "right (41 days)", "not_on_map": "right" },
+    "tarimgaraj": {
+      "site_online": "wrong: perfist.com is a marketing agency; its homepage mentions Tarım Garaj as a client. The shop's site is tarimgaraj.com",
+      "no_https_redirect": "wrong: same site (perfist.com), not the business's",
+      "phone_unconfirmed": "wrong: 0850 840 88 86 is on tarimgaraj.com",
+      "not_on_map": "right"
+    }
+  },
+  "dropped": {
+    "petpal": { "site_online": "true claim lost: petpal.com.tr is the Bursa (Nilüfer) shop, but its 6 MB homepage names 'Petpal' only after the part the identity check reads", "https_healthy": "true claim lost: same site" },
+    "naramica": { "site_online": "rightly dropped (naraconcept.gr is a different business)", "https_healthy": "rightly dropped", "phone_confirmed": "rightly dropped" },
+    "tarimgaraj": { "https_healthy": "rightly dropped (perfist.com, not theirs, and it does not redirect)" }
+  },
+  "totals": { "proposed": 39, "kept": 33, "right": 29, "wrong": 4, "dropped": 6, "droppedAndShouldHaveBeen": 4, "trueClaimsLost": 2 },
+  "causes": [
+    "own-site identity accepted from a mention in the body text of another company's homepage (agency client list): 3",
+    "planner replaced the typed business name and city with a different business (Naramica -> NaraConcept, Athens): 1",
+    "true claims lost: identity check reads only the start of a very large homepage (petpal.com.tr, 6 MB): 2 dropped"
+  ]
+}

@@ -10,10 +10,18 @@ import { displayName } from '../display-name.mjs';
 import { invalidHostSentence, isValidHostname } from '../hostname.mjs';
 import { observed } from '../io/observed.mjs';
 import { withDeadline } from '../limits.mjs';
-import { domainsIn, extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
+import { domainsIn, extractPhones, looksLikeDomain, nameSimilarity, nameTokens, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
 
 const isDomain = (s) => looksLikeDomain(s) && isValidHostname(s);
+
+/** Is `planned` a tidier spelling of `typed` ("Kaptan Oyuncak Mağazası" for "Kaptan Oyuncak"), not another business? */
+export function sameBusinessName(typed, planned) {
+  if (nameSimilarity(typed, planned) >= 0.45) return true;
+  const want = nameTokens(typed);
+  const have = new Set(nameTokens(planned));
+  return want.length > 0 && want.every((t) => have.has(t));
+}
 
 /** Parse "Name, City", "Name, domain" (either order after the name) or a bare domain. */
 export function intake(query) {
@@ -171,7 +179,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
 
   // 3. Plan (reasoning model): who is this business, which domain and phone are theirs?
   const planOut = await ask('plan', { query, parsed, discovery: discovery.results || [], grounding });
-  const plan = planOut.json || {};
+  let plan = planOut.json || {};
   if (planOut.error) partial.push(`Planner did not answer (${planOut.error}); code used the query and the search results instead.`);
   // Grounding guard: the model may choose, never invent. A domain must be a valid web address
   // (real ending) that the search results show as a web address; otherwise it is dropped here and
@@ -189,6 +197,14 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
     planned = null;
   }
   if (domainDropped) guard.push(domainDropped);
+  // Name guard: the planner may tidy the typed name ("hicret kuruyemiş" -> "Hicret Kuruyemiş"), never swap
+  // it for another business (round 2: "Naramica" became "NaraConcept", Athens). If it did, its name, city,
+  // domain and phone all describe that other business, so none of them are used.
+  if (plan.name && parsed.name && !sameBusinessName(parsed.name, plan.name)) {
+    guard.push(`the model named a different business (“${plan.name}”) than the one asked for (“${parsed.name}”) — its name, city, domain and phone are not used`);
+    planned = null;
+    plan = { ...plan, name: null, city: null, phone: null };
+  }
   const ctx = {
     name: plan.name || parsed.name || null,
     city: [plan.city, parsed.city].find((c) => c && !looksLikeDomain(c)) || null,
