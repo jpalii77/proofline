@@ -76,7 +76,7 @@ A summary line reads "N model calls · X tokens · Y claims dropped by the gate"
 [`src/tavily.mjs`](src/tavily.mjs) calls `POST https://api.tavily.com/search` **at runtime** in live mode. In the current code it is used for:
 
 1. **Discovery** ([`src/agent/pipeline.mjs`](src/agent/pipeline.mjs)): one search for the business name and city. These results are the **only** source the planner may take a domain or phone from; anything the model names that is not in them is dropped.
-2. **Own-site identity** (`site.own_site` and `web.own_site_found` in [`src/checks.mjs`](src/checks.mjs)): the same discovery results decide whether a domain is the business's own website (a search result about the business must point at it when the homepage alone does not name the business), and whether the business has a website of its own at all or only listings.
+2. **Own-site identity** (`site.own_site` and `web.own_site_found` in [`src/checks.mjs`](src/checks.mjs)): the same discovery results decide whether a domain is the business's own website (a search result about the business must point at it when the homepage alone does not name the business), and whether the business has a website of its own at all or only listings. A name alone is not enough when a city is known: the site or a search result showing it must name that city too, so a namesake abroad is never taken for the shop. Before "no website", the address built from the name (`name.com`, `name.com.tr`) is tried and counts only if its homepage names the business.
 3. **Closure check** (`web.no_closure_signal`): `"<name>" <city> permanently closed`. A hit counts only if the same result also names the business.
 
 Within one phase a repeated search is answered from memory, but the proof gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
@@ -176,7 +176,7 @@ Where it lives:
 
 ## Tests
 
-**138 tests in 18 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, share links, the Workers network adapter, the public demo's quotas, the interface language and tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
+**159 tests in 21 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, share links, the Workers network adapter, the public demo's quotas, the interface language and tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
 
 ## Reference
 

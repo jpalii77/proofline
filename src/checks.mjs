@@ -130,6 +130,22 @@ function pageIdentity(p, name, min = NAME_MIN) {
   return { identified: false, ...best };
 }
 
+/** Does the place ("Kadıköy, Istanbul": either part) appear on the page, or in a search result that shows this host? */
+function placeTie(p, results, host, city) {
+  const wants = String(city).split(',').map((x) => fold(x).trim()).filter((x) => x.length >= 3);
+  if (!wants.length) return 'no usable city given';
+  const names = (hay) => { const h = ` ${fold(hay)} `; return wants.find((w) => h.includes(` ${w} `)); };
+  const onPage = names(p?.html || '');
+  if (onPage) return `the homepage names ${onPage}`;
+  for (const r of results || []) {
+    const hay = `${r.title || ''} ${r.content || ''}`;
+    if (normalizeHost(r.url) !== host && !domainsIn(hay).includes(host)) continue;
+    const hit = names(hay);
+    if (hit) return `a search result for this site names ${hit} (${r.url})`;
+  }
+  return null;
+}
+
 function hostLabelNames(sub, name) {
   const label = fold(sub).replace(/ /g, '');
   const tokens = nameTokens(name).filter((t) => t.length >= 3);
@@ -140,7 +156,7 @@ function hostLabelNames(sub, name) {
  * Verdict for one candidate host. `results` are discovery search results (already fetched).
  * needSearchTie: the page alone is not enough, a search result must tie the domain to the business.
  */
-async function ownSiteVerdict(io, { host, name, results, searchError, userGiven = false, needSearchTie = false }) {
+async function ownSiteVerdict(io, { host, name, city = null, results, searchError, userGiven = false, needSearchTie = false }) {
   const invalid = invalidHostSentence(host);
   if (invalid) return { pass: false, summary: `${invalid} — no own website found`, observed: { host, invalidHost: true } };
   const cls = classifyHost(host);
@@ -163,11 +179,15 @@ async function ownSiteVerdict(io, { host, name, results, searchError, userGiven 
   const p = await page(io, `https://${host}/`);
   const loaded = okStatus(p.status);
   const id = loaded ? pageIdentity(p, name) : { identified: false };
-  if (id.identified) {
-    return { pass: true, summary: `${host} names the business (${id.field}: “${id.value}”)`, observed: { host, identity: id, ties } };
-  }
-  if (ties.length) {
-    return { pass: true, summary: `${host} is tied to “${name}”: ${ties[0].how} (${ties[0].url})`, observed: { host, identity: id, ties } };
+  if (id.identified || ties.length) {
+    // A name alone can belong to a namesake elsewhere (petpal.com is a US network, not the Bursa shop):
+    // with a city given, the page or a search result showing this site must name that city too.
+    const place = city && !looksLikeDomain(city) ? placeTie(loaded ? p : null, results, host, city) : 'no city given';
+    if (!place) {
+      return { pass: null, summary: `${host} uses the name “${name}” but nothing on it or in search ties it to ${city}; it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
+    }
+    const why = id.identified ? `names the business (${id.field}: “${id.value}”)` : `is tied to “${name}”: ${ties[0].how} (${ties[0].url})`;
+    return { pass: true, summary: `${host} ${why}`, observed: { host, identity: id, ties, ...(city ? { place } : {}) } };
   }
   if (!loaded && isHostLimit(p.error)) {
     // Our host ran out of requests or time: that says nothing about the business's site.
@@ -187,6 +207,13 @@ async function ownSiteVerdict(io, { host, name, results, searchError, userGiven 
   };
 }
 
+/** "Naramica" -> naramica.com, naramica.com.tr. Short or generic names are not guessed (elle.com is a magazine). */
+export function obviousDomains(name) {
+  const slug = fold(name).replace(/[^a-z0-9]/g, '');
+  if (slug.length < 7 || !nameTokens(name).length) return [];
+  return [`${slug}.com`, `${slug}.com.tr`];
+}
+
 export const CHECKS = {
   'site.own_site': {
     title: "The domain is the business's own website",
@@ -194,7 +221,7 @@ export const CHECKS = {
       const cls = classifyHost(host);
       if (!isValidHostname(host) || cls.kind === 'platform' || userGiven || !name) return ownSiteVerdict(io, { host, name, userGiven, needSearchTie });
       const s = await io.search(query || discoveryQuery({ name, city }), { purpose: 'discover' });
-      return ownSiteVerdict(io, { host, name, results: s.results || [], searchError: s.error || null, needSearchTie });
+      return ownSiteVerdict(io, { host, name, city, results: s.results || [], searchError: s.error || null, needSearchTie });
     },
   },
 
@@ -218,13 +245,21 @@ export const CHECKS = {
         }
       }
       const tried = [];
-      for (const host of candidates.slice(0, max)) {
-        const v = await ownSiteVerdict(io, { host, name, results });
-        tried.push({ host, pass: v.pass, summary: v.summary });
-        if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}`, observed: { host, tried, listings } };
+      // Search can miss a shop's own site (naramica.com came back as Instagram only), so the obvious
+      // address built from the name is probed too. It counts only if its homepage names the business.
+      const guesses = obviousDomains(name).filter((h) => !candidates.includes(h));
+      for (const host of [...candidates.slice(0, max), ...guesses]) {
+        const guessed = guesses.includes(host);
+        const v = await ownSiteVerdict(io, { host, name, city, results });
+        if (guessed && v.pass !== true && !v.observed?.notChecked && !v.observed?.placeUnproven) continue; // a guess that is not theirs is no evidence either way
+        tried.push({ host, pass: v.pass, summary: v.summary, ...(guessed ? { guessed: true } : {}) });
+        if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}${guessed ? ' (found by trying the address built from the name)' : ''}`, observed: { host, tried, listings } };
         // A candidate our host could not check leaves the question open: never "no website".
         if (v.observed?.notChecked) return { pass: null, summary: `Not checked: ${v.summary}`, observed: { tried, listings } };
       }
+      // A site that names the business but not its city may still be theirs: say so, never "no website".
+      const namesake = tried.find((t) => t.pass === null && /namesake/.test(t.summary));
+      if (namesake) return { pass: null, summary: `Not settled: ${namesake.summary}`, observed: { tried, listings } };
       const unloaded = tried.filter((t) => t.pass === null).map((t) => t.host);
       return {
         pass: false,
@@ -399,10 +434,20 @@ export const CHECKS = {
     async run(io, { name, city }) {
       // A domain in the city slot would make the lookup find nothing and read as "not on the map".
       const place = city && !looksLikeDomain(city) ? city : null;
-      const r = await io.nominatim(`${name}${place ? `, ${place}` : ''}`);
+      const at = place ? `, ${place}` : '';
+      let r = await io.nominatim(`${name}${at}`);
       if (r.error) return { pass: null, summary: `Map lookup failed: ${r.error}`, observed: {} };
+      // Map names often drop words like "Kafe": "Sakal Kafe Pub, Ankara" finds nothing, "Sakal Pub, Ankara" does.
+      const core = nameTokens(name).join(' ');
+      let retried = false;
+      if (!(r.results || []).length && core && core !== fold(name)) {
+        const again = await io.nominatim(`${core}${at}`);
+        if (again.error) return { pass: null, summary: `Map lookup failed: ${again.error}`, observed: {} };
+        r = again;
+        retried = true;
+      }
       const best = (r.results || [])
-        .map((x) => ({ ...x, score: nameSimilarity(name, x.name || x.display_name) }))
+        .map((x) => ({ ...x, score: nameSimilarity(name, x.name || String(x.display_name || '').split(',')[0]) }))
         .sort((a, b) => b.score - a.score)[0];
       const pass = !!best && best.score >= 0.5;
       return {
@@ -412,7 +457,8 @@ export const CHECKS = {
           name: best.name, display_name: best.display_name, lat: best.lat, lon: best.lon,
           osm: best.osm_type && best.osm_id ? `${best.osm_type}/${best.osm_id}` : null,
           phone: best.phone || null, website: best.website || null, score: Number(best.score.toFixed(3)),
-        } : {},
+          ...(retried ? { query: `${core}${at}` } : {}),
+        } : (retried ? { query: `${core}${at}` } : {}),
       };
     },
   },
