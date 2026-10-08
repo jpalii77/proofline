@@ -352,9 +352,9 @@ export const DICT = {
     'hero.h6.statement': '+90 212 555 30 61 is the business’s own number.',
     'hero.h6.reason': 'The phone number appears on the official site: expected pass, got fail — the site lists another number',
     'hero.h7.label': 'No contact link on site',
-    'hero.h7.statement': 'The homepage has no contact form, email link, tap-to-call or WhatsApp link.',
+    'hero.h7.statement': 'The homepage shows no contact form, email, phone number or WhatsApp link.',
 
-    'blurb.lumen': 'Café with a working site, but a certificate about to expire and no contact button. A stale review claims the site is down.',
+    'blurb.lumen': 'Café with a working site, but its certificate is about to expire. A stale review claims the site is down.',
     'blurb.harbor': 'Clinic whose domain lapsed and now shows a for-sale page. An old forum post claims a certificate warning.',
     'blurb.atlas': 'Bike shop that may have changed hands: the site now carries another name and number, and a directory marks it closed.',
     'blurb.kuzey': 'Café with no website of its own, only a QR-menu page and Instagram. The planner mistakes the menu platform for its site.',
@@ -718,9 +718,9 @@ export const DICT = {
     'hero.h6.statement': '+90 212 555 30 61 işletmenin kendi numarası.',
     'hero.h6.reason': 'Telefon numarası resmî sitede geçiyor: beklenen başarılı, sonuç başarısız — sitede başka bir numara var',
     'hero.h7.label': 'Sitede iletişim bağlantısı yok',
-    'hero.h7.statement': 'Ana sayfada iletişim formu, e-posta bağlantısı, dokunarak arama ya da WhatsApp bağlantısı yok.',
+    'hero.h7.statement': 'Ana sayfada iletişim formu, e-posta, telefon numarası ya da WhatsApp bağlantısı yok.',
 
-    'blurb.lumen': 'Sitesi çalışan bir kafe; ama sertifikası bitmek üzere ve iletişim düğmesi yok. Eski bir yorum sitenin açılmadığını iddia ediyor.',
+    'blurb.lumen': 'Sitesi çalışan bir kafe; ama sertifikasının süresi dolmak üzere. Eski bir yorum sitenin açılmadığını iddia ediyor.',
     'blurb.harbor': 'Alan adının süresi dolmuş, artık satılık sayfası gösteren bir klinik. Eski bir forum gönderisi sertifika uyarısı olduğunu iddia ediyor.',
     'blurb.atlas': 'El değiştirmiş olabilecek bir bisiklet tamircisi: site artık başka bir ad ve numara taşıyor, bir rehber de işletmeyi kapalı gösteriyor.',
     'blurb.kuzey': 'Kendi web sitesi olmayan bir kafe; yalnız bir QR menü sayfası ve Instagram’ı var. Planlayıcı menü platformunu işletmenin sitesi sanıyor.',

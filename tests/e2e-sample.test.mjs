@@ -36,12 +36,12 @@ test('every planted wrong claim is dropped by the gate', async () => {
   }
 });
 
-test('Lumen: certificate about to expire, no contact path, phone confirmed', async () => {
+test('Lumen: certificate about to expire, phone confirmed (the "call 0232…" line counts as a contact path)', async () => {
   const { report } = await run('lumen');
   const types = report.verified.map((c) => c.type).sort();
-  assert.deepEqual(types, ['no_contact_path', 'on_map', 'phone_confirmed', 'site_online', 'ssl_expiring_soon']);
+  assert.deepEqual(types, ['on_map', 'phone_confirmed', 'site_online', 'ssl_expiring_soon']);
   assert.equal(report.card.areas.reach.grade, 'A');
-  assert.equal(report.card.areas.contact.grade, 'C');
+  assert.equal(report.card.areas.contact.grade, 'A');
 });
 
 test('Harbor: parked domain, listed phone not on site', async () => {

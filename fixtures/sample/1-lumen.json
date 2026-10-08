@@ -5,7 +5,7 @@
   "city": "Izmir",
   "domain": "lumencoffee.example",
   "listedPhone": "+90 232 555 01 47",
-  "blurb": "Café with a working site, but a certificate about to expire and no contact button. A stale review claims the site is down.",
+  "blurb": "Café with a working site, but its certificate is about to expire. A stale review claims the site is down.",
   "planted": [
     { "type": "site_unreachable", "rationale": "A 2024 directory review says “their website is down, couldn't order beans”." }
   ],

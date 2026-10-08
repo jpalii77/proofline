@@ -191,7 +191,7 @@ Where it lives:
 | `http.https_redirect` | Plain `http://` upgrades to HTTPS |
 | `tls.cert_valid` | Certificate is trusted and has at least N days left |
 | `page.not_parked` | Homepage is real, not a for-sale / parking / placeholder page |
-| `page.contact_path` | Form, email, tap-to-call or WhatsApp link exists |
+| `page.contact_path` | Form, email (link or plain text), phone (tap-to-call or labelled number) or WhatsApp link exists. On a page longer than the read limit, "none found" is "not checked" |
 | `page.phone_listed` | A given phone number is on the business's own site (format-insensitive) |
 | `page.name_match` | Site name matches the business name (a mismatch is the rename / change-of-hands signal) |
 | `osm.listed` | A matching place exists on OpenStreetMap (Nominatim) |
@@ -209,7 +209,7 @@ A page about the business on a platform proves it is *present* there, never what
 
 | Sample | What the agent finds | Planted claim the gate drops |
 | --- | --- | --- |
-| Lumen Coffee Roasters | Certificate expires in 9 days, no contact path, phone confirmed | "Site is down" |
+| Lumen Coffee Roasters | Certificate expires in 9 days, phone confirmed on its site | "Site is down" |
 | Harbor Dental Studio | Domain shows a for-sale page; listed phone not on site | "Certificate invalid" |
 | Atlas Bike Repair | Renamed site, closure signal, no HTTPS redirect; first request times out | "Phone confirmed" |
 | Kuzey Kafe | No website of its own, only a QR-menu page and Instagram; the planner mistakes the menu platform for its site | "No contact path", "phone not on its site", "renamed" — all made against the platform page |

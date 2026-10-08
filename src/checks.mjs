@@ -51,6 +51,25 @@ async function page(io, url) {
   return { ...r, html, title: pageTitle(html), text: visibleText(html) };
 }
 
+// A page longer than the read limit is cut off (src/io/real.mjs). What we found on it is proof;
+// what we did not find may sit further down, so absence on a cut-off page is "not checked".
+function notWholePage(observed) {
+  return { pass: null, summary: 'Not checked: the homepage is longer than the part we read, so “not found” would be a guess', observed: { ...observed, truncated: true } };
+}
+
+const EMAIL = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
+const PHONE_LABEL = /(?:^|[^a-z])(?:tel|telefon|phone|gsm|cep|mobile|call|ara|iletisim|whatsapp)\s*[:.]?\s*$/i; // matched on fold()ed text
+
+/** Phone numbers in visible text that sit right after a label like "Tel:" — not prices or order codes. */
+function labelledPhones(text) {
+  const out = [];
+  for (const m of String(text || '').matchAll(/\+?\d[\d\s().-]{7,18}\d/g)) {
+    const before = text.slice(Math.max(0, m.index - 20), m.index);
+    if (PHONE_LABEL.test(fold(before)) && extractPhones(m[0]).length) out.push(m[0]);
+  }
+  return out;
+}
+
 // ---- Own-site eligibility -------------------------------------------------------------------
 // A domain is treated as the business's own website only if
 //   1. it is a valid web address with a real ending (hostname.mjs), not text that looks like one;
@@ -322,11 +341,17 @@ export const CHECKS = {
       const mailto = /href=["']mailto:/i.test(p.html);
       const tel = /href=["']tel:/i.test(p.html);
       const whatsapp = /wa\.me\/|api\.whatsapp\.com/i.test(p.html);
-      const found = [form && 'contact form', mailto && 'email link', tel && 'tap-to-call link', whatsapp && 'WhatsApp link'].filter(Boolean);
+      // A plain-text address or a labelled phone number is a way to get in touch too.
+      const email = EMAIL.test(p.text);
+      const phone = labelledPhones(p.text).length > 0;
+      const found = [form && 'contact form', mailto && 'email link', tel && 'tap-to-call link', whatsapp && 'WhatsApp link',
+        email && 'email address', phone && 'phone number'].filter(Boolean);
+      const observed = { form, mailto, tel, whatsapp, email, phone };
+      if (!found.length && p.truncated) return notWholePage(observed);
       return {
         pass: found.length > 0,
-        summary: found.length ? `Found: ${found.join(', ')}` : 'No form, email, tap-to-call or WhatsApp link on the homepage',
-        observed: { form, mailto, tel, whatsapp },
+        summary: found.length ? `Found: ${found.join(', ')}` : 'No form, email, phone or WhatsApp contact on the homepage',
+        observed,
       };
     },
   },
@@ -341,6 +366,7 @@ export const CHECKS = {
       const telLinks = [...p.html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1]);
       const onPage = new Set([...extractPhones(p.text), ...telLinks.map(phoneKey).filter(Boolean)]);
       const pass = onPage.has(key);
+      if (!pass && p.truncated) return notWholePage({ looked_for: key, on_page: [...onPage] });
       return {
         pass,
         summary: pass ? `${phone} is listed on the site` : `${phone} is not on the site (site lists: ${[...onPage].join(', ') || 'none'})`,
@@ -357,6 +383,7 @@ export const CHECKS = {
       // Same identity rule as site.own_site: og:site_name, title, <h1>, then the body text.
       const id = pageIdentity(p, name, min);
       const siteName = id.value || metaContent(p.html, 'og:site_name') || p.title;
+      if (!id.identified && p.truncated) return notWholePage({ site_name: siteName, field: id.field, score: Number(id.score.toFixed(3)) });
       return {
         pass: id.identified,
         summary: id.identified

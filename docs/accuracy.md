@@ -30,8 +30,8 @@ All 7 dropped claims deserved to be dropped (none was a true claim lost).
 | Error | Wrong claims | Fix | Regression test |
 | --- | --- | --- | --- |
 | A domain typed after the name ("Name, example.com") was used as the city, so the map lookup found nothing | 1 (round 1a, before the measured run) | Fixed: a domain is never a city | `tests/intake-domain.test.mjs` |
-| Absence read from a truncated page: the fetch keeps 400 KB, a tel: link sat at ~804 KB | 2 | Planned: absence on a truncated page is "not checked" | — |
+| Absence read from a truncated page: the fetch keeps 400 KB, a tel: link sat at ~804 KB | 2 | Fixed (8 Oct, re-measured in round 2): the reader flags a cut-off page; on it, "not found" (contact, phone, name) is "not checked" | `tests/truncated-page.test.mjs` |
 | Own-site identity accepted on a name match alone (petpal.com is a US network, not the Bursa shop) | 2 | Planned | — |
 | "No website" concluded from 5 search results without probing the obvious domain (naramica.com, vatkalimon.com) | 2 | Planned | — |
 | OSM name match too strict ("Sakal Kafe Pub" vs "Sakal Pub", same street) | 1 | Planned | — |
-| Contact path ignores an email and phone shown as plain text | 1 | Planned | — |
+| Contact path ignores an email and phone shown as plain text | 1 | Fixed (8 Oct, re-measured in round 2): a plain-text email or a labelled phone number ("Tel:", "Call", "İletişim"…) counts; bare numbers such as prices or order codes do not | `tests/truncated-page.test.mjs` |

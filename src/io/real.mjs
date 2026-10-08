@@ -39,20 +39,25 @@ export async function assertPublicHost(host, lookup) {
   if (!addrs.length || addrs.some((a) => isPrivateAddress(a))) throw new Error('private address refused');
 }
 
-async function readCapped(res) {
-  if (!res.body) return '';
+// Returns { text, truncated }. A truncated page can prove presence, never absence (checks.mjs).
+export async function readCapped(res, max = MAX_BODY) {
+  if (!res.body) return { text: '', truncated: false };
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let out = '';
   let size = 0;
-  while (size < MAX_BODY) {
+  let truncated = false;
+  for (;;) {
+    if (size >= max) { truncated = true; break; }
     const { done, value } = await reader.read();
     if (done) break;
     size += value.length;
     out += decoder.decode(value, { stream: true });
   }
   reader.cancel().catch(() => {});
-  return (out + decoder.decode()).slice(0, MAX_BODY);
+  out += decoder.decode();
+  if (out.length > max) { out = out.slice(0, max); truncated = true; }
+  return { text: out, truncated };
 }
 
 let lastNominatim = 0;
@@ -93,8 +98,8 @@ export function createRealIO({ net, tavily, nominatimContact = '', fetchImpl = g
             current = new URL(loc, current).toString();
             continue;
           }
-          const body = /text\/html|xhtml|text\/plain/i.test(res.headers.get('content-type') || 'text/html') ? await readCapped(res) : '';
-          return { status: res.status, finalUrl: current, chain, body };
+          const read = /text\/html|xhtml|text\/plain/i.test(res.headers.get('content-type') || 'text/html') ? await readCapped(res) : { text: '', truncated: false };
+          return { status: res.status, finalUrl: current, chain, body: read.text, ...(read.truncated ? { truncated: true } : {}) };
         }
         return { status: null, finalUrl: current, chain, error: 'too many redirects' };
       } catch (e) {
