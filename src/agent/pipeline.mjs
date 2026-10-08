@@ -13,13 +13,18 @@ import { withDeadline } from '../limits.mjs';
 import { domainsIn, extractPhones, looksLikeDomain, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
 
-/** Parse "Name, City" or a bare domain. */
+const isDomain = (s) => looksLikeDomain(s) && isValidHostname(s);
+
+/** Parse "Name, City", "Name, domain" (either order after the name) or a bare domain. */
 export function intake(query) {
   const q = String(query || '').trim().slice(0, 200);
   if (!q) return { error: 'Enter a business name or a domain.' };
-  if (looksLikeDomain(q) && isValidHostname(q)) return { raw: q, domain: normalizeHost(q) };
+  if (isDomain(q)) return { raw: q, domain: normalizeHost(q) };
   const [name, ...rest] = q.split(',').map((s) => s.trim()).filter(Boolean);
-  return { raw: q, name, city: rest.join(', ') || null };
+  // A domain is never a city: it would turn the map lookup into "Name, example.com" and find nothing.
+  const domainPart = rest.find(isDomain);
+  const city = rest.filter((s) => !isDomain(s)).join(', ') || null;
+  return domainPart ? { raw: q, name, city, domain: normalizeHost(domainPart) } : { raw: q, name, city };
 }
 
 /**
@@ -186,7 +191,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   if (domainDropped) guard.push(domainDropped);
   const ctx = {
     name: plan.name || parsed.name || null,
-    city: plan.city || parsed.city || null,
+    city: [plan.city, parsed.city].find((c) => c && !looksLikeDomain(c)) || null,
     domain: planned || parsed.domain || null,
     phone: plan.phone || null,
     searchQuery,

@@ -10,7 +10,7 @@ import { invalidHostSentence, isValidHostname } from './hostname.mjs';
 import { isHostLimit } from './limits.mjs';
 import { classifyHost } from './platforms.mjs';
 import {
-  canonName, domainsIn, extractPhones, fold, headings, metaContent, nameSimilarity, nameTokens, normalizeHost,
+  canonName, domainsIn, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
   pageTitle, phoneKey, visibleText,
 } from './text.mjs';
 
@@ -370,7 +370,9 @@ export const CHECKS = {
   'osm.listed': {
     title: 'Listed on OpenStreetMap under this name',
     async run(io, { name, city }) {
-      const r = await io.nominatim(`${name}${city ? `, ${city}` : ''}`);
+      // A domain in the city slot would make the lookup find nothing and read as "not on the map".
+      const place = city && !looksLikeDomain(city) ? city : null;
+      const r = await io.nominatim(`${name}${place ? `, ${place}` : ''}`);
       if (r.error) return { pass: null, summary: `Map lookup failed: ${r.error}`, observed: {} };
       const best = (r.results || [])
         .map((x) => ({ ...x, score: nameSimilarity(name, x.name || x.display_name) }))

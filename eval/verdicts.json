@@ -1,0 +1,27 @@
+{
+  "run": "runs/2026-10-08.json (round 1b, after the domain-as-city fix)",
+  "checkedBy": "independent re-check on 2026-10-08: curl (status, redirect), openssl (certificate end date), full-page HTML search, Nominatim queries, direct domain probes",
+  "verdicts": {
+    "hicret": { "site_online": "right", "https_healthy": "right", "phone_unconfirmed": "right", "not_on_map": "right (the shop is in Kayseri; OSM's two 'Hicret Kuruyemiş' entries are in Kocaeli and Gaziantep)" },
+    "zekitriko": { "site_online": "right", "https_healthy": "right", "phone_unconfirmed": "right", "not_on_map": "right" },
+    "elleshoes": { "site_online": "right", "https_healthy": "right", "no_contact_path": "wrong: the homepage shows iletisim@elleshoes.com, a 0850 number and WhatsApp as plain text (no links); the claim misleads a seller", "not_on_map": "right" },
+    "onlineciftci": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "peyman": { "not_on_map": "right" },
+    "petpal": { "site_online": "wrong: petpal.com is a US pet social network, not the Bursa shop (identity matched on the name alone)", "https_healthy": "wrong: same site", "not_on_map": "right" },
+    "sakal": { "no_own_website": "right (no site found by search or domain probes)", "not_on_map": "wrong: OSM lists 'Sakal Pub', Kavaklıdere, Ankara; name similarity to 'Sakal Kafe Pub' was below the 0.5 bar" },
+    "naramica": { "no_own_website": "wrong: naramica.com loads ('Naramica | Seramik Ürünleri Keşfet'); search returned only Instagram", "not_on_map": "right" },
+    "kaptan": { "site_online": "right", "https_healthy": "right", "no_contact_path": "wrong: tel:+905422121167 and a WhatsApp link sit at byte ~804k; the fetch keeps only the first 400k", "phone_unconfirmed": "wrong: same tel: link carries 5422121167", "not_on_map": "right" },
+    "vatkalimon": { "no_own_website": "wrong: vatkalimon.com loads ('Vatkalimon'); search returned no site", "not_on_map": "right" },
+    "kampveotesi": { "not_on_map": "right" },
+    "tarimgaraj": { "not_on_map": "right" }
+  },
+  "totals": { "kept": 33, "right": 24, "wrong": 9, "dropped": 7, "droppedAndShouldHaveBeen": 7 },
+  "causes": [
+    "absence read from a truncated page (400 KB cap): 2",
+    "own-site identity accepted on a name match alone (different business, other country): 2",
+    "'no website' concluded from 5 search results without probing the obvious domain: 2",
+    "OSM name match too strict for 'X Kafe Pub' vs 'X Pub': 1",
+    "contact path ignores plain-text email and phone: 1",
+    "fixed before this run: a domain typed after the name was used as the city (round 1a)"
+  ]
+}

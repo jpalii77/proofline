@@ -1,0 +1,14 @@
+[
+  { "id": "hicret", "query": "Hicret Kuruyemiş, hicretkuruyemis.net", "note": "online nut shop (ikas)" },
+  { "id": "zekitriko", "query": "Zeki Triko, zekitriko.com", "note": "underwear brand with own store" },
+  { "id": "elleshoes", "query": "Elle Shoes, elleshoes.com", "note": "shoe store (T-Soft)" },
+  { "id": "onlineciftci", "query": "Online Çiftçi, onlineciftci.com", "note": "food / farm products" },
+  { "id": "peyman", "query": "Peyman Kuruyemiş, peymanshop.com", "note": "large nut brand" },
+  { "id": "petpal", "query": "Petpal, Bursa", "note": "pet shop" },
+  { "id": "sakal", "query": "Sakal Kafe Pub, Ankara", "note": "bar/cafe; directory pages, no own web store" },
+  { "id": "naramica", "query": "Naramica", "note": "ceramics store" },
+  { "id": "kaptan", "query": "Kaptan Oyuncak", "note": "toy store" },
+  { "id": "vatkalimon", "query": "Vatkalimon", "note": "fashion store" },
+  { "id": "kampveotesi", "query": "Kamp ve Ötesi", "note": "outdoor gear store" },
+  { "id": "tarimgaraj", "query": "Tarım Garaj", "note": "agriculture equipment store" }
+]
