@@ -1,6 +1,7 @@
 // Zero-dependency HTTP server: static UI + Server-Sent Events stream of the agent trace.
 //   GET  /api/config            public setup (sample mode, model names, sample list)
 //   GET  /api/run?q=...         SSE: one event per agent step, final "done" carries the report
+//        ...&lang=tr            the models write the owner lines, summary and pitch in Turkish
 //   POST /api/recheck           { runId, claimId } -> re-runs that claim's proof right now
 //   GET  /api/report/<id>       a finished run (for the read-only share link /r/<id>)
 //   GET  /r/<id>                the page, opened read-only on that report
@@ -9,7 +10,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runAgent } from './src/agent/pipeline.mjs';
+import { REPORT_LANGS, runAgent } from './src/agent/pipeline.mjs';
 import { gateClaim } from './src/claims.mjs';
 import { observed } from './src/io/observed.mjs';
 import { friendlyError } from './src/limits.mjs';
@@ -67,6 +68,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
 
   async function handleRun(req, res, url) {
     const q = (url.searchParams.get('q') || '').trim().slice(0, 200);
+    const lang = REPORT_LANGS.includes(url.searchParams.get('lang')) ? url.searchParams.get('lang') : 'en';
     const wiring = q ? wiringFor(cfg, q, { fetchImpl, pace }) : { error: 'Enter a business name or a domain.' };
     res.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive' });
     const send = (e) => res.write(`event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`);
@@ -79,7 +81,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
     const emit = (e) => { events.push(e); send(e); };
     try {
       emit({ type: 'run', runId, mode: cfg.sampleMode ? 'sample' : 'live' });
-      const out = await runAgent({ query: wiring.query, io: wiring.io, brain: wiring.brain, emit });
+      const out = await runAgent({ query: wiring.query, io: wiring.io, brain: wiring.brain, emit, lang });
       if (out.report) {
         remember(runId, { io: wiring.io, claims: [...out.report.verified, ...out.report.dropped] });
         const id = newShareId();

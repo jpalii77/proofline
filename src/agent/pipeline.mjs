@@ -85,6 +85,9 @@ export function numbersGrounded(text, claim) {
   return newNumbers(text, claim).length === 0;
 }
 
+/** Languages a report can be written in. */
+export const REPORT_LANGS = ['en', 'tr'];
+
 // Which model call does what. `tier` picks the model (reasoning = Nemotron Super, fast = Nano).
 export const MODEL_ROLES = {
   plan: { tier: 'reasoning', role: 'Planner', task: 'which domain and phone belong to the business' },
@@ -113,8 +116,11 @@ export function modelTotals(calls) {
  * deadlineMs: optional wall-clock budget for the whole run (live demo). After it, network checks
  * answer "not checked" and model calls are skipped; the run still finishes with what is proven.
  */
-export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now = () => Date.now(), deadlineMs = null }) {
+export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now = () => Date.now(), deadlineMs = null, lang = 'en' }) {
   const t0 = now();
+  // Language of the words the models write for people (owner lines, summary, pitch). Checks, claim
+  // types and proofs stay the same in every language; the page translates their fixed wording.
+  const reportLang = REPORT_LANGS.includes(lang) ? lang : 'en';
   const deadlineAt = deadlineMs ? t0 + deadlineMs : null;
   const io = withDeadline(rawIO, deadlineAt, now);
   const step = (type, data) => emit({ t: now() - t0, ...data, type });
@@ -158,7 +164,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   }
   const modelEvent = (call) => step('model', { ...call });
 
-  step('start', { query, mode: io.mode, models: brain.models });
+  step('start', { query, mode: io.mode, models: brain.models, lang: reportLang });
 
   // 1. Intake
   const parsed = intake(query);
@@ -320,7 +326,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   const rewordRejected = [];
   let verifyCall = null;
   if (verified.length) {
-    const verifyOut = await ask('verify', { ctx, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, statement: c.statement, evidence: c.evidence.map((e) => e.summary) })) });
+    const verifyOut = await ask('verify', { ctx, lang: reportLang, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, statement: c.statement, evidence: c.evidence.map((e) => e.summary) })) });
     verifyCall = verifyOut.call;
     for (const row of Array.isArray(verifyOut.json?.claims) ? verifyOut.json.claims : []) {
       const c = verified.find((v) => v.id === row?.id);
@@ -341,7 +347,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   if (verifyCall) modelEvent(verifyCall);
 
   // 8. Write (reasoning model): owner summary + seller pitch that cites claim ids
-  const writeOut = await ask('write', { ctx, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, area: c.area, statement: c.statement })) });
+  const writeOut = await ask('write', { ctx, lang: reportLang, claims: verified.map((c) => ({ id: c.id, type: c.type, tone: c.tone, area: c.area, statement: c.statement })) });
   if (writeOut.error) partial.push(`Writer did not answer (${writeOut.error}); no summary or pitch was written. The verified claims above stand on their own.`);
   const w = writeOut.json || {};
   const ids = new Set(verified.map((c) => c.id));
@@ -381,6 +387,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
     pitchRemoved: uncited,
     models,
     partial,
+    lang: reportLang,
     generatedAt: new Date(now()).toISOString(),
     stats: {
       proposed: claims.length, verified: verified.length, dropped: dropped.length,

@@ -2,7 +2,8 @@
 // Pure functions, no DOM, so the mapping is tested against the report in Node (tests/gate-data.test.mjs).
 // The visual never invents an outcome: a lane is kept or dropped exactly as the gate event says.
 
-import { DICT, t } from './i18n.js';
+import { DICT, getLang, t } from './i18n.js';
+import { claimStatement, dropReasonText } from './report-lang.js';
 
 // Three gate lines, in the order a claim meets them. Every check belongs to exactly one.
 export const GATES = [
@@ -39,8 +40,10 @@ export function labelTables(lang) { return { short: table('short.', lang), mini:
  *          dropAt: gate idx | null, reason: string|null, failed: { check, title, summary } | null }
  * A dropped claim stops at the gate holding its first check that did not match (or was skipped:
  * inconclusive is not proven). A kept claim passes all three.
+ * ctx (the run's business: domain, phone, name) marks a real run: its sentence and drop reason are then
+ * shown in the page's language. The landing page's example lanes pass none and keep their own text.
  */
-export function laneFromGate(e) {
+export function laneFromGate(e, ctx = null, lang = getLang()) {
   const evidence = Array.isArray(e.evidence) ? e.evidence : [];
   const touches = [...new Set(evidence.map((x) => gateOf(x.check)))].sort((a, b) => a - b);
   const dropped = e.verdict !== 'verified';
@@ -52,28 +55,36 @@ export function laneFromGate(e) {
     failed = bad[0] ? { check: bad[0].check, title: bad[0].title, summary: bad[0].summary } : null;
     dropAt = failed ? gateOf(failed.check) : touches.length ? touches[touches.length - 1] : GATES.length - 1;
   }
+  const statement = ctx ? claimStatement(e, ctx, lang) : e.statement;
+  const dropReason = ctx && e.dropReason ? dropReasonText(e, lang) : e.dropReason;
   return {
     id: e.id,
     type: e.claimType || e.type || null,
-    label: shortLabel(e.claimType || e.type) || e.statement,
-    mini: miniLabel(e.claimType || e.type) || shortLabel(e.claimType || e.type) || e.statement,
-    statement: e.statement,
+    label: shortLabel(e.claimType || e.type) || statement,
+    mini: miniLabel(e.claimType || e.type) || shortLabel(e.claimType || e.type) || statement,
+    statement,
     verdict: dropped ? 'dropped' : 'verified',
     touches,
     dropAt,
-    reason: dropped ? (e.dropReason || (failed ? `${failed.title}: ${failed.summary}` : t('gate.notProven'))) : null,
+    reason: dropped ? (dropReason || (failed ? `${failed.title}: ${failed.summary}` : t('gate.notProven'))) : null,
     failed,
   };
 }
 
-export function lanesFromEvents(events) {
-  return events.filter((e) => e && e.type === 'gate').map(laneFromGate);
+/** The business the run settled on (from its plan step), for wording its claims. */
+export function ctxFromEvents(events) {
+  return events.find((e) => e && e.type === 'plan')?.ctx || {};
+}
+
+export function lanesFromEvents(events, lang = getLang()) {
+  const ctx = ctxFromEvents(events);
+  return events.filter((e) => e && e.type === 'gate').map((e) => laneFromGate(e, ctx, lang));
 }
 
 // Same lanes from a finished report (shared links and cached runs carry the report too).
-export function lanesFromReport(report) {
+export function lanesFromReport(report, lang = getLang()) {
   const toEvent = (c) => ({ id: c.id, claimType: c.type, verdict: c.verdict, statement: c.statement, dropReason: c.dropReason, evidence: c.evidence || [] });
-  return [...(report.verified || []), ...(report.dropped || [])].map((c) => laneFromGate(toEvent(c)));
+  return [...(report.verified || []), ...(report.dropped || [])].map((c) => laneFromGate(toEvent(c), report.ctx || {}, lang));
 }
 
 export function gateSummary(lanes) {

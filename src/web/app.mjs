@@ -3,6 +3,7 @@
 //   GET  /api/config             demo setup: samples, whether live search is on, limits, what is left today
 //   GET  /api/run?q=...          SSE trace of a recorded sample (free, unlimited)
 //   GET  /api/run?q=...&live=1   SSE trace of a live run: cached for 24 h per query, else rate-limited
+//        ...&lang=tr             the models write the owner lines, summary and pitch in Turkish
 //   POST /api/recheck            { runId, claimId } -> re-runs that claim's proof right now
 //   GET  /api/report/<id>        a finished run, stored for /r/<id> (read-only share link, 14 days)
 //   GET  /api/selftest           network checks against fixed public test hosts (how this host behaves)
@@ -12,7 +13,7 @@
 // never leave the server.
 
 import { createNemotronBrain } from '../agent/nemotron-brain.mjs';
-import { runAgent } from '../agent/pipeline.mjs';
+import { REPORT_LANGS, runAgent } from '../agent/pipeline.mjs';
 import { createSampleBrain } from '../agent/sample-brain.mjs';
 import { runCheck } from '../checks.mjs';
 import { gateClaim } from '../claims.mjs';
@@ -136,7 +137,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
     } catch { /* sharing is optional; the report is already on screen */ }
   }
 
-  function runSample(query, sse) {
+  function runSample(query, sse, lang) {
     const sample = findSample(loadSamples(), query);
     if (!sample) { sse.send({ type: 'error', message: MESSAGES.notSample }); sse.close(); return null; }
     const runId = `s.${sample.id}.${rid('')}`;
@@ -150,6 +151,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
           io: createSampleIO(sample, { latency: pace ? [60, 240] : null }),
           brain: createSampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
           emit,
+          lang,
         });
         await share(sse, { query: sample.input, mode: 'sample', events });
       } catch (err) {
@@ -158,11 +160,13 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
     })();
   }
 
-  async function runLive(request, query, sse) {
+  async function runLive(request, query, sse, lang) {
     const fail = (message) => { sse.send({ type: 'error', message }); sse.close(); };
     if (!cfg.liveReady) return fail(MESSAGES.notConfigured);
-    const key = fold(query);
-    if (!key) return fail(MESSAGES.empty);
+    const folded = fold(query);
+    if (!folded) return fail(MESSAGES.empty);
+    // A Turkish report has Turkish model text: it is cached apart from the English one.
+    const key = lang === 'en' ? folded : `${lang}:${folded}`;
 
     const hit = await store.getCache(key, cfg.cacheHours * HOUR);
     if (hit) {
@@ -182,7 +186,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
     try {
       emit({ type: 'run', runId, mode: 'live', left: Math.max(0, Math.min(cfg.globalPerDay - quota.global, cfg.ipPerDay - quota.ip)) });
       const { io, brain } = liveWiring();
-      const out = await runAgent({ query, io, brain, emit, now, deadlineMs: cfg.runSeconds * 1000 });
+      const out = await runAgent({ query, io, brain, emit, now, deadlineMs: cfg.runSeconds * 1000, lang });
       if (out.report) {
         await store.putRun(runId, { query, claims: [...out.report.verified, ...out.report.dropped].map(({ evidence, verdict, dropReason, ...plain }) => plain) }); // eslint-disable-line no-unused-vars
         // A run that lost a model step is shown, but not cached: the next visitor gets a fresh try.
@@ -261,9 +265,10 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
       if (request.method === 'GET' && url.pathname === '/api/run') {
         const q = (url.searchParams.get('q') || '').trim().slice(0, 200);
         const live = url.searchParams.get('live') === '1';
+        const lang = REPORT_LANGS.includes(url.searchParams.get('lang')) ? url.searchParams.get('lang') : 'en';
         const sse = sseStream();
         let work;
-        if (!q) { sse.send({ type: 'error', message: MESSAGES.empty }); sse.close(); } else work = live ? runLive(request, q, sse) : runSample(q, sse);
+        if (!q) { sse.send({ type: 'error', message: MESSAGES.empty }); sse.close(); } else work = live ? runLive(request, q, sse, lang) : runSample(q, sse, lang);
         if (work && ctx?.waitUntil) ctx.waitUntil(work);
         return sse.response;
       }

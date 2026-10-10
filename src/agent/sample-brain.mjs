@@ -46,6 +46,61 @@ const PITCH_LINE = {
   no_own_website: 'you have no website of your own yet; searches only lead to listing and menu platforms',
 };
 
+// Turkish versions, used when the page asks for a Turkish report (same facts, no new numbers).
+const OWNER_TEXT_TR = {
+  site_online: 'Web siteniz açılıyor ve işletmenizi gösteriyor.',
+  site_unreachable: 'Web siteniz şu anda ziyaretçilere açılmıyor.',
+  domain_parked: 'Web adresiniz işletmeniz yerine “satılık” ya da boş bir sayfa gösteriyor.',
+  https_healthy: 'Siteniz güvenli: sertifikası geçerli ve ziyaretçiler güvenli https sürümüne yönlendiriliyor.',
+  ssl_expiring_soon: 'Sitenizin güvenlik sertifikası yakında bitiyor; sonra tarayıcılar ziyaretçileri uyaracak.',
+  ssl_invalid: 'Sertifikanın süresi dolmuş ya da geçersiz olduğu için tarayıcılar sitenizde güvenlik uyarısı gösteriyor.',
+  no_https_redirect: 'Adresinizi “https” olmadan yazanlar sitenizin güvensiz sürümüne düşüyor.',
+  no_contact_path: 'Ziyaretçiler ana sayfanızdan size ulaşamıyor: form, e-posta, arama ya da WhatsApp düğmesi yok.',
+  phone_confirmed: 'İnternetteki telefon numaranız kendi sitenizdekiyle aynı.',
+  phone_unconfirmed: 'İnternette sizin için görünen telefon numarası kendi sitenizde yok; eski olabilir.',
+  on_map: 'Birçok harita uygulamasının kullandığı OpenStreetMap’te varsınız.',
+  not_on_map: 'Birçok harita uygulamasının kullandığı OpenStreetMap’te yoksunuz.',
+  possibly_closed: 'Herkese açık bir sayfa kapanmış olabileceğinizi söylüyor. Açıksanız o sayfanın düzeltilmesi gerekir.',
+  possibly_renamed: 'Web siteniz, kayıtlardaki adınızdan farklı bir ad gösteriyor; müşterilerin kafası karışabilir.',
+  no_own_website: 'Henüz kendi web siteniz yok; insanlar sizi yalnızca listeleme ve menü platformlarında buluyor.',
+};
+
+const PITCH_LINE_TR = {
+  domain_parked: 'web adresiniz şu anda satılık sayfası gösteriyor, yani sizi arayanlar bir reklama düşüyor',
+  site_unreachable: 'web siteniz şu anda açılmıyor',
+  ssl_expiring_soon: 'güvenlik sertifikanız 30 gün içinde bitiyor, sonra tarayıcılar ziyaretçileri uyaracak',
+  ssl_invalid: 'tarayıcılar şu anda sitenizde güvenlik uyarısı gösteriyor',
+  no_https_redirect: 'adresinizi https olmadan yazan ziyaretçiler güvensiz sayfada kalıyor',
+  no_contact_path: 'ana sayfadan size ulaşmanın bir yolu yok',
+  phone_unconfirmed: 'internetteki kayıtlarda görünen telefon numarası kendi sitenizde yok',
+  not_on_map: 'OpenStreetMap’te yoksunuz',
+  possibly_renamed: 'siteniz ile kayıtlarınız farklı adlar kullanıyor',
+  possibly_closed: 'herkese açık bir kayıt kapanmış olabileceğinizi söylüyor',
+  no_own_website: 'henüz kendi web siteniz yok; aramalar yalnızca listeleme ve menü platformlarına çıkıyor',
+};
+
+function writeTr({ name, city, issues, goods }) {
+  const owner_summary = issues.length
+    ? `${name} için internette doğrulanmış ${issues.length} sorun var${goods.length ? `; ${goods.length} şey zaten çalışıyor` : ''}. Aşağıdaki her madde, onu kanıtlayan kontrole bağlı.`
+    : `${name} internette sağlıklı görünüyor. Aşağıdaki her madde, onu kanıtlayan kontrole bağlı.`;
+  const findings = issues
+    .filter((c) => PITCH_LINE_TR[c.type])
+    .slice(0, 3)
+    .map((c) => ({ text: `Şunu fark ettim: ${PITCH_LINE_TR[c.type]}.`, cites: [c.id] }));
+  // A planted, uncited sentence: the write step must strip it.
+  findings.push({ text: 'Bu yüzden müşterilerinizin yaklaşık %40’ını kaybediyorsunuz.', cites: [] });
+  return {
+    owner_summary,
+    pitch: {
+      subject: `${name}: ${issues.length ? `web siteniz için ${issues.length} hızlı düzeltme` : 'web sitesi kontrolünüz'}`,
+      opening: `Merhaba, ${city ? `${city} bölgesindeki` : 'bölgenizdeki'} yerel işletmelerin web sitelerini çalışır tutmalarına yardım ediyorum. ${name} için herkese açık hızlı bir kontrol yaptım.`,
+      findings,
+      offer: 'Bunları bu hafta sabit bir fiyata düzeltebilirim; kendiniz yeniden çalıştırabileceğiniz önce/sonra raporunu da gönderirim.',
+      closing: 'Kontrolleri 10 dakikalık bir görüşmede göstermekten memnuniyet duyarım.',
+    },
+  };
+}
+
 export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
   const reply = async (json) => {
     const ms = thinkMs ? Math.round(thinkMs * (0.7 + Math.random() * 0.6)) : 0;
@@ -97,14 +152,15 @@ export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
       return reply({ claims });
     },
 
-    verify: ({ claims }) => reply({
-      claims: claims.map((c) => ({ id: c.id, owner_text: OWNER_TEXT[c.type] || c.statement })),
+    verify: ({ claims, lang }) => reply({
+      claims: claims.map((c) => ({ id: c.id, owner_text: (lang === 'tr' ? OWNER_TEXT_TR : OWNER_TEXT)[c.type] || c.statement })),
     }),
 
-    write: ({ ctx, claims }) => {
+    write: ({ ctx, claims, lang }) => {
       const issues = claims.filter((c) => CLAIM_TYPES[c.type]?.tone !== 'good');
       const goods = claims.filter((c) => CLAIM_TYPES[c.type]?.tone === 'good');
       const name = ctx.displayName || ctx.name || ctx.domain;
+      if (lang === 'tr') return reply(writeTr({ name, city: ctx.city, issues, goods }));
       const owner_summary = issues.length
         ? `${name} has ${issues.length} verified issue${issues.length > 1 ? 's' : ''} online${goods.length ? `, and ${goods.length} thing${goods.length > 1 ? 's' : ''} already working` : ''}. Each item below links to the check that proves it.`
         : `${name} looks healthy online. Every item below links to the check that proves it.`;

@@ -5,6 +5,16 @@
 
 const RULES = 'Reply with one JSON object only. No markdown. Never invent facts, domains, phone numbers or numbers.';
 
+// The words people read (owner lines, summary, pitch) follow the language picked on the page.
+// JSON keys, claim ids, domains, phone numbers and business names are never translated.
+const LANGUAGE = { en: 'English', tr: 'Turkish' };
+export function languageRule(lang) {
+  const name = LANGUAGE[lang] || LANGUAGE.en;
+  return lang === 'tr'
+    ? `Write every text value in ${name} (natural, everyday Turkish; use "siz"). Keep JSON keys, claim ids, domains, phone numbers and names exactly as given.`
+    : `Write every text value in ${name}.`;
+}
+
 export function createNemotronBrain(llm) {
   return {
     models: { reasoning: llm.models.reasoning, fast: llm.models.fast, provider: 'Nebius Token Factory' },
@@ -39,17 +49,19 @@ Schema: {"claims": [{"type": catalog type, "rationale": string citing the observ
       user: { business: ctx, catalog, observations: observations.map((o) => ({ check: o.check, params: o.params, pass: o.pass, summary: o.summary })) },
     }),
 
-    verify: ({ ctx, claims }) => llm.chat({
+    verify: ({ ctx, claims, lang }) => llm.chat({
       tier: 'fast',
       system: `Rewrite each verified claim as one short, friendly sentence for the business owner (no jargon). ${RULES}
+${languageRule(lang)}
 Do not add numbers, dates or facts not in the claim or its evidence. Schema: {"claims": [{"id": string, "owner_text": string}]}`,
       user: { business: ctx.displayName || ctx.name || ctx.domain, claims },
     }),
 
-    write: ({ ctx, claims }) => llm.chat({
+    write: ({ ctx, claims, lang }) => llm.chat({
       tier: 'reasoning',
       maxTokens: 1400,
       system: `You write two things from VERIFIED claims only. ${RULES}
+${languageRule(lang)}
 1) owner_summary: 2-3 plain sentences for the owner about their digital health.
 2) pitch: a short, honest outreach draft from a web freelancer. Each finding must cite claim ids it relies on.
 Schema: {"owner_summary": string, "pitch": {"subject": string, "opening": string, "findings": [{"text": string, "cites": [claim id]}], "offer": string, "closing": string}}`,

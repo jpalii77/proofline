@@ -99,7 +99,7 @@ This came from our own first live runs on 6 October 2026: the model picked a caf
 
 The page is built for someone who has never heard of Proofline:
 
-- **English and Turkish interface** ([`public/i18n.js`](public/i18n.js)): `?lang=tr|en`, then the saved choice, then the browser language, else English. The agent's own report text (claims, findings, drop reasons) is report data and stays in English for now.
+- **English and Turkish interface** ([`public/i18n.js`](public/i18n.js)): `?lang=tr|en`, then the saved choice, then the browser language, else English. The report follows the language too: Nemotron writes the owner lines, summary and pitch in the run's language (`/api/run?...&lang=tr`, cached apart from English), and the page shows the fixed wording built by code (claim sentences, check names and results, drop reasons) in Turkish ([`public/report-lang.js`](public/report-lang.js)). Checks, claim types and proofs are the same in both languages; a sentence the page does not recognise is shown as sent rather than guessed.
 - **Guided tour** ([`public/tour.js`](public/tour.js)): an optional four-step "How it works" tour (what this is, where to start, what the proof gate is, how to read the result). It never opens by itself; the button pulses once on a first visit. Esc closes, arrow keys move, reduced motion is respected.
 - **Recorded examples first**: four fictional businesses run instantly and free; live search is one switch away.
 - **Phone layout**: single-column layout below 880 px, compact grade card below 560 px.
@@ -176,7 +176,7 @@ Where it lives:
 
 ## Tests
 
-**164 tests in 22 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, share links, the Workers network adapter, the public demo's quotas, the interface language and tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
+**177 tests in 23 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
 
 ## Reference
 

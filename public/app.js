@@ -3,7 +3,8 @@
 import { applyStatic, DICT, dateTime, getLang, num, onLangChange, partialText, secs, serverText, setLang, t, time } from './i18n.js';
 import { setupTour } from './tour.js';
 import { createGateStage } from './gate.js';
-import { gateSummary, laneFromGate, lanesFromEvents, lanesFromReport, miniLabel, shortLabel } from './gate-data.js';
+import { ctxFromEvents, gateSummary, laneFromGate, lanesFromEvents, lanesFromReport, miniLabel, shortLabel } from './gate-data.js';
+import { checkTitle, claimStatement, dropReasonText, guardNoteText, modelDetailText, removedReasonText, summaryText } from './report-lang.js';
 
 const $ = (s) => document.querySelector(s);
 function h(tag, attrs = {}, ...kids) {
@@ -17,6 +18,15 @@ function h(tag, attrs = {}, ...kids) {
   for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
   return el;
 }
+
+// Fixed server wording (claim sentences, check names and results, drop reasons) in the page's language.
+const runCtx = () => run?.report?.ctx || ctxFromEvents(run?.events || []);
+const stmt = (c) => claimStatement(c, runCtx(), getLang());
+const dropWhy = (c) => dropReasonText(c, getLang());
+const checkName = (e) => checkTitle(e, getLang());
+const result = (s) => summaryText(s, getLang());
+const removedWhy = (r) => removedReasonText(r, getLang());
+const callDetail = (d) => modelDetailText(d, getLang());
 
 const TOOL_LABEL = { dnsLookup: 'DNS', fetchPage: 'HTTP', tlsCert: 'TLS', nominatim: 'OSM', search: 'Tavily' };
 const STAGE_OF = { plan: 'plan', discover: 'plan', observe: 'observe', tool: 'observe', propose: 'propose', gate: 'gate', verify: 'verify', write: 'write' };
@@ -235,7 +245,7 @@ function tokensText(u) {
 }
 
 function gateTrace(e) {
-  event(e.verdict === 'verified' ? t('tag.kept') : t('tag.dropped'), [h('b', {}, e.statement), e.dropReason ? h('span', { class: 'meta' }, e.dropReason) : h('span', { class: 'meta' }, t('ev.allMatched', { n: e.evidence.length }))], e.verdict === 'verified' ? 'pass' : 'fail drop');
+  event(e.verdict === 'verified' ? t('tag.kept') : t('tag.dropped'), [h('b', {}, stmt(e)), e.dropReason ? h('span', { class: 'meta' }, dropWhy(e)) : h('span', { class: 'meta' }, t('ev.allMatched', { n: e.evidence.length }))], e.verdict === 'verified' ? 'pass' : 'fail drop');
 }
 
 const parsedText = (p) => (p.domain ? t('ev.parsedDomain', { domain: p.domain }) : p.city ? t('ev.parsedNameCity', { name: p.name, city: p.city }) : t('ev.parsedName', { name: p.name }));
@@ -251,21 +261,21 @@ const HANDLERS = {
     h('b', {}, e.ctx.domain || e.ctx.name),
     ` ${[e.ctx.city, e.ctx.phone].filter(Boolean).join(' · ')}`,
     e.reasoning ? h('span', { class: 'meta' }, e.reasoning) : null,
-    ...e.guard.map((g) => h('span', { class: 'meta warn' }, t('ev.guard', { text: g }))),
+    ...e.guard.map((g) => h('span', { class: 'meta warn' }, t('ev.guard', { text: guardNoteText(g, getLang()) }))),
   ]),
   model: (e) => event(t('tag.model'), [
     h('b', {}, `${roleText(e.role)} · ${e.model}`),
     h('span', { class: 'meta' }, `${tierText(e.tier)} · ${secs(e.ms || 0)} · ${tokensText(e.usage)}`),
-    h('span', { class: `meta outcome o-${e.outcome}` }, `${outcomeText(e.outcome)}${e.detail ? ` — ${e.detail}` : ''}`),
+    h('span', { class: `meta outcome o-${e.outcome}` }, `${outcomeText(e.outcome)}${e.detail ? ` — ${callDetail(e.detail)}` : ''}`),
   ], `model o-${e.outcome}`),
   tool: (e) => { if (e.phase === 'gather') event(TOOL_LABEL[e.tool] || e.tool, h('span', { class: 'meta flat' }, `${shortArgs(e.args)} · ${num(e.ms)} ms${e.error ? ` · ${e.error}` : ''}`)); },
-  observe: (e) => event(t('tag.check'), [markOf(e.pass), h('b', {}, e.title), h('span', { class: 'meta' }, e.summary)], e.pass === true ? 'pass' : e.pass === false ? 'fail' : 'na'),
+  observe: (e) => event(t('tag.check'), [markOf(e.pass), h('b', {}, checkName(e)), h('span', { class: 'meta' }, result(e.summary))], e.pass === true ? 'pass' : e.pass === false ? 'fail' : 'na'),
   propose: (e) => {
     event(t('tag.claims'), [h('b', {}, t('ev.toClaims', { n: e.claims.length })), e.rejected.length ? h('span', { class: 'meta' }, t('ev.refused', { n: num(e.rejected.length) })) : null]);
     openGate(e.claims);
   },
   gate: (e) => gateEvent(e),
-  verify: (e) => event(t('tag.verify'), [h('b', {}, e.skipped ? t('ev.noRewrite') : t('ev.ownerLines', { n: e.rewritten })), e.rejected.length ? h('span', { class: 'meta warn' }, t('ev.rewritesRejected', { n: e.rejected.length, reasons: e.rejected.map((r) => r.reason).join('; ') })) : null]),
+  verify: (e) => event(t('tag.verify'), [h('b', {}, e.skipped ? t('ev.noRewrite') : t('ev.ownerLines', { n: e.rewritten })), e.rejected.length ? h('span', { class: 'meta warn' }, t('ev.rewritesRejected', { n: e.rejected.length, reasons: e.rejected.map((r) => removedWhy(r.reason)).join('; ') })) : null]),
   write: (e) => event(t('tag.write'), [h('b', {}, e.failed ? t('ev.pitchNone') : t('ev.pitch', { n: e.kept })), e.removed.length ? h('span', { class: 'meta' }, t('ev.uncited', { n: e.removed.length })) : null]),
   done: (e) => {
     run.report = e.report;
@@ -307,13 +317,13 @@ function openGate(claims) {
   if (!stage) gateShell('');
   run.gateStarted = true;
   run.gateStatus.textContent = claims.length ? t('gate.atGate', { n: claims.length }) : t('gate.none');
-  stage.seed(claims.map((c) => ({ id: c.id, label: shortLabel(c.type) || c.statement, mini: miniLabel(c.type), statement: c.statement })));
+  stage.seed(claims.map((c) => ({ id: c.id, label: shortLabel(c.type) || stmt(c), mini: miniLabel(c.type), statement: stmt(c) })));
 }
 
 function gateEvent(e) {
   gateTrace(e);
   if (!stage || replaying) return;
-  stage.add(laneFromGate(e));
+  stage.add(laneFromGate(e, runCtx()));
   if (run.gateStatus) run.gateStatus.textContent = t('gate.running');
 }
 
@@ -365,7 +375,8 @@ function start(query) {
   if (window.matchMedia('(max-width: 880px)').matches) $('#workspace').scrollIntoView({ behavior: 'smooth' });
 
   const mine = run;
-  source = new EventSource(`/api/run?q=${encodeURIComponent(query)}${live ? '&live=1' : ''}`);
+  // The models write the owner lines, summary and pitch in the language the page is in when the run starts.
+  source = new EventSource(`/api/run?q=${encodeURIComponent(query)}${live ? '&live=1' : ''}&lang=${getLang()}`);
   for (const type of Object.keys(HANDLERS)) {
     source.addEventListener(type, (m) => { if (run === mine) dispatch(type, JSON.parse(m.data)); });
   }
@@ -469,7 +480,7 @@ function modelPanel(r, calls) {
         c.usage ? h('span', {}, t('models.out', { n: fmt(c.usage.out) })) : null),
       h('div', { class: 'call-out' },
         h('span', { class: `verdict o-${c.outcome}` }, outcomeText(c.outcome)),
-        c.detail ? h('span', { class: 'detail' }, c.detail) : null)))) : h('p', { class: 'muted' }, t('models.none')));
+        c.detail ? h('span', { class: 'detail' }, callDetail(c.detail)) : null)))) : h('p', { class: 'muted' }, t('models.none')));
 }
 
 // ---- Report ---------------------------------------------------------------------------------
@@ -592,9 +603,9 @@ function claimCard(c) {
   const out = h('span', { class: 'rerun-result', role: 'status' });
   const list = h('ul', {}, c.evidence.map(evidenceRow));
   return h('div', { class: `claim ${dropped ? 'dropped' : c.tone}`, id: `claim-${c.id}`, tabindex: '-1' },
-    h('div', { class: 'claim-top' }, h('h4', {}, c.statement), h('span', { class: `badge ${dropped ? 'dropped' : c.tone}` }, label)),
-    !dropped && c.ownerText && c.ownerText !== c.statement ? h('p', { class: 'owner' }, t('claim.forOwner', { text: c.ownerText })) : null,
-    dropped ? h('p', { class: 'why' }, h('b', {}, t('claim.whyDropped')), c.dropReason) : null,
+    h('div', { class: 'claim-top' }, h('h4', {}, stmt(c)), h('span', { class: `badge ${dropped ? 'dropped' : c.tone}` }, label)),
+    !dropped && c.ownerText && c.ownerText !== c.statement && c.ownerText !== stmt(c) ? h('p', { class: 'owner' }, t('claim.forOwner', { text: c.ownerText })) : null,
+    dropped ? h('p', { class: 'why' }, h('b', {}, t('claim.whyDropped')), dropWhy(c)) : null,
     dropped && c.rationale ? h('p', { class: 'why' }, t('claim.modelReason', { text: c.rationale })) : null,
     h('details', { class: 'proof' },
       h('summary', {}, h('span', { class: 'lbl' }, t('proof.label', { n: c.evidence.length })), h('span', { class: 'muted' }, t('proof.checked', { time: time(c.checkedAt) }))),
@@ -605,7 +616,7 @@ function claimCard(c) {
 function evidenceRow(e) {
   const mark = e.skipped ? h('span', { class: 'mark na' }, '–') : e.matched ? h('span', { class: 'mark ok' }, '✓') : h('span', { class: 'mark no' }, '✗');
   return h('li', {}, mark,
-    h('div', {}, e.skipped ? `${e.title} — ${e.summary}` : e.pass === null ? t('proof.notChecked', { title: e.title, summary: e.summary }) : t(e.expect ? 'proof.expectPass' : 'proof.expectFail', { title: e.title, summary: e.summary }), h('code', {}, `${e.check}(${JSON.stringify(e.params)})`)));
+    h('div', {}, e.skipped ? `${checkName(e)} — ${result(e.summary)}` : e.pass === null ? t('proof.notChecked', { title: checkName(e), summary: result(e.summary) }) : t(e.expect ? 'proof.expectPass' : 'proof.expectFail', { title: checkName(e), summary: result(e.summary) }), h('code', {}, `${e.check}(${JSON.stringify(e.params)})`)));
 }
 
 async function rerun(c, list, out, btn) {
@@ -647,7 +658,7 @@ function pitchBlock(r) {
     p.findings.length ? h('ul', {}, p.findings.map((f) => h('li', {}, f.text, ...f.cites.map(cite)))) : h('p', { class: 'muted' }, t('pitch.noIssues')),
     h('p', {}, p.offer), h('p', {}, p.closing),
     h('div', { class: 'actions' }, copyBtn, status),
-    r.pitchRemoved?.length ? h('div', { class: 'removed' }, t('pitch.removed'), ...r.pitchRemoved.map((x) => h('span', {}, h('s', {}, x.text), ` (${x.reason}) `))) : null,
+    r.pitchRemoved?.length ? h('div', { class: 'removed' }, t('pitch.removed'), ...r.pitchRemoved.map((x) => h('span', {}, h('s', {}, x.text), ` (${removedWhy(x.reason)}) `))) : null,
     h('p', { class: 'note' }, t('pitch.note')));
 }
 
