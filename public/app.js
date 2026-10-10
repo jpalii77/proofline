@@ -28,6 +28,7 @@ const result = (s) => summaryText(s, getLang());
 const removedWhy = (r) => removedReasonText(r, getLang());
 const callDetail = (d) => modelDetailText(d, getLang());
 
+const FORMAT_KEY = { json_schema: 'models.schema', 'json_object (schema refused)': 'models.schemaRefused' };
 const TOOL_LABEL = { dnsLookup: 'DNS', fetchPage: 'HTTP', tlsCert: 'TLS', nominatim: 'OSM', search: 'Tavily' };
 const STAGE_OF = { plan: 'plan', discover: 'plan', observe: 'observe', tool: 'observe', propose: 'propose', gate: 'gate', verify: 'verify', write: 'write' };
 const ORDER = ['plan', 'observe', 'propose', 'gate', 'verify', 'write'];
@@ -473,7 +474,9 @@ function modelPanel(r, calls) {
       h('div', { class: 'call-main' },
         h('b', {}, roleText(c.role)),
         h('span', { class: 'tier' }, tierText(c.tier)),
-        h('code', {}, c.model)),
+        h('code', {}, c.model),
+        // Structured output: the reply was decoded to a JSON Schema (or fell back to plain JSON mode).
+        FORMAT_KEY[c.format] ? h('span', { class: 'tier' }, t(FORMAT_KEY[c.format])) : null),
       h('div', { class: 'call-nums' },
         h('span', {}, secs(c.ms || 0)),
         h('span', {}, c.usage ? t('models.in', { n: fmt(c.usage.in) }) : t('models.tokensDash')),

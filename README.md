@@ -56,13 +56,22 @@ Every model call goes, at runtime, to **Nebius Token Factory's OpenAI-compatible
 
 **Why two tiers.** The decisions that need judgement (who is this business, which claims follow from the evidence, how to explain them) go to the reasoning model, Nemotron 3 Super. The many short rewrites go to Nemotron 3 Nano, which is fast and cheap, and whose output is checked by a simple rule, so a small model's mistake cannot reach the owner. The tiers are set with `NEBIUS_REASONING_MODEL` and `NEBIUS_FAST_MODEL`; `npm run models` lists the Nemotron IDs on your key.
 
-All calls ask for strict JSON (`response_format: json_object`); replies with `<think>` blocks or code fences are tolerated.
+**Structured output.** Every call sends a JSON Schema (`response_format: {type: "json_schema", strict: true}`, built per call by `SCHEMAS` in [`src/agent/nemotron-brain.mjs`](src/agent/nemotron-brain.mjs)). The schema's enums are filled from the run itself, so the model is held to what it may pick at decoding time, before code checks anything:
+
+| Call | Enum in the schema |
+| --- | --- |
+| Planner | `domain` is one of the web addresses seen in this run's Tavily results, or null; `phone` likewise |
+| Claim proposer | `type` is one of the claim catalog's types |
+| Owner rewrite | `id` is one of the verified claims |
+| Writer | each finding's `cites` are verified claim ids only |
+
+The code checks in the table above stay exactly the same: the schema narrows what the model can say, the gate decides what is true. If an endpoint refuses the schema (HTTP 400/422), the call is sent once more in plain JSON mode (`json_object`) and the model calls panel says "JSON mode (schema refused)" instead of "JSON schema". `npm run schema-probe` sends one tiny schema call per model on your key and prints which format was used. Replies with `<think>` blocks or code fences are tolerated.
 
 ### The model calls panel
 
 Every report has a panel that lists each Nemotron call of that run:
 
-- role and tier (reasoning / fast) and the exact model ID;
+- role and tier (reasoning / fast), the exact model ID, and whether the reply was decoded to a JSON Schema;
 - latency;
 - tokens in / out (and reasoning tokens when present), read from the response's `usage` field by `parseUsage` in [`src/llm.mjs`](src/llm.mjs). A missing field is shown as unknown, never estimated;
 - the outcome of code's checks on the answer: **accepted**, **partly rejected** (for example a Nano rewrite that introduced a number), **rejected**, or **no answer** (with the reason).
@@ -176,7 +185,7 @@ Where it lives:
 
 ## Tests
 
-**177 tests in 23 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
+**183 tests in 24 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
 
 ## Reference
 

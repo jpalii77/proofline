@@ -54,37 +54,50 @@ export function createTokenFactoryClient({
   const root = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const models = { reasoning: reasoningModel, fast: fastModel || reasoningModel };
 
-  async function chat({ tier = 'reasoning', system, user, maxTokens = 1200, temperature = 0.2 }) {
+  // schema: optional { name, schema } (JSON Schema). Sent as response_format json_schema, so the
+  // reply is decoded to that shape (enums limit the model to allowed values). If the endpoint refuses
+  // the schema (HTTP 400/422), the call is sent once more as plain JSON mode and `format` says so;
+  // the code checks after the call are the same either way.
+  async function chat({ tier = 'reasoning', system, user, maxTokens = 1200, temperature = 0.2, schema = null }) {
     const model = models[tier] || models.reasoning;
     const started = Date.now();
-    let res;
-    try {
-      res = await fetchImpl(new URL('chat/completions', root), {
+    const send = (responseFormat) => fetchImpl(new URL('chat/completions', root), {
       method: 'POST',
       headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model,
-          temperature,
-          max_tokens: maxTokens,
-          response_format: { type: 'json_object' },
-          messages: [
-            { role: 'system', content: system },
-            { role: 'user', content: typeof user === 'string' ? user : JSON.stringify(user) },
-          ],
-        }),
-        signal: AbortSignal.timeout(timeoutMs),
-      });
+      body: JSON.stringify({
+        model,
+        temperature,
+        max_tokens: maxTokens,
+        response_format: responseFormat,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: typeof user === 'string' ? user : JSON.stringify(user) },
+        ],
+      }),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    let format = schema ? 'json_schema' : 'json_object';
+    let res;
+    try {
+      res = await send(schema
+        ? { type: 'json_schema', json_schema: { name: schema.name, schema: schema.schema, strict: true } }
+        : { type: 'json_object' });
+      if (schema && (res.status === 400 || res.status === 422)) {
+        await res.text().catch(() => '');
+        format = 'json_object (schema refused)';
+        res = await send({ type: 'json_object' });
+      }
     } catch (e) {
       const why = e.name === 'TimeoutError' ? `no answer within ${Math.round(timeoutMs / 1000)} s` : (e.message || String(e));
-      throw callError(`Token Factory: ${why}`, { model, ms: Date.now() - started, usage: null });
+      throw callError(`Token Factory: ${why}`, { model, ms: Date.now() - started, usage: null, format });
     }
     if (!res.ok) {
       const body = await res.text().catch(() => '');
-      throw callError(`Token Factory HTTP ${res.status}: ${body.slice(0, 200)}`, { model, ms: Date.now() - started, usage: null });
+      throw callError(`Token Factory HTTP ${res.status}: ${body.slice(0, 200)}`, { model, ms: Date.now() - started, usage: null, format });
     }
     let data;
     try { data = await res.json(); } catch {
-      throw callError('Token Factory reply was not JSON', { model, ms: Date.now() - started, usage: null });
+      throw callError('Token Factory reply was not JSON', { model, ms: Date.now() - started, usage: null, format });
     }
     const usage = parseUsage(data.usage);
     const ms = Date.now() - started;
@@ -92,9 +105,9 @@ export function createTokenFactoryClient({
     let json;
     try { json = parseJsonReply(content); } catch (e) {
       const cut = data.choices?.[0]?.finish_reason === 'length' ? ' (reply cut off at the token limit)' : '';
-      throw callError(`model reply had no valid JSON${cut}: ${e.message}`, { model, ms, usage });
+      throw callError(`model reply had no valid JSON${cut}: ${e.message}`, { model, ms, usage, format });
     }
-    return { json, model, usage, ms };
+    return { json, model, usage, ms, format };
   }
 
   async function listModels() {

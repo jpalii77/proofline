@@ -1,7 +1,7 @@
 // The live brain: four prompts to NVIDIA Nemotron on Nebius Token Factory.
 //   plan / propose / write  -> reasoning tier (Nemotron 3 Super by default)
 //   verify                  -> fast tier (set NEBIUS_FAST_MODEL to a Nemotron Nano ID)
-// Every prompt asks for strict JSON and every answer is checked by code afterwards.
+// Every prompt sends a JSON Schema (structured output) and every answer is checked by code afterwards.
 
 const RULES = 'Reply with one JSON object only. No markdown. Never invent facts, domains, phone numbers or numbers.';
 
@@ -15,12 +15,48 @@ export function languageRule(lang) {
     : `Write every text value in ${name}.`;
 }
 
+// Structured output: each call sends a JSON Schema (response_format json_schema), so the reply is
+// decoded into that shape. Enums hold the model to what it may pick: a domain or phone from the search
+// results, a claim type from the catalog, a claim id that exists. Code still checks every answer after.
+const obj = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
+const str = { type: 'string' };
+/** A string from `values`, or null. With no values, only null. */
+export const oneOfOrNull = (values) => {
+  const list = [...new Set((values || []).filter((v) => typeof v === 'string' && v))];
+  return list.length ? { type: ['string', 'null'], enum: [...list, null] } : { type: 'null' };
+};
+/** A list of ids from `ids` (empty list when there are none). */
+const idList = (ids) => (ids.length ? { type: 'array', items: { type: 'string', enum: ids } } : { type: 'array', maxItems: 0 });
+
+export const SCHEMAS = {
+  plan: ({ grounding }) => ({
+    name: 'business_identity',
+    schema: obj({ name: { type: ['string', 'null'] }, city: { type: ['string', 'null'] }, domain: oneOfOrNull(grounding?.domains), phone: oneOfOrNull(grounding?.phones), reasoning: str }),
+  }),
+  propose: ({ catalog }) => ({
+    name: 'claim_proposals',
+    schema: obj({ claims: { type: 'array', items: obj({ type: { type: 'string', enum: (catalog || []).map((c) => c.type) }, rationale: str }) } }),
+  }),
+  verify: ({ claims }) => ({
+    name: 'owner_lines',
+    schema: obj({ claims: { type: 'array', items: obj({ id: { type: 'string', enum: (claims || []).map((c) => c.id) }, owner_text: str }) } }),
+  }),
+  write: ({ claims }) => ({
+    name: 'summary_and_pitch',
+    schema: obj({
+      owner_summary: str,
+      pitch: obj({ subject: str, opening: str, findings: { type: 'array', items: obj({ text: str, cites: idList((claims || []).map((c) => c.id)) }) }, offer: str, closing: str }),
+    }),
+  }),
+};
+
 export function createNemotronBrain(llm) {
   return {
     models: { reasoning: llm.models.reasoning, fast: llm.models.fast, provider: 'Nebius Token Factory' },
 
     plan: ({ query, parsed, discovery, grounding }) => llm.chat({
       tier: 'reasoning',
+      schema: SCHEMAS.plan({ grounding }),
       system: `You identify a small business from a user query and web search results. ${RULES}
 Pick the business's own website domain and its main phone ONLY from the allowed lists. If unsure, use null.
 A listing is not a website: never pick a QR-menu/menu provider, delivery app, directory, review site, map, social network or link hub
@@ -39,6 +75,7 @@ Schema: {"name": string|null, "city": string|null, "domain": string|null, "phone
 
     propose: ({ ctx, observations, catalog }) => llm.chat({
       tier: 'reasoning',
+      schema: SCHEMAS.propose({ catalog }),
       maxTokens: 1500,
       system: `You are an auditor proposing claims about a business's web presence. ${RULES}
 You may only use claim types from the catalog. Propose every claim the observations support, good or bad.
@@ -51,6 +88,7 @@ Schema: {"claims": [{"type": catalog type, "rationale": string citing the observ
 
     verify: ({ ctx, claims, lang }) => llm.chat({
       tier: 'fast',
+      schema: SCHEMAS.verify({ claims }),
       system: `Rewrite each verified claim as one short, friendly sentence for the business owner (no jargon). ${RULES}
 ${languageRule(lang)}
 Do not add numbers, dates or facts not in the claim or its evidence. Schema: {"claims": [{"id": string, "owner_text": string}]}`,
@@ -59,6 +97,7 @@ Do not add numbers, dates or facts not in the claim or its evidence. Schema: {"c
 
     write: ({ ctx, claims, lang }) => llm.chat({
       tier: 'reasoning',
+      schema: SCHEMAS.write({ claims }),
       maxTokens: 1400,
       system: `You write two things from VERIFIED claims only. ${RULES}
 ${languageRule(lang)}

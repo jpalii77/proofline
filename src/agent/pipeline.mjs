@@ -149,13 +149,14 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
         work,
         new Promise((_, reject) => { timer = setTimeout(() => reject(Object.assign(new Error(`no answer before the run time limit (${Math.round(left / 1000)} s left)`), { call: { model } })), left); }),
       ]);
-      Object.assign(call, { model: out.model || model, ms: out.ms ?? now() - started, usage: out.usage || null });
+      Object.assign(call, { model: out.model || model, ms: out.ms ?? now() - started, usage: out.usage || null, ...(out.format ? { format: out.format } : {}) });
       return { json: out.json || {}, call };
     } catch (err) {
       Object.assign(call, {
         model: err.call?.model || model,
         ms: err.call?.ms ?? now() - started,
         usage: err.call?.usage || null,
+        ...(err.call?.format ? { format: err.call.format } : {}),
         outcome: 'failed',
         detail: String(err.message || err).slice(0, 240),
       });
