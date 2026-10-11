@@ -1,0 +1,62 @@
+{
+  "run": "eval/runs/2026-10-11-r4.json",
+  "list": "eval/businesses-3.json (12 Turkish online shops from a sales prospect list, never used before; most queries are the bare name with no city or domain, on purpose: the hardest input)",
+  "checkedBy": "Independent re-check outside Proofline on 2026-10-12: curl (HTTP/HTTPS, page titles, full homepage HTML, Instagram links), openssl s_client (certificate end date), Nominatim free-text search limited to Turkey, direct domain probes, the prospect list's own record of each shop's website (Saker, 9-11 Oct), web search.",
+  "summary": { "kept": 26, "right": 12, "wrong": 11, "unverifiable": 3, "dropped": 1, "droppedRightly": 1 },
+  "verdicts": {
+    "hilalav": {
+      "no_own_website": "wrong: hilalavmarket.com is its own shop (title 'Av Tüfekleri I Kamp & Outdoor', IdeaSoft store; the prospect list records this domain). Search showed only Yandex Maps, and the address built from the name was not tried",
+      "not_on_map": "right (no Hilal AV Market on OSM in Turkey)"
+    },
+    "erenhobi": {
+      "site_online": "right (HTTP 200, its drone/hobby store)",
+      "https_healthy": "right (certificate ends 15 Dec 2026 = 64 days; http 307 to https)",
+      "phone_unconfirmed": "right as stated (0312 447 04 49 from listings is not on the site; the site shows 0541 311 56 54)",
+      "possibly_renamed": "wrong: the page title is just the address 'erenhobi.com'; 'erenhobi' and 'Eren Hobi' are the same name without the space. Nothing was renamed",
+      "not_on_map": "right"
+    },
+    "petankara": {
+      "on_map": "wrong: the match 'Ankara Pet' (Lizbon Caddesi, Ata Mah.) is another pet shop; Pet Ankara is at İşçi Blokları Mah. 1516. Cadde 37/4, Çankaya (its contact page). Same two words in the other order, one of them the city"
+    },
+    "aktifim": {
+      "no_own_website": "wrong: the business ('Aktifim Kozmetik') sells on kozmetikvagonu.com (prospect list record). The name alone could not lead there, but the claim is false",
+      "not_on_map": "right"
+    },
+    "markapia": { "not_on_map": "right (online-only shop; markapia.com was not found by the run, but no claim was made about it)" },
+    "lostmind": {
+      "no_own_website": "unverifiable: the prospect list ('Lost Mind Studios') measured a web store's mobile speed, so a site likely exists, but its address is not recorded and no search found it; lostmind.com is a parked GoDaddy page",
+      "not_on_map": "right"
+    },
+    "tokerbebe": { "not_on_map": "right (no Toker Bebe on OSM; the store is in Mamak, Ankara per its site)" },
+    "tubabutik": { "not_on_map": "unverifiable: OSM has a clothes shop named 'Tuba' in Fatih, İstanbul; nothing ties it to tubabutik.com (an ikas store with no address on the homepage)" },
+    "shout": {
+      "site_online": "wrong business: shout-tv.com is 'Shout! TV' (a US streaming service), not the Turkish clothing shop shout.com.tr",
+      "https_healthy": "wrong business (same site)",
+      "on_map": "wrong business: 'Shout' in Sandwich, Massachusetts"
+    },
+    "loky": {
+      "site_online": "wrong business: lokyai.com is 'Loky AI' (data infrastructure), not the Turkish shop",
+      "https_healthy": "wrong business (same site)",
+      "no_contact_path": "wrong business (same site)",
+      "on_map": "wrong business: a village in Madagascar"
+    },
+    "osepet": {
+      "no_own_website": "right (sells on shopier.com/osepet per the prospect list; osepet.com is a domain-for-sale page)",
+      "not_on_map": "right"
+    },
+    "modalila": {
+      "no_own_website": "unverifiable: the shop sells on shopier.com/modalilacomm; modalila.com is a separate-looking tesettür store ('Modalila') with no link to that Shopier page or an Instagram handle, so it may or may not be the same business",
+      "not_on_map": "right"
+    }
+  },
+  "dropped": {
+    "aktifim": { "possibly_renamed": "rightly dropped: aktiv.com has nothing to do with Aktifim" }
+  },
+  "missed": {
+    "markapia": "own site markapia.com not found (planner picked no domain)",
+    "petankara": "own site petankara.com.tr not found (planner picked no domain)",
+    "tokerbebe": "own site tokerbebe.com not found",
+    "tubabutik": "own site tubabutik.com not found",
+    "shout": "own site shout.com.tr not found; a foreign namesake was taken instead"
+  }
+}

@@ -126,8 +126,12 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 1 | 2026-10-08 | 12 online shops | 40 | 7 | 33 | 24 | 73% |
 | 2 | 2026-10-08, after round-1 fixes | same 12 | 39 | 6 | 33 | 29 | 88% |
 | 3 | 2026-10-11, after round-2 fixes | 12 new local businesses (venues, hotels, clinics) | 26 | 5 | 21 | 18 | 86% |
+| 4 | 2026-10-12, stress test | 12 new online shops, **bare name only** (no city, no domain) | 27 | 1 | 26 | 12 of 23 checkable | 52% |
+| 5 | 2026-10-12, after round-4 fixes | same 12, bare names | 25 | 3 | 22 | 18 of 20 checkable | **90%** |
 
 Round 3 is the honest test: businesses the earlier fixes were not made for. Its 3 wrong claims came from two causes (a site that answers on http only; a one-word map match of the wrong kind of place), both now fixed with tests.
+
+Round 4 looks for the limits on purpose: one-word names like "Shout" or "Loky" with nothing else. The agent took foreign namesakes (a US TV service, an AI company) for Turkish shops: 7 of its 11 wrong claims. Lesson for users today: add the city or the domain. 4 of its 5 error types are now fixed with tests (a bare name must match exactly, or the address must be the whole name; no map match on a one-word name without a city); see [`docs/accuracy.md`](docs/accuracy.md). Round 5 re-measured the same list after those fixes: 90% (18 of 20 checkable), no foreign namesakes left; where the name alone cannot settle who the business is, the report now says "not settled" instead of guessing.
 
 ## Setup
 

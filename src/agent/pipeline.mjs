@@ -10,7 +10,7 @@ import { displayName } from '../display-name.mjs';
 import { invalidHostSentence, isValidHostname } from '../hostname.mjs';
 import { observed } from '../io/observed.mjs';
 import { withDeadline } from '../limits.mjs';
-import { domainsIn, extractPhones, looksLikeDomain, nameSimilarity, nameTokens, normalizeHost, phoneKey } from '../text.mjs';
+import { coreTokens, domainsIn, extractPhones, looksLikeDomain, nameSimilarity, nameTokens, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
 
 const isDomain = (s) => looksLikeDomain(s) && isValidHostname(s);
@@ -21,6 +21,16 @@ export function sameBusinessName(typed, planned) {
   const want = nameTokens(typed);
   const have = new Set(nameTokens(planned));
   return want.length > 0 && want.every((t) => have.has(t));
+}
+
+/**
+ * A bare one-word name (no city, no domain typed) that the planner turned into a longer, more specific name
+ * ("Shout" -> "Shout Outdoor Media"): the extra words pick one of many namesakes.
+ */
+export function narrowsBareName(parsed, planned) {
+  if (!parsed?.name || parsed.city || parsed.domain || coreTokens(parsed.name).length >= 2) return false;
+  const typed = new Set(nameTokens(parsed.name));
+  return nameTokens(planned).some((t) => !typed.has(t));
 }
 
 /** Parse "Name, City", "Name, domain" (either order after the name) or a bare domain. */
@@ -209,6 +219,12 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   // domain and phone all describe that other business, so none of them are used.
   if (plan.name && parsed.name && !sameBusinessName(parsed.name, plan.name)) {
     guard.push(`the model named a different business (“${plan.name}”) than the one asked for (“${parsed.name}”) — its name, city, domain and phone are not used`);
+    planned = null;
+    plan = { ...plan, name: null, city: null, phone: null };
+  } else if (plan.name && parsed.name && narrowsBareName(parsed, plan.name)) {
+    // A one-word name with nothing else ("Shout") was narrowed to one particular business found in search
+    // ("Shout Outdoor Media", round 5): that is a guess between namesakes, so it is not used.
+    guard.push(`only “${parsed.name}” was given; the model picked one particular business (“${plan.name}”), which may be a namesake — its name, city, domain and phone are not used`);
     planned = null;
     plan = { ...plan, name: null, city: null, phone: null };
   }

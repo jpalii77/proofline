@@ -31,7 +31,15 @@ const PARKED = [
   /\bindex of \//i,
   /\balan ad[ıi] sat[ıi]l[ıi]kt[ıi]r\b|\bsat[ıi]l[ıi]k alan ad[ıi]\b/i,
   /\bcoming soon\b|\bçok yakında\b/i,
+  // "osepet.com for sale | Spaceship.com", "Domain for sale" (round 4)
+  /\bdomain for sale\b|\b[a-z0-9-]+\.[a-z]{2,}(\.[a-z]{2})? (is )?for sale\b/i,
 ];
+
+/** A parked, for-sale or placeholder page (the same markers as page.not_parked). */
+function isParked(p) {
+  const hay = `${p.title || ''}\n${(p.text || '').slice(0, 4000)}`;
+  return PARKED.some((re) => re.test(hay));
+}
 
 const CLOSURE = [
   /\bpermanently closed\b/i,
@@ -112,6 +120,49 @@ function tokensContained(name, text) {
   return want.length > 0 && want.every((t) => have.has(t));
 }
 
+/** A name written as one word: "Eren Hobi" -> "erenhobi" (and without generic words: "Kamp ve Ötesi" -> "kampotesi"). */
+function compactNames(name) {
+  return [...new Set([fold(name).replace(/ /g, ''), nameTokens(name).join('')])].filter(Boolean);
+}
+
+/** "erenhobi.com" as a page title is the address itself: compare its first label, else the text, written as one word. */
+function compactSame(value, name) {
+  const v = looksLikeDomain(String(value).trim()) ? String(value).trim().split('.')[0] : value;
+  const c = fold(v).replace(/ /g, '');
+  return !!c && compactNames(name).includes(c);
+}
+
+/**
+ * The address is the whole name written as one word (hilalavmarket.com for "Hilal AV Market"). Only for names
+ * of 7+ letters: a short one ("shout", "loky") is too likely to belong to someone else.
+ */
+export function labelIsName(host, name) {
+  const label = fold(registrable(normalizeHost(host) || host).split('.')[0]).replace(/ /g, '');
+  return label.length >= 7 && compactNames(name).includes(label);
+}
+
+/** The parts of a title: "Loky AI - The Unified …" -> ["Loky AI - The Unified …", "Loky AI", "The Unified …"]. */
+function titleParts(value) {
+  const parts = String(value).split(/\s+[|\-–—:·•]\s+|\s*\|\s*/).map((x) => x.trim()).filter(Boolean);
+  return [value, ...(parts.length > 1 ? parts : [])];
+}
+
+/**
+ * With nothing but a bare name to go on, a field must name exactly the business: "SHOUT – Oversize Giyim" has
+ * a part that is "Shout"; "Shout! TV" and "Loky AI" only contain the name, so they may be namesakes (round 4).
+ */
+function exactIdentity(p, name) {
+  const want = nameTokens(name).join(' ');
+  const fields = [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x])];
+  for (const [field, value] of fields) {
+    if (!value) continue;
+    for (const part of titleParts(value)) {
+      if ((want && nameTokens(part).join(' ') === want) || compactSame(part, name)) return { field, value };
+    }
+  }
+  return null;
+}
+
 /** Does the homepage itself say whose site this is? Title, og:site_name, <h1>, then body text. */
 function pageIdentity(p, name, min = NAME_MIN) {
   const fields = [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x])]
@@ -119,8 +170,9 @@ function pageIdentity(p, name, min = NAME_MIN) {
   let best = { field: null, value: '', score: 0 };
   for (const [field, value] of fields) {
     // A long title ("Sakal Café — Kahve & Kahvaltı, Ankara") still names the business when it
-    // contains every distinctive word of the name.
-    const score = tokensContained(name, value) ? 1 : nameSimilarity(name, value);
+    // contains every distinctive word of the name; a title that is the name written as one word
+    // or the address itself ("erenhobi.com" for "Eren Hobi", round 4) names it too.
+    const score = tokensContained(name, value) || titleParts(value).some((x) => compactSame(x, name)) ? 1 : nameSimilarity(name, value);
     if (score > best.score) best = { field, value, score };
   }
   if (best.score >= min) return { identified: true, ...best };
@@ -202,6 +254,21 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
   // naming it counts, but only with a city, so the place rule below still has to tie it to that city.
   if (loaded && !id.identified && labelNames && city && !looksLikeDomain(city)) {
     id = { identified: true, field: 'address', value: host, score: id.score };
+  }
+  // A bare name (no city, no address typed) is the riskiest input: "Shout" also names a US TV service and
+  // "Loky" an AI company (round 4). Then the page must name exactly the business, or the address must be the
+  // whole name written as one word (hilalavmarket.com); a looser match is a possible namesake, never "theirs".
+  const bare = !city || looksLikeDomain(city);
+  // (a for-sale page at that address is not the business's site: vatkalimon.com once was one)
+  const labelOk = loaded && labelIsName(host, name) && !isParked(p);
+  if (bare && labelOk && !id.identified) id = { identified: true, field: 'address', value: host, score: id.score };
+  if (bare && (id.identified || ties.length)) {
+    const exact = labelOk ? { field: 'address', value: host } : loaded ? exactIdentity(p, name) : null;
+    if (!exact) {
+      const loose = id.identified ? `${id.field}: “${id.value}”` : ties[0].how;
+      return { pass: null, summary: `${host} only loosely matches “${name}” (${loose}); with no city or website given, it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
+    }
+    id = { ...id, identified: true, ...exact, score: 1 };
   }
   if (id.identified || ties.length) {
     // A name alone can belong to a namesake elsewhere (petpal.com is a US network, not the Bursa shop):
@@ -521,10 +588,25 @@ export const CHECKS = {
       // different place (round 3: "Santral Ankara Diş" matched "Santral", a clothes shop).
       const wrongKind = pass ? kindMismatch(name, best.kind) : null;
       if (wrongKind) pass = false;
+      // A name that holds the city ("Pet Ankara") leaves one ordinary word once the city is set aside, and
+      // "Ankara Pet" is another shop (round 4): then the map name must carry the name in the same order.
+      const placeWords = place ? new Set(fold(place).split(' ')) : new Set();
+      const holdsCity = nameTokens(name).some((t) => placeWords.has(t));
+      const mapName = best ? best.name || String(best.display_name || '').split(',')[0] : '';
+      // (one may be part of the other: "Dent-i Konya" for "Dent-i Konya Ağız ve Diş")
+      const inOrder = (a, b) => ` ${fold(a)} `.includes(` ${fold(b)} `);
+      const reordered = pass && holdsCity && !inOrder(mapName, name) && !inOrder(name, mapName);
+      if (reordered) pass = false;
+      // With no city, a one-word name found on the map can be anywhere in the world (round 4: "Shout" in
+      // Massachusetts, "Loky" in Madagascar): it does not show this business is on the map.
+      const untied = pass && !place && coreTokens(name).length < 2;
+      if (untied) pass = null;
       return {
         pass,
-        summary: pass ? `Found “${best.name}” (${best.display_name})`
-          : wrongKind ? `Only “${best.name}” matched, and it is ${wrongKind}; no matching place on OpenStreetMap` : 'No matching place on OpenStreetMap',
+        summary: untied ? `Found “${best.name}” (${best.display_name}), but with no city given nothing ties this place to the business`
+          : pass ? `Found “${best.name}” (${best.display_name})`
+          : wrongKind ? `Only “${best.name}” matched, and it is ${wrongKind}; no matching place on OpenStreetMap`
+          : reordered ? `Only “${mapName}” matched: the same words in another order, so another place; no matching place on OpenStreetMap` : 'No matching place on OpenStreetMap',
         observed: best ? {
           name: best.name, display_name: best.display_name, lat: best.lat, lon: best.lon,
           osm: best.osm_type && best.osm_id ? `${best.osm_type}/${best.osm_id}` : null,

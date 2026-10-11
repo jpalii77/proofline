@@ -1,0 +1,47 @@
+{
+  "run": "eval/runs/2026-10-11-r5.json",
+  "list": "eval/businesses-3.json (the round-4 list again, bare names only), after the round-4 fixes",
+  "checkedBy": "Independent re-check outside Proofline on 2026-10-12: curl (HTTP/HTTPS, titles, full homepage HTML, phone numbers on the page), openssl s_client (certificate end date), Nominatim search limited to Turkey, the prospect list's own record of each shop's website, and the round-4 checks of the same businesses.",
+  "summary": { "proposed": 25, "kept": 22, "right": 18, "wrong": 2, "unverifiable": 2, "dropped": 3, "droppedRightly": 3 },
+  "verdicts": {
+    "hilalav": { "not_on_map": "right" },
+    "erenhobi": {
+      "site_online": "right (HTTP 200, its drone/hobby store; now identified by its title 'erenhobi.com')",
+      "https_healthy": "right (certificate ends 15 Dec 2026; http 307 to https)",
+      "phone_unconfirmed": "right as stated (0541 311 56 67 from listings is not on the site; the site shows 0541 311 56 54)",
+      "not_on_map": "right"
+    },
+    "petankara": { "not_on_map": "right (OSM has 'Ankara Pet', another shop; no 'Pet Ankara')" },
+    "aktifim": {
+      "no_own_website": "wrong (known limit): the shop sells on kozmetikvagonu.com, a site with another name",
+      "not_on_map": "right"
+    },
+    "markapia": {
+      "site_online": "right (HTTP 200, its clothing store)",
+      "https_healthy": "right (certificate ends 26 Nov 2026 = 45 days; http 301 to https)",
+      "not_on_map": "right"
+    },
+    "lostmind": { "not_on_map": "right" },
+    "tokerbebe": { "not_on_map": "right" },
+    "tubabutik": {
+      "site_online": "right (HTTP 200, ikas store 'Tuba Butik')",
+      "https_healthy": "right (certificate ends 29 Nov 2026 = 48 days; http 301 to https)",
+      "phone_confirmed": "right (0537 821 78 69 is on the homepage)",
+      "not_on_map": "unverifiable (OSM has a clothes shop 'Tuba' in Fatih, İstanbul; nothing ties it to this shop)"
+    },
+    "shout": {
+      "not_on_map": "wrong business: the planner turned 'Shout' into 'Shout Outdoor Media', another company; fixed after this round (a bare one-word name narrowed to one particular business is not used)"
+    },
+    "osepet": { "no_own_website": "right (sells on Shopier; osepet.com is a for-sale page)", "not_on_map": "right" },
+    "modalila": {
+      "no_own_website": "unverifiable (sells on shopier.com/modalilacomm; modalila.com may or may not be the same business)",
+      "not_on_map": "right"
+    }
+  },
+  "dropped": {
+    "hilalav": { "no_own_website": "rightly dropped: hilalavmarket.com is its site. The planner guessed the city 'Adana', and the site does not name Adana, so it was 'not settled' rather than found" },
+    "shout": { "site_online": "rightly dropped: leadiq.com is a sales tool, not the shop" },
+    "loky": { "no_own_website": "rightly dropped: lokyai.com only loosely matches 'Loky', so the question stays open instead of a false 'no website' or a foreign site" }
+  },
+  "changes": "Round 4 -> 5 on the same list: wrong kept claims 11 -> 2; the 7 namesake claims about Shout! TV, Loky AI, Massachusetts and Madagascar are gone; Eren Hobi no longer 'renamed'; Pet Ankara no longer matched to Ankara Pet; Markapia and Tuba Butik now get their own sites checked (5 more true findings)."
+}

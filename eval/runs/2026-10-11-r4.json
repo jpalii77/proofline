@@ -1,0 +1,3101 @@
+{
+  "day": "2026-10-11",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "hilalav",
+      "query": "Hilal AV Market",
+      "note": "hunting/outdoor e-shop (Saker list, Oct 2026); name only",
+      "ms": 20807,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4589,
+        "rewritesRejected": 0,
+        "ms": 20805
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Hilal AV Market; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned false: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": null,
+                "query": "Hilal AV Market official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": null,
+                "query": "Hilal AV Market official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s); listings only: https://yandex.com/maps/org/hilal_av_market/98928845506",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://yandex.com/maps/org/hilal_av_market/98928845506"
+                ]
+              },
+              "ms": 4088,
+              "at": "2026-10-11T21:56:29.492Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:29.492Z",
+          "ownerText": "We couldn't locate a website for Hilal AV Market—it shows up only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Hilal AV Market is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 91,
+              "at": "2026-10-11T21:56:29.583Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:29.583Z",
+          "ownerText": "Hilal AV Market isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The business has no dedicated website and relies only on external listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "It is missing from OpenStreetMap, which many navigation apps use to display locations.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2704,
+          "usage": {
+            "in": 1461,
+            "out": 368,
+            "total": 1829,
+            "reasoning": 303
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3192,
+          "usage": {
+            "in": 725,
+            "out": 437,
+            "total": 1162,
+            "reasoning": 363
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2389,
+          "usage": {
+            "in": 259,
+            "out": 455,
+            "total": 714,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2843,
+          "usage": {
+            "in": 309,
+            "out": 575,
+            "total": 884,
+            "reasoning": 363
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "erenhobi",
+      "query": "Eren Hobi",
+      "note": "hobby supplies e-shop (Saker list); name only",
+      "ms": 30524,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 5,
+        "verified": 5,
+        "dropped": 0,
+        "checksRun": 25,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 7671,
+        "rewritesRejected": 0,
+        "ms": 30524
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "erenhobi.com loads and shows real content.",
+          "rationale": "site.own_site, dns.resolves, http.reachable, http.https_redirect, tls.cert_valid, page.not_parked, and page.contact_path all passed, confirming the domain is online and reachable.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "erenhobi.com names the business (address: “erenhobi.com”)",
+              "observed": {
+                "host": "erenhobi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "erenhobi.com",
+                  "score": 0.4375
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/erenhobby",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/erenhobiankara",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.erenhobi.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 1786,
+              "at": "2026-10-11T21:56:56.486Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://erenhobi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 240,
+              "at": "2026-10-11T21:56:56.726Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “erenhobi.com”)",
+              "observed": {
+                "title": "erenhobi.com",
+                "marker": null
+              },
+              "ms": 0,
+              "at": "2026-10-11T21:56:56.726Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:56.726Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "erenhobi.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed with certificate expiry in 64 days, exceeding the 30‑day threshold.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "erenhobi.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "erenhobi.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "erenhobi.com names the business (address: “erenhobi.com”)",
+              "observed": {
+                "host": "erenhobi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "erenhobi.com",
+                  "score": 0.4375
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/erenhobby",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/erenhobiankara",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.erenhobi.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 2,
+              "at": "2026-10-11T21:56:56.728Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "erenhobi.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 64 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-15T17:17:31.000Z",
+                "daysLeft": 64,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 35,
+              "at": "2026-10-11T21:56:56.763Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "erenhobi.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://erenhobi.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://erenhobi.com/",
+                    "status": 307
+                  },
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://erenhobi.com/"
+              },
+              "ms": 432,
+              "at": "2026-10-11T21:56:57.195Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:57.195Z",
+          "ownerText": "Your site uses a secure connection that lasts over a month."
+        },
+        {
+          "id": "phone_unconfirmed",
+          "type": "phone_unconfirmed",
+          "area": "contact",
+          "tone": "risk",
+          "statement": "3124470449 (from listings) is not on the business's own site; it may be outdated.",
+          "rationale": "page.phone_listed failed: the phone number 3124470449 is not present on the site; the site lists a different number (5413115654).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://erenhobi.com/",
+                "phone": "3124470449"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "erenhobi.com names the business (address: “erenhobi.com”)",
+              "observed": {
+                "host": "erenhobi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "erenhobi.com",
+                  "score": 0.4375
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/erenhobby",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/erenhobiankara",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.erenhobi.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 5,
+              "at": "2026-10-11T21:56:57.200Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://erenhobi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-11T21:56:57.200Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://erenhobi.com/",
+                "phone": "3124470449"
+              },
+              "pass": false,
+              "summary": "3124470449 is not on the site (site lists: 5413115654)",
+              "observed": {
+                "looked_for": "3124470449",
+                "on_page": [
+                  "5413115654"
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-11T21:56:57.201Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:57.201Z",
+          "ownerText": "The phone number you see elsewhere isn’t listed on your site."
+        },
+        {
+          "id": "possibly_renamed",
+          "type": "possibly_renamed",
+          "area": "presence",
+          "tone": "risk",
+          "statement": "The site at erenhobi.com uses a different name than “Eren Hobi”; the business may have been renamed or changed hands.",
+          "rationale": "page.name_match failed: similarity 0.44 (<0.45) and the name 'Eren Hobi' was not found on the page, indicating a possible rename.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false,
+                "needSearchTie": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.name_match",
+              "params": {
+                "url": "https://erenhobi.com/",
+                "name": "Eren Hobi"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi official website phone",
+                "userGiven": false,
+                "needSearchTie": true
+              },
+              "pass": true,
+              "summary": "erenhobi.com is tied to “Eren Hobi”: a search result about the business names this domain (https://www.facebook.com/erenhobby)",
+              "observed": {
+                "host": "erenhobi.com",
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/erenhobby",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/erenhobiankara",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.erenhobi.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-11T21:56:57.202Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://erenhobi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-11T21:56:57.202Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “erenhobi.com”)",
+              "observed": {
+                "title": "erenhobi.com",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-11T21:56:57.203Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.name_match",
+              "title": "Site name matches the business name",
+              "params": {
+                "url": "https://erenhobi.com/",
+                "name": "Eren Hobi"
+              },
+              "pass": false,
+              "summary": "“erenhobi.com” vs “Eren Hobi”: similarity 0.44 (needs ≥ 0.45), name not found on the page",
+              "observed": {
+                "site_name": "erenhobi.com",
+                "field": "title",
+                "score": 0.438
+              },
+              "ms": 1,
+              "at": "2026-10-11T21:56:57.204Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:57.204Z",
+          "ownerText": "Your website’s name is different from “Eren Hobi”."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Eren Hobi is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed: no matching place for 'Eren Hobi' in Ankara was found on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Eren Hobi",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Eren Hobi",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 87,
+              "at": "2026-10-11T21:56:57.291Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:56:57.291Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your website loads correctly and uses a valid HTTPS certificate, ensuring a secure and accessible experience for visitors.",
+          "cites": [
+            "site_online",
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The phone number listed in directories (3124470449) does not appear on your own site, suggesting it may be outdated or incorrect.",
+          "cites": [
+            "phone_unconfirmed"
+          ]
+        },
+        {
+          "text": "The content on erenhobi.com uses a different name than “Eren Hobi,” indicating a possible rebrand or change in ownership.",
+          "cites": [
+            "possibly_renamed"
+          ]
+        },
+        {
+          "text": "Eren Hobi is currently absent from OpenStreetMap, which many map applications rely on for local business listings.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5379,
+          "usage": {
+            "in": 1070,
+            "out": 1026,
+            "total": 2096,
+            "reasoning": 932
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5675,
+          "usage": {
+            "in": 1131,
+            "out": 1112,
+            "total": 2243,
+            "reasoning": 852
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 8133,
+          "usage": {
+            "in": 586,
+            "out": 1647,
+            "total": 2233,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3921,
+          "usage": {
+            "in": 458,
+            "out": 641,
+            "total": 1099,
+            "reasoning": 280
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "petankara",
+      "query": "Pet Ankara, Ankara",
+      "note": "pet shop (Saker list); name + city",
+      "ms": 18879,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 4,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4245,
+        "rewritesRejected": 0,
+        "ms": 18879
+      },
+      "verified": [
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Pet Ankara is listed on OpenStreetMap.",
+          "rationale": "Found “Ankara Pet” (Ankara Pet, Lizbon Caddesi, Ata Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06460, Turkey)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Pet Ankara",
+                "city": "Ankara"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Pet Ankara",
+                "city": "Ankara"
+              },
+              "pass": true,
+              "summary": "Found “Ankara Pet” (Ankara Pet, Lizbon Caddesi, Ata Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06460, Turkey)",
+              "observed": {
+                "name": "Ankara Pet",
+                "display_name": "Ankara Pet, Lizbon Caddesi, Ata Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06460, Turkey",
+                "lat": "39.8715138",
+                "lon": "32.8253248",
+                "osm": "node/11203819493",
+                "phone": "+90 312 476 16 00",
+                "website": "https://ankarapet.com/",
+                "score": 0.692,
+                "kind": "shop=pet"
+              },
+              "ms": 121,
+              "at": "2026-10-11T21:57:26.471Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:57:26.472Z",
+          "ownerText": "Your business appears on OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [
+        {
+          "type": "site_online",
+          "reason": "missing domain"
+        }
+      ],
+      "findings": [
+        {
+          "text": "Pet Ankara is listed on OpenStreetMap, showing it already has a basic online map presence.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2149,
+          "usage": {
+            "in": 1078,
+            "out": 298,
+            "total": 1376,
+            "reasoning": 241
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4218,
+          "usage": {
+            "in": 788,
+            "out": 683,
+            "total": 1471,
+            "reasoning": 554
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1230,
+          "usage": {
+            "in": 186,
+            "out": 208,
+            "total": 394,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4523,
+          "usage": {
+            "in": 239,
+            "out": 765,
+            "total": 1004,
+            "reasoning": 541
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "aktifim",
+      "query": "Aktifim",
+      "note": "sports/outdoor e-shop (Saker list); name only",
+      "ms": 20218,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 3,
+        "verified": 2,
+        "dropped": 1,
+        "checksRun": 10,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5314,
+        "rewritesRejected": 0,
+        "ms": 20218
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Aktifim; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Aktifim",
+                "city": null,
+                "query": "Aktifim official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Aktifim",
+                "city": null,
+                "query": "Aktifim official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s)",
+              "observed": {
+                "tried": [],
+                "listings": []
+              },
+              "ms": 1834,
+              "at": "2026-10-11T21:57:50.441Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:57:50.441Z",
+          "ownerText": "We couldn't find a website for Aktifim; it only shows up on listings."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Aktifim is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Aktifim",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Aktifim",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 87,
+              "at": "2026-10-11T21:57:50.528Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:57:50.528Z",
+          "ownerText": "Aktifim isn’t listed on OpenStreetMap, so some map apps may not show it."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "possibly_renamed",
+          "type": "possibly_renamed",
+          "area": "presence",
+          "tone": "risk",
+          "statement": "The site at aktiv.com uses a different name than “Aktifim”; the business may have been renamed or changed hands.",
+          "rationale": "site.own_site check failed: aktiv.com does not identify “Aktifim” (page says “Aktiv Learning”) and no search result ties it to the business",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "aktiv.com",
+                "name": "Aktifim",
+                "city": null,
+                "query": "Aktifim official website phone",
+                "userGiven": false,
+                "needSearchTie": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://aktiv.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://aktiv.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.name_match",
+              "params": {
+                "url": "https://aktiv.com/",
+                "name": "Aktifim"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "aktiv.com",
+                "name": "Aktifim",
+                "city": null,
+                "query": "Aktifim official website phone",
+                "userGiven": false,
+                "needSearchTie": true
+              },
+              "pass": false,
+              "summary": "No search result ties aktiv.com to “Aktifim”; a different name on an unverified site is not evidence of a rename",
+              "observed": {
+                "host": "aktiv.com",
+                "ties": []
+              },
+              "ms": 1,
+              "at": "2026-10-11T21:57:50.529Z",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://aktiv.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: aktiv.com is not the business's own website",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://aktiv.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: aktiv.com is not the business's own website",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "page.name_match",
+              "title": "Site name matches the business name",
+              "params": {
+                "url": "https://aktiv.com/",
+                "name": "Aktifim"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: aktiv.com is not the business's own website",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "The domain is the business's own website: expected pass, got fail — No search result ties aktiv.com to “Aktifim”; a different name on an unverified site is not evidence of a rename",
+          "checkedAt": "2026-10-11T21:57:50.530Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You have no owned website, showing up only on directories and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business is missing from OpenStreetMap, which many navigation apps use.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3139,
+          "usage": {
+            "in": 1366,
+            "out": 515,
+            "total": 1881,
+            "reasoning": 444
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5565,
+          "usage": {
+            "in": 805,
+            "out": 1014,
+            "total": 1819,
+            "reasoning": 892
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2075,
+          "usage": {
+            "in": 225,
+            "out": 387,
+            "total": 612,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3846,
+          "usage": {
+            "in": 314,
+            "out": 688,
+            "total": 1002,
+            "reasoning": 441
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "markapia",
+      "query": "Markapia",
+      "note": "e-shop (Saker list, archived 11 Oct: no proven issue); a healthy case",
+      "ms": 15190,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 4,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4355,
+        "rewritesRejected": 0,
+        "ms": 15189
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Markapia is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Markapia",
+                "city": "İstanbul"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Markapia",
+                "city": "İstanbul"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 94,
+              "at": "2026-10-11T21:58:11.094Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:58:11.094Z",
+          "ownerText": "Your business isn’t showing up on popular map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [
+        {
+          "type": "site_online",
+          "reason": "missing domain"
+        }
+      ],
+      "findings": [
+        {
+          "text": "Markapia is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2889,
+          "usage": {
+            "in": 1334,
+            "out": 415,
+            "total": 1749,
+            "reasoning": 341
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4589,
+          "usage": {
+            "in": 745,
+            "out": 664,
+            "total": 1409,
+            "reasoning": 571
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 890,
+          "usage": {
+            "in": 157,
+            "out": 162,
+            "total": 319,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3661,
+          "usage": {
+            "in": 246,
+            "out": 632,
+            "total": 878,
+            "reasoning": 432
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "lostmind",
+      "query": "Lost Mind",
+      "note": "clothing e-shop (Saker list, archived 11 Oct); ambiguous name",
+      "ms": 20481,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4248,
+        "rewritesRejected": 0,
+        "ms": 20481
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Lost Mind; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found reported: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Lost Mind",
+                "city": null,
+                "query": "Lost Mind official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Lost Mind",
+                "city": null,
+                "query": "Lost Mind official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s)",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "archive.org",
+                    "pass": false,
+                    "summary": "archive.org does not identify “Lost Mind” (page says “Internet Archive: Digital Library of Free & Borrowable Texts, Movies, Music & Wayback Machine”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "open.spotify.com",
+                    "pass": false,
+                    "summary": "open.spotify.com is a page on spotify.com, a site that does not carry the business's name, so it is not its own website"
+                  },
+                  {
+                    "host": "patreon.com",
+                    "pass": false,
+                    "summary": "patreon.com does not identify “Lost Mind” (page says “Your wildest creative reality”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": []
+              },
+              "ms": 5088,
+              "at": "2026-10-11T21:58:33.744Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:58:33.744Z",
+          "ownerText": "We couldn't find a website for Lost Mind; it only appears on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Lost Mind is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed reported: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Lost Mind",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Lost Mind",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 80,
+              "at": "2026-10-11T21:58:33.824Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:58:33.824Z",
+          "ownerText": "Lost Mind isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Lost Mind has no dedicated website and relies solely on third‑party platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "The business is not present on OpenStreetMap, reducing discoverability in map‑based searches.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2379,
+          "usage": {
+            "in": 1279,
+            "out": 311,
+            "total": 1590,
+            "reasoning": 258
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2998,
+          "usage": {
+            "in": 704,
+            "out": 420,
+            "total": 1124,
+            "reasoning": 350
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2174,
+          "usage": {
+            "in": 220,
+            "out": 409,
+            "total": 629,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4132,
+          "usage": {
+            "in": 295,
+            "out": 610,
+            "total": 905,
+            "reasoning": 405
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "tokerbebe",
+      "query": "Toker Bebe",
+      "note": "baby products e-shop (Saker list)",
+      "ms": 20015,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 4,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4931,
+        "rewritesRejected": 0,
+        "ms": 20015
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Toker Bebe is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Toker Bebe",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Toker Bebe",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 81,
+              "at": "2026-10-11T21:58:59.656Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:58:59.656Z",
+          "ownerText": "Your business isn’t showing up on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [
+        {
+          "type": "site_online",
+          "reason": "missing domain"
+        }
+      ],
+      "findings": [
+        {
+          "text": "Your business is not listed on OpenStreetMap, which many map apps rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5764,
+          "usage": {
+            "in": 1352,
+            "out": 962,
+            "total": 2314,
+            "reasoning": 876
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4073,
+          "usage": {
+            "in": 773,
+            "out": 651,
+            "total": 1424,
+            "reasoning": 540
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1176,
+          "usage": {
+            "in": 161,
+            "out": 193,
+            "total": 354,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3315,
+          "usage": {
+            "in": 253,
+            "out": 586,
+            "total": 839,
+            "reasoning": 383
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "tubabutik",
+      "query": "Tuba Butik",
+      "note": "women's clothing e-shop (Saker list)",
+      "ms": 23022,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 4,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 5070,
+        "rewritesRejected": 0,
+        "ms": 23022
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Tuba Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "OSM listing check for Tuba Butik in Istanbul returned false, indicating no matching place on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Tuba Butik",
+                "city": "Istanbul"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Tuba Butik",
+                "city": "Istanbul"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {
+                "name": "Tuba",
+                "display_name": "Tuba, Akdeniz Caddesi, Akdeniz, Akşemsettin Mahallesi, Istanbul, Fatih, Istanbul, Marmara Region, 34080, Turkey",
+                "lat": "41.0187013",
+                "lon": "28.9459685",
+                "osm": "node/5243950769",
+                "phone": null,
+                "website": null,
+                "score": 0.455,
+                "kind": "shop=clothes"
+              },
+              "ms": 101,
+              "at": "2026-10-11T21:59:26.674Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:59:26.674Z",
+          "ownerText": "Your shop isn’t listed on OpenStreetMap, so some map apps might not show it."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business is not listed on OpenStreetMap, which many navigation apps rely on, potentially limiting discoverability.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4767,
+          "usage": {
+            "in": 1361,
+            "out": 652,
+            "total": 2013,
+            "reasoning": 578
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 8043,
+          "usage": {
+            "in": 745,
+            "out": 1138,
+            "total": 1883,
+            "reasoning": 1093
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1203,
+          "usage": {
+            "in": 161,
+            "out": 267,
+            "total": 428,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3296,
+          "usage": {
+            "in": 254,
+            "out": 492,
+            "total": 746,
+            "reasoning": 278
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "shout",
+      "query": "Shout",
+      "note": "e-shop (Saker list, archived 11 Oct); very common word, namesake risk",
+      "ms": 24950,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 18,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 5469,
+        "rewritesRejected": 0,
+        "ms": 24949
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "shout-tv.com loads and shows real content.",
+          "rationale": "Own website found (shout-tv.com) and HTTP reachable with 200 status",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "shout-tv.com",
+                "name": "Shout",
+                "city": null,
+                "query": "Shout official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://shout-tv.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://shout-tv.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "shout-tv.com",
+                "name": "Shout",
+                "city": null,
+                "query": "Shout official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "shout-tv.com names the business (og:site_name: “Shout! TV”)",
+              "observed": {
+                "host": "shout-tv.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Shout! TV",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2339,
+              "at": "2026-10-11T21:59:53.852Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://shout-tv.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.shout-tv.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.shout-tv.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://shout-tv.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.shout-tv.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 198,
+              "at": "2026-10-11T21:59:54.050Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://shout-tv.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Shout! TV”)",
+              "observed": {
+                "title": "Shout! TV",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-11T21:59:54.052Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:59:54.052Z",
+          "ownerText": "Your site loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "shout-tv.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate valid for 59 days (>30 days threshold)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "shout-tv.com",
+                "name": "Shout",
+                "city": null,
+                "query": "Shout official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "shout-tv.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "shout-tv.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "shout-tv.com",
+                "name": "Shout",
+                "city": null,
+                "query": "Shout official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "shout-tv.com names the business (og:site_name: “Shout! TV”)",
+              "observed": {
+                "host": "shout-tv.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Shout! TV",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2,
+              "at": "2026-10-11T21:59:54.054Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "shout-tv.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 59 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-10T21:11:55.000Z",
+                "daysLeft": 59,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 186,
+              "at": "2026-10-11T21:59:54.240Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "shout-tv.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.shout-tv.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://shout-tv.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.shout-tv.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.shout-tv.com/"
+              },
+              "ms": 292,
+              "at": "2026-10-11T21:59:54.532Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:59:54.532Z",
+          "ownerText": "Your site has a valid HTTPS certificate and redirects securely."
+        },
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Shout is listed on OpenStreetMap.",
+          "rationale": "OpenStreetMap lists Shout location",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Shout",
+                "city": null
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Shout",
+                "city": null
+              },
+              "pass": true,
+              "summary": "Found “Shout” (Shout, Sandwich, Barnstable County, Massachusetts, 02537, United States)",
+              "observed": {
+                "name": "Shout",
+                "display_name": "Shout, Sandwich, Barnstable County, Massachusetts, 02537, United States",
+                "lat": "41.7118168",
+                "lon": "-70.4402795",
+                "osm": "way/386271564",
+                "phone": null,
+                "website": null,
+                "score": 1,
+                "kind": "highway=path"
+              },
+              "ms": 85,
+              "at": "2026-10-11T21:59:54.617Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T21:59:54.617Z",
+          "ownerText": "Your business appears on OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads real content and is accessible to visitors.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "Your website uses a valid HTTPS certificate, keeping visitor data safe.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Shout appears on OpenStreetMap, confirming your local presence on maps.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4574,
+          "usage": {
+            "in": 1440,
+            "out": 454,
+            "total": 1894,
+            "reasoning": 375
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4579,
+          "usage": {
+            "in": 1140,
+            "out": 732,
+            "total": 1872,
+            "reasoning": 641
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1243,
+          "usage": {
+            "in": 360,
+            "out": 213,
+            "total": 573,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4262,
+          "usage": {
+            "in": 324,
+            "out": 806,
+            "total": 1130,
+            "reasoning": 585
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "loky",
+      "query": "Loky",
+      "note": "e-shop (Saker list); short name, namesake risk",
+      "ms": 26503,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6032,
+        "rewritesRejected": 0,
+        "ms": 26503
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "lokyai.com loads and shows real content.",
+          "rationale": "Own website found: lokyai.com names the business (title: \"Loky AI - The Unified Agentic Data Infrastructure\")",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "lokyai.com",
+                "name": "Loky",
+                "city": null,
+                "query": "Loky official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://lokyai.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://lokyai.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "lokyai.com",
+                "name": "Loky",
+                "city": null,
+                "query": "Loky official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "lokyai.com names the business (title: “Loky AI - The Unified Agentic Data Infrastructure”)",
+              "observed": {
+                "host": "lokyai.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Loky AI - The Unified Agentic Data Infrastructure",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.coingecko.com/en/coins/loky-by-virtuals",
+                    "how": "a search result about the business names this domain"
+                  }
+                ]
+              },
+              "ms": 2661,
+              "at": "2026-10-11T22:00:21.115Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://lokyai.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://lokyai.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://lokyai.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 341,
+              "at": "2026-10-11T22:00:21.456Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://lokyai.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Loky AI - The Unified Agentic Data Infrastructure”)",
+              "observed": {
+                "title": "Loky AI - The Unified Agentic Data Infrastructure",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-11T22:00:21.458Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:00:21.458Z",
+          "ownerText": "Your website loads and shows real content about Loky AI."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "lokyai.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "Certificate expires in 65 day(s) (needs ≥ 30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "lokyai.com",
+                "name": "Loky",
+                "city": null,
+                "query": "Loky official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "lokyai.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "lokyai.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "lokyai.com",
+                "name": "Loky",
+                "city": null,
+                "query": "Loky official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "lokyai.com names the business (title: “Loky AI - The Unified Agentic Data Infrastructure”)",
+              "observed": {
+                "host": "lokyai.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Loky AI - The Unified Agentic Data Infrastructure",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.coingecko.com/en/coins/loky-by-virtuals",
+                    "how": "a search result about the business names this domain"
+                  }
+                ]
+              },
+              "ms": 4,
+              "at": "2026-10-11T22:00:21.462Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "lokyai.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 65 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-16T14:51:55.000Z",
+                "daysLeft": 65,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 289,
+              "at": "2026-10-11T22:00:21.751Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "lokyai.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://lokyai.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://lokyai.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://lokyai.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://lokyai.com/"
+              },
+              "ms": 618,
+              "at": "2026-10-11T22:00:22.369Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:00:22.369Z",
+          "ownerText": "Your site uses a secure HTTPS connection that will stay valid for a while."
+        },
+        {
+          "id": "no_contact_path",
+          "type": "no_contact_path",
+          "area": "contact",
+          "tone": "issue",
+          "statement": "The homepage has no contact form, email link, tap-to-call or WhatsApp link.",
+          "rationale": "No form, email, phone or WhatsApp contact on the homepage",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "lokyai.com",
+                "name": "Loky",
+                "city": null,
+                "query": "Loky official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.contact_path",
+              "params": {
+                "url": "https://lokyai.com/"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "lokyai.com",
+                "name": "Loky",
+                "city": null,
+                "query": "Loky official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "lokyai.com names the business (title: “Loky AI - The Unified Agentic Data Infrastructure”)",
+              "observed": {
+                "host": "lokyai.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Loky AI - The Unified Agentic Data Infrastructure",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.coingecko.com/en/coins/loky-by-virtuals",
+                    "how": "a search result about the business names this domain"
+                  }
+                ]
+              },
+              "ms": 2,
+              "at": "2026-10-11T22:00:22.371Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.contact_path",
+              "title": "Visitors can get in touch from the site",
+              "params": {
+                "url": "https://lokyai.com/"
+              },
+              "pass": false,
+              "summary": "No form, email, phone or WhatsApp contact on the homepage",
+              "observed": {
+                "form": false,
+                "mailto": false,
+                "tel": false,
+                "whatsapp": false,
+                "email": false,
+                "phone": false
+              },
+              "ms": 1,
+              "at": "2026-10-11T22:00:22.372Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:00:22.372Z",
+          "ownerText": "Your homepage doesn't have a way for visitors to contact you directly."
+        },
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Loky is listed on OpenStreetMap.",
+          "rationale": "Found “Loky” (Loky, Vohemar, Sava, Antsiranana Province, Madagascar)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Loky",
+                "city": null
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Loky",
+                "city": null
+              },
+              "pass": true,
+              "summary": "Found “Loky” (Loky, Vohemar, Sava, Antsiranana Province, Madagascar)",
+              "observed": {
+                "name": "Loky",
+                "display_name": "Loky, Vohemar, Sava, Antsiranana Province, Madagascar",
+                "lat": "-13.0445870",
+                "lon": "49.4744081",
+                "osm": "way/204356379",
+                "phone": null,
+                "website": null,
+                "score": 1,
+                "kind": "waterway=river"
+              },
+              "ms": 92,
+              "at": "2026-10-11T22:00:22.464Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:00:22.464Z",
+          "ownerText": "Your business appears on OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads and displays genuine content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate for over 30 days.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The homepage lacks any contact form, email link, tap‑to‑call or WhatsApp option.",
+          "cites": [
+            "no_contact_path"
+          ]
+        },
+        {
+          "text": "Loky is listed on OpenStreetMap, indicating some existing online visibility.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2801,
+          "usage": {
+            "in": 1612,
+            "out": 366,
+            "total": 1978,
+            "reasoning": 291
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4027,
+          "usage": {
+            "in": 1026,
+            "out": 604,
+            "total": 1630,
+            "reasoning": 461
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2571,
+          "usage": {
+            "in": 426,
+            "out": 596,
+            "total": 1022,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5594,
+          "usage": {
+            "in": 362,
+            "out": 1040,
+            "total": 1402,
+            "reasoning": 708
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "osepet",
+      "query": "Osepet",
+      "note": "Shopier seller (Saker list): expected no website of its own",
+      "ms": 18138,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4411,
+        "rewritesRejected": 0,
+        "ms": 18138
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Osepet; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Osepet",
+                "city": null,
+                "query": "Osepet official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Osepet",
+                "city": null,
+                "query": "Osepet official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s)",
+              "observed": {
+                "tried": [],
+                "listings": []
+              },
+              "ms": 2926,
+              "at": "2026-10-11T22:00:46.864Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:00:46.864Z",
+          "ownerText": "We couldn't find a website for Osepet—it only shows up on other sites and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Osepet is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Osepet",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Osepet",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 82,
+              "at": "2026-10-11T22:00:46.946Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:00:46.946Z",
+          "ownerText": "Osepet isn’t listed on OpenStreetMap, so it may not appear in some map apps."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Osepet has no website of its own and is visible only on listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Osepet is missing from OpenStreetMap, which many map apps rely on for local discovery.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2202,
+          "usage": {
+            "in": 1364,
+            "out": 324,
+            "total": 1688,
+            "reasoning": 267
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2823,
+          "usage": {
+            "in": 711,
+            "out": 454,
+            "total": 1165,
+            "reasoning": 382
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2878,
+          "usage": {
+            "in": 223,
+            "out": 454,
+            "total": 677,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2944,
+          "usage": {
+            "in": 300,
+            "out": 581,
+            "total": 881,
+            "reasoning": 351
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "modalila",
+      "query": "Modalilacomm",
+      "note": "Shopier seller (Saker list): expected no website of its own",
+      "ms": 17938,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4309,
+        "rewritesRejected": 0,
+        "ms": 17938
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Modalilacomm; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned false: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null,
+                "query": "Modalilacomm official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null,
+                "query": "Modalilacomm official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s)",
+              "observed": {
+                "tried": [],
+                "listings": []
+              },
+              "ms": 1776,
+              "at": "2026-10-11T22:01:09.314Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:01:09.314Z",
+          "ownerText": "We couldn't find a website for your business; it only shows up on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Modalilacomm is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 82,
+              "at": "2026-10-11T22:01:09.396Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T22:01:09.396Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps rely on."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Modalilacomm currently has no dedicated website, appearing only on third‑party listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "The business is absent from OpenStreetMap, reducing visibility in map‑based searches.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3419,
+          "usage": {
+            "in": 1320,
+            "out": 386,
+            "total": 1706,
+            "reasoning": 331
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2819,
+          "usage": {
+            "in": 718,
+            "out": 434,
+            "total": 1152,
+            "reasoning": 360
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1921,
+          "usage": {
+            "in": 226,
+            "out": 343,
+            "total": 569,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3390,
+          "usage": {
+            "in": 305,
+            "out": 577,
+            "total": 882,
+            "reasoning": 343
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

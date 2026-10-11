@@ -1,12 +1,12 @@
 # Proofline accuracy
 
-**Status: round 3 measured (11 Oct 2026) on 12 new local businesses the earlier fixes were not made for: 86% of kept claims correct (18 of 21), no run crashed, every model call used a JSON Schema. Its 4 error types are fixed with regression tests (`tests/round3-identity.test.mjs`); one known limit remains (a business on the map under an older name).**
+**Status: round 5 measured (12 Oct 2026): on the hardest input so far, 12 online shops queried by bare name only (no city, no domain), 90% of the kept claims that could be checked are correct (18 of 20; 2 could not be settled), up from 52% in round 4 on the same list before its fixes. The foreign-namesake errors (7 in round 4) are gone; of the 2 wrong claims left, one is a known limit (a shop whose site has another name) and one (a bare name the planner narrowed to another company) is fixed with a test. Round 3, on businesses queried with their city: 86% (18 of 21).**
 
 ## Method
 
-1. The live agent (Tavily + Nemotron 3 Super on Nebius Token Factory + live checks) runs on a fixed list of 12 real Turkish small businesses: rounds 1–2 on `eval/businesses.json` (mostly online shops); round 3 on a new list, `eval/businesses-2.json` (wedding venues, hotels, dental clinics and a driving school in five cities), so the fixes are tested on businesses they were not made for.
+1. The live agent (Tavily + Nemotron 3 Super on Nebius Token Factory + live checks) runs on a fixed list of 12 real Turkish small businesses: rounds 1–2 on `eval/businesses.json` (mostly online shops); round 3 on a new list, `eval/businesses-2.json` (wedding venues, hotels, dental clinics and a driving school in five cities), so the fixes are tested on businesses they were not made for; round 4 on another new list, `eval/businesses-3.json` (online shops, bare names only), to find the limits.
 2. Every run is saved (`eval/runs/<date>.json`): claims proposed, claims the gate kept, claims it dropped (with reason), model calls.
-3. Each kept claim is re-checked independently, outside Proofline (curl, openssl, the full page HTML, Nominatim, direct domain probes), and marked right or wrong (`eval/verdicts.json` for round 1, `eval/verdicts-r2.json` for round 2, `eval/verdicts-r3.json` for round 3, which also judges every dropped claim).
+3. Each kept claim is re-checked independently, outside Proofline (curl, openssl, the full page HTML, Nominatim, direct domain probes), and marked right or wrong (`eval/verdicts.json` for round 1, `eval/verdicts-r2.json` for round 2, `eval/verdicts-r3.json` for round 3, `eval/verdicts-r4.json` and `eval/verdicts-r5.json` for rounds 4–5; rounds 3–5 also judge every dropped claim). A claim the check cannot settle is marked unverifiable and left out of the percentage.
 4. The table below is filled from those marks only.
 
 ## Results
@@ -16,10 +16,16 @@
 | 1 | 2026-10-08 | 12 | 40 | 7 | 33 | 24 | 73% |
 | 2 | 2026-10-08 (after the round-1 fixes) | 12 | 39 | 6 | 33 | 29 | **88%** |
 | 3 | 2026-10-11 (new list, after the round-2 fixes) | 12 | 26 | 5 | 21 | 18 | **86%** |
+| 4 | 2026-10-12 (new list, bare names only) | 12 | 27 | 1 | 26 | 12 of 23 checkable (3 unverifiable) | **52%** |
+| 5 | 2026-10-12 (same list, after the round-4 fixes) | 12 | 25 | 3 | 22 | 18 of 20 checkable (2 unverifiable) | **90%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
 Round 3 (new businesses): of the 5 dropped claims, 2 deserved it and 3 were true claims lost (a domain with no DNS record that nothing tied to the business; a namesake the identity check would not settle; a hotel-directory page taken for the hotel's site). The 3 wrong kept claims concern two businesses (below).
+
+Round 4 (bare names): the one dropped claim deserved it (aktiv.com is not Aktifim). 11 kept claims were wrong: 7 about foreign namesakes (Shout → a US TV service and a place in Massachusetts; Loky → an AI company and a village in Madagascar), 2 "no website of its own" for shops that have one, 1 rename read from a title that is just the address, 1 map match on another pet shop with the same two words reversed. The run also missed 5 own sites without making a claim about them (listed in `eval/verdicts-r4.json`).
+
+Round 5 (same list, after the fixes): all 3 dropped claims deserved it (a "no website" for Hilal AV Market, whose site the planner's guessed city kept unsettled; leadiq.com taken for Shout; a "no website" for Loky with lokyai.com only loosely matching). 2 kept claims were wrong: Aktifim's "no website" (its site has another name; known limit) and a map claim about "Shout Outdoor Media", a company the planner narrowed the bare name "Shout" to (fixed after the round: such a guess between namesakes is not used, `tests/round4-identity.test.mjs`). Markapia and Tuba Butik now get their own sites checked: 5 more true findings than in round 4.
 
 What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false "no contact path"; Petpal is no longer confused with a US site; Vatkalimon's own site is found by trying the address built from its name; Sakal Kafe Pub is found on the map.
 
@@ -61,3 +67,14 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | A hotel directory's subdomain (golden-boutique.ankarahotels.org) was taken for the hotel's own site | 0 (1 true claim lost) | Fixed (11 Oct): a subdomain of a site whose own name does not carry the business's name is someone else's page | `tests/round3-identity.test.mjs` |
 | Shared trade words made two schools one: "Aysan Sürücü Kursu" (aysansurucukursu.com) passed for "A2 Sürücü Kursu" | 0 (the claim was dropped, for the wrong reason) | Fixed (11 Oct): trade words (Sürücü Kursu, Butik Otel, Ağız ve Diş…) are set aside and what is left of both names must match | `tests/round3-identity.test.mjs` |
 | Known limit, not fixed: the hotel is on OpenStreetMap under an older name ("Sunset Pansiyon and Apartments", Çıralı) | 1 (not_on_map) | A name search cannot know an older name; a later round may compare the map entry's phone or website with the site's | — |
+
+### Round 4 (new list of 12 online shops, bare names only)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| Bare common name, no city: a foreign namesake's site and map place were taken (shout-tv.com "Shout! TV", lokyai.com "Loky AI"; Massachusetts, Madagascar) | 7 | Fixed (12 Oct): with no city and no address typed, a site counts only if a title part, og:site_name or heading is exactly the name ("SHOUT – Oversize Giyim" yes, "Shout! TV" no) or the address is the whole name written as one word (7+ letters); a looser match is "may be a namesake", never "theirs". A one-word name found on the map with no city is not tied to the business | `tests/round4-identity.test.mjs` |
+| "No website" while the address built from the name exists (hilalavmarket.com; its title names products, not the shop) | 1 | Fixed (12 Oct): an address that is the whole name written as one word, loading a real page (not a for-sale page), is the business's site | `tests/round4-identity.test.mjs` |
+| "No website" for a shop whose site has another name (Aktifim sells on kozmetikvagonu.com) | 1 | Known limit, not fixed: nothing in the name leads there; the claim already says "no website of its own was found" | — |
+| Rename read from a page title that is the address itself ("erenhobi.com" vs "Eren Hobi") | 1 | Fixed (12 Oct): a title (or title part) that is the name written as one word, or the address itself, names the business | `tests/round4-identity.test.mjs` |
+| Map match on another shop with the same words reversed, one being the city ("Ankara Pet" for "Pet Ankara") | 1 | Fixed (12 Oct): when the name holds the city word, the map name must carry it in the same order (one may be part of the other) | `tests/round4-identity.test.mjs` |
+| For-sale pages written as "osepet.com for sale" or "Domain for sale" were not recognised as parked | 0 (found while fixing) | Fixed (12 Oct): both forms are parked markers | `tests/round4-identity.test.mjs` |

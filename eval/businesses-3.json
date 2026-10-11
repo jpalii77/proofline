@@ -1,0 +1,14 @@
+[
+  { "id": "hilalav", "query": "Hilal AV Market", "note": "hunting/outdoor e-shop (Saker list, Oct 2026); name only" },
+  { "id": "erenhobi", "query": "Eren Hobi", "note": "hobby supplies e-shop (Saker list); name only" },
+  { "id": "petankara", "query": "Pet Ankara, Ankara", "note": "pet shop (Saker list); name + city" },
+  { "id": "aktifim", "query": "Aktifim", "note": "sports/outdoor e-shop (Saker list); name only" },
+  { "id": "markapia", "query": "Markapia", "note": "e-shop (Saker list, archived 11 Oct: no proven issue); a healthy case" },
+  { "id": "lostmind", "query": "Lost Mind", "note": "clothing e-shop (Saker list, archived 11 Oct); ambiguous name" },
+  { "id": "tokerbebe", "query": "Toker Bebe", "note": "baby products e-shop (Saker list)" },
+  { "id": "tubabutik", "query": "Tuba Butik", "note": "women's clothing e-shop (Saker list)" },
+  { "id": "shout", "query": "Shout", "note": "e-shop (Saker list, archived 11 Oct); very common word, namesake risk" },
+  { "id": "loky", "query": "Loky", "note": "e-shop (Saker list); short name, namesake risk" },
+  { "id": "osepet", "query": "Osepet", "note": "Shopier seller (Saker list): expected no website of its own" },
+  { "id": "modalila", "query": "Modalilacomm", "note": "Shopier seller (Saker list): expected no website of its own" }
+]
