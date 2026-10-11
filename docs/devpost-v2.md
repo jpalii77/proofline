@@ -28,12 +28,15 @@ You type a business name and city, or a domain. Proofline:
 
 Every step streams to the page as a live trace. Every claim has a **Re-run proof** button. A **model calls panel** lists each Nemotron call: model, role, latency, tokens in and out from Token Factory's `usage` field, and whether code accepted, partly rejected, rejected or got no answer. Every report gets a read-only **share link** (kept 14 days).
 
-The public demo opens with four recorded, fictional examples (instant, free) and a capped live mode that calls Tavily and Nemotron for real. The interface is in **English and Turkish**, and an optional four-step **"How it works" tour** explains the page to a first-time visitor.
+The public demo opens with four recorded, fictional examples (instant, free) and a capped live mode that calls Tavily and Nemotron for real. The whole report follows the visitor's language, **English or Turkish**: Nemotron writes the owner lines, summary and pitch in that language, and the page shows the fixed wording (checks, claim sentences, drop reasons) in it too. An optional four-step **"How it works" tour** explains the page to a first-time visitor.
+
+**Measured, not claimed:** on 12 new local businesses it had never seen (round 3), **86% of the claims the gate kept were correct** when checked by hand outside Proofline (18 of 21); see Accuracy below.
 
 ## How we built it
 
 - **Runtime:** plain Node.js 20+, zero dependencies. Public demo on Cloudflare Workers, with a SQLite-backed Durable Object for daily quotas, a 24-hour query cache and share links.
-- **NVIDIA Nemotron on Nebius Token Factory:** every model call goes to Token Factory's OpenAI-compatible Chat Completions API at runtime, with plain `fetch` and strict JSON (`src/llm.mjs`; prompts in `src/agent/nemotron-brain.mjs`).
+- **NVIDIA Nemotron on Nebius Token Factory:** every model call goes to Token Factory's OpenAI-compatible Chat Completions API at runtime, with plain `fetch` (`src/llm.mjs`; prompts in `src/agent/nemotron-brain.mjs`).
+  - **Structured output:** each call sends a JSON Schema (`response_format: json_schema`, strict) whose enums are filled from the run itself: the planner's domain can only be one of the web addresses Tavily returned (or null), a proposed claim type can only come from the catalog, and a pitch finding can only cite a verified claim id. The model is held to what it may say while decoding; code still checks every answer after. Verified live on both models (Super and Nano accepted the schema); if an endpoint refuses it, the call falls back to JSON mode once and the panel says so. In the 48 model calls of accuracy round 3, every one used the schema.
   - **Nemotron 3 Super** (`nvidia/nemotron-3-super-120b-a12b`, reasoning tier): planner, claim proposer and writer.
   - **Nemotron 3 Nano** (`nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`, fast tier): plain-language rewrites, checked by `numbersGrounded` in `src/agent/pipeline.mjs`.
   - Token counts come from the API's `usage` field (`parseUsage`); a missing field is shown as unknown, never estimated.
@@ -44,8 +47,8 @@ The public demo opens with four recorded, fictional examples (instant, free) and
   The gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
 - **Guards in code:** grounding guard (domain and phone must come from search results, domain must have a real public-suffix ending), own-site guard (a listing platform is never "the website"), the gate (`gateClaim`), and a citation lint on the pitch.
 - **Failure handling:** a failed model call, a time limit or a request limit turns the affected checks into "not checked", never into a finding. Server errors become a plain sentence, never a stack trace.
-- **Interface:** single page, no framework; English and Turkish dictionary (`public/i18n.js`), guided tour (`public/tour.js`), phone layout.
-- **Tests:** 138 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests. `SAMPLE_MODE` runs the whole agent on recorded fixtures with a labelled rule-based stand-in for the model, so anyone can try it without keys.
+- **Interface:** single page, no framework; English and Turkish interface and report (`public/i18n.js`, `public/report-lang.js`), guided tour (`public/tour.js`), phone layout checked at 375 px.
+- **Tests:** 199 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests. `SAMPLE_MODE` runs the whole agent on recorded fixtures with a labelled rule-based stand-in for the model, so anyone can try it without keys.
 
 ## Challenges we ran into
 
@@ -57,6 +60,8 @@ Our own agent made exactly the mistake Proofline exists to prevent. On 6 October
 
 The fictional "Kuzey Kafe" sample reproduces the first trap so anyone can watch the gate drop the claims made against the platform page.
 
+Then we measured instead of guessing. Three rounds on real businesses, each kept claim checked by hand, each error turned into a fix with a regression test: 73% → 88% on 12 online shops, then 86% on 12 local businesses the fixes were never made for. The errors were instructive: a cut-off page read as "no contact info", a US namesake taken for a Bursa shop, an agency's homepage that lists the business as a client, a dental clinic matched on the map to a clothes shop called "Santral", a hotel whose site answers only on plain http.
+
 Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS certificate API, so DNS uses DNS-over-HTTPS and certificate expiry comes from Certificate Transparency logs, behind a small adapter. Live search had to be rate-limited to protect a small trial credit. And the page had to make sense to someone who has never heard of a "proof gate", which led to the guided tour and plain error messages.
 
 ## Accomplishments that we're proud of
@@ -64,6 +69,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - The model's mistakes are visible, not hidden: dropped claims stay on screen with the exact check that failed.
 - Every claim can be re-proven by the user with one click.
 - Fixes for real failures went into the evidence and the gate, not into a longer prompt, and each one has a regression test.
+- Accuracy is measured on real businesses and published with every verdict, including the claims it got wrong.
 - Every Nemotron call is accounted for on screen: tokens, latency and what code did with the answer.
 - It runs end to end with zero dependencies, locally or on a free Workers plan.
 
@@ -75,11 +81,19 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 
 ## Accuracy
 
-Measurement in progress (October 2026). The live agent runs on a list of real businesses and every kept claim is checked independently; results will be in `docs/accuracy.md` in the repository. <!-- ACCURACY: fill after the measurement; no numbers before the independent check -->
+The live agent runs on lists of 12 real Turkish small businesses; every claim the gate keeps is then checked by hand outside Proofline (DNS, curl, openssl, the full homepage, OpenStreetMap, web search).
+
+| Round | Businesses | Proposed | Dropped by the gate | Kept | Kept and correct | Accuracy of kept claims |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 (8 Oct) | 12 online shops | 40 | 7 | 33 | 24 | 73% |
+| 2 (8 Oct, after fixes) | same 12 | 39 | 6 | 33 | 29 | 88% |
+| 3 (11 Oct, after fixes) | 12 new local businesses: venues, hotels, clinics | 26 | 5 | 21 | 18 | 86% |
+
+Round 3 is the honest number: businesses the earlier fixes were not made for. Its errors are fixed with tests, and the method, every verdict and every error are in `docs/accuracy.md`.
 
 ## What's next
 
-- Agent report text (claims, findings, drop reasons) in the visitor's language; today only the interface is bilingual.
+- Recognise a business listed on the map under an older name, by comparing the map entry's phone or website with the site's (round 3's one unfixed error).
 - More Tavily signals: relocation / "moved", and a dedicated identity-verification search.
 - Nemotron 3 Ultra for the hardest planning decisions, if credit allows.
 - Record real Nemotron outputs for the sample fixtures, replacing the rule-based stand-in.
@@ -91,7 +105,7 @@ Proofline is a new project. The repository's first commit is on 6 October 2026, 
 
 ## Built with
 
-javascript, node.js, nvidia-nemotron, nemotron-3-super, nemotron-3-nano, nebius-token-factory, tavily, cloudflare-workers, durable-objects, openstreetmap, server-sent-events
+javascript, node.js, nvidia-nemotron, nemotron-3-super, nemotron-3-nano, nebius-token-factory, structured-output, tavily, cloudflare-workers, durable-objects, openstreetmap, server-sent-events
 
 ## Links
 
