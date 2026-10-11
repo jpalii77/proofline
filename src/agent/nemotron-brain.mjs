@@ -73,7 +73,7 @@ Schema: {"name": string|null, "city": string|null, "domain": string|null, "phone
       },
     }),
 
-    propose: ({ ctx, observations, catalog }) => llm.chat({
+    propose: ({ ctx, observations, catalog, lang }) => llm.chat({
       tier: 'reasoning',
       schema: SCHEMAS.propose({ catalog }),
       maxTokens: 1500,
@@ -82,7 +82,7 @@ You may only use claim types from the catalog. Propose every claim the observati
 A code gate will re-run the checks behind each claim; claims that fail are dropped and shown as dropped, so do not pad.
 business.ownSite=false means no website of the business's own was confirmed: do not propose website, security or contact-on-site claims;
 if web.own_site_found failed, propose no_own_website.
-Schema: {"claims": [{"type": catalog type, "rationale": string citing the observation}]}`,
+${lang === 'tr' ? 'Write each rationale in Turkish; keep claim types, domains, phone numbers and names exactly as given.\n' : ''}Schema: {"claims": [{"type": catalog type, "rationale": string citing the observation}]}`,
       user: { business: ctx, catalog, observations: observations.map((o) => ({ check: o.check, params: o.params, pass: o.pass, summary: o.summary })) },
     }),
 

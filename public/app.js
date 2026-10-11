@@ -4,7 +4,7 @@ import { applyStatic, DICT, dateTime, getLang, num, onLangChange, partialText, s
 import { setupTour } from './tour.js';
 import { createGateStage } from './gate.js';
 import { ctxFromEvents, gateSummary, laneFromGate, lanesFromEvents, lanesFromReport, miniLabel, shortLabel } from './gate-data.js';
-import { checkTitle, claimStatement, dropReasonText, guardNoteText, modelDetailText, removedReasonText, summaryText } from './report-lang.js';
+import { cardFacts, checkTitle, claimStatement, dropReasonText, guardNoteText, modelDetailText, modelName, removedReasonText, summaryText } from './report-lang.js';
 
 const $ = (s) => document.querySelector(s);
 function h(tag, attrs = {}, ...kids) {
@@ -255,7 +255,7 @@ const parsedText = (p) => (p.domain ? t('ev.parsedDomain', { domain: p.domain })
 const HANDLERS = {
   run: (e) => { runId = e.runId; if (typeof e.left === 'number') setLeft(e.left); },
   cached: (e) => event(t('tag.cache'), [h('b', {}, t('ev.cacheTitle')), h('span', { class: 'meta' }, e.ageMinutes < 60 ? t('ev.cacheMin', { n: num(e.ageMinutes) }) : t('ev.cacheHours', { n: num(Math.round(e.ageMinutes / 60)) }))]),
-  start: (e) => event(t('tag.start'), [h('b', {}, e.query), h('span', { class: 'meta' }, t('ev.models', { reasoning: e.models.reasoning, fast: e.models.fast }))]),
+  start: (e) => event(t('tag.start'), [h('b', {}, e.query), h('span', { class: 'meta' }, t('ev.models', { reasoning: modelName(e.models.reasoning, getLang()), fast: modelName(e.models.fast, getLang()) }))]),
   intake: (e) => event(t('tag.intake'), parsedText(e.parsed)),
   discover: (e) => event(t('tag.tavily'), [h('b', {}, t('ev.results', { n: e.results.length })), h('span', { class: e.error ? 'meta warn' : 'meta' }, e.error ? t('ev.searchFailed', { error: e.error }) : e.query)]),
   plan: (e) => event(t('tag.plan'), [
@@ -265,7 +265,7 @@ const HANDLERS = {
     ...e.guard.map((g) => h('span', { class: 'meta warn' }, t('ev.guard', { text: guardNoteText(g, getLang()) }))),
   ]),
   model: (e) => event(t('tag.model'), [
-    h('b', {}, `${roleText(e.role)} · ${e.model}`),
+    h('b', {}, `${roleText(e.role)} · ${modelName(e.model, getLang())}`),
     h('span', { class: 'meta' }, `${tierText(e.tier)} · ${secs(e.ms || 0)} · ${tokensText(e.usage)}`),
     h('span', { class: `meta outcome o-${e.outcome}` }, `${outcomeText(e.outcome)}${e.detail ? ` — ${callDetail(e.detail)}` : ''}`),
   ], `model o-${e.outcome}`),
@@ -474,7 +474,7 @@ function modelPanel(r, calls) {
       h('div', { class: 'call-main' },
         h('b', {}, roleText(c.role)),
         h('span', { class: 'tier' }, tierText(c.tier)),
-        h('code', {}, c.model),
+        h('code', {}, modelName(c.model, getLang())),
         // Structured output: the reply was decoded to a JSON Schema (or fell back to plain JSON mode).
         FORMAT_KEY[c.format] ? h('span', { class: 'tier' }, t(FORMAT_KEY[c.format])) : null),
       h('div', { class: 'call-nums' },
@@ -533,7 +533,7 @@ function renderReport(r) {
       h('div', { class: 'biz-id' },
         h('h2', {}, t('card.title')),
         h('h3', {}, r.ctx.displayName || r.ctx.name || r.ctx.domain),
-        h('div', { class: 'facts' }, [r.ctx.domain, r.ctx.city, r.ctx.phone].filter(Boolean).map((f) => h('span', {}, f))),
+        h('div', { class: 'facts' }, cardFacts(r.ctx).map((f) => h('span', {}, f))),
         at ? h('p', { class: 'generated' }, t('card.generated', { when: when(at) })) : null),
       h('div', { class: 'overall' }, gradeRing(card.grade, card.overall), h('small', {}, gradeWord(card.grade)))),
     h('div', { class: 'areas' }, areas),
@@ -609,7 +609,7 @@ function claimCard(c) {
     h('div', { class: 'claim-top' }, h('h4', {}, stmt(c)), h('span', { class: `badge ${dropped ? 'dropped' : c.tone}` }, label)),
     !dropped && c.ownerText && c.ownerText !== c.statement && c.ownerText !== stmt(c) ? h('p', { class: 'owner' }, t('claim.forOwner', { text: c.ownerText })) : null,
     dropped ? h('p', { class: 'why' }, h('b', {}, t('claim.whyDropped')), dropWhy(c)) : null,
-    dropped && c.rationale ? h('p', { class: 'why' }, t('claim.modelReason', { text: c.rationale })) : null,
+    dropped && c.rationale ? h('p', { class: 'why' }, t('claim.modelReason', { text: result(c.rationale) })) : null,
     h('details', { class: 'proof' },
       h('summary', {}, h('span', { class: 'lbl' }, t('proof.label', { n: c.evidence.length })), h('span', { class: 'muted' }, t('proof.checked', { time: time(c.checkedAt) }))),
       list,

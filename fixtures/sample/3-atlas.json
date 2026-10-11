@@ -7,7 +7,7 @@
   "listedPhone": "+90 212 555 30 61",
   "blurb": "Bike shop that may have changed hands: the site now carries another name and number, and a directory marks it closed.",
   "planted": [
-    { "type": "phone_confirmed", "rationale": "The directory phone looks like the shop's main line." }
+    { "type": "phone_confirmed", "rationale": "The directory phone looks like the shop's main line.", "rationale_tr": "Rehberdeki telefon dükkânın ana hattı gibi görünüyor." }
   ],
   "io": {
     "dns": { "atlasbike.example": { "a": ["192.0.2.18"], "aaaa": [] } },

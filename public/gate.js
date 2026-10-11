@@ -422,7 +422,9 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
         // a stopped card comes in front of the posts, so its stamp is never behind glass
         z = state.includes('settled') ? 3 : state === 'dropped' ? 24 : 12;
         const sm = c.plan.marks.find((m) => m.state === 'settled');
-        if (sm && t >= sm.t) c.node.style.setProperty('--chip-w', `${sm.w}px`);
+        // the chip takes its list's width in the layout as it is now: a plan made before the frame had its
+        // final width (phone, page still settling) would leave a narrow chip with a cut-off claim
+        if (sm && t >= sm.t) c.node.style.setProperty('--chip-w', `${(c.lane.verdict === 'verified' ? L.kept : L.dropped)(0)?.w ?? sm.w}px`);
       }
       if (c.state !== state) { c.node.className = `gs-card ${state}`; c.state = state; }
       c.node.style.opacity = String(opacity);

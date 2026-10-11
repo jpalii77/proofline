@@ -46,6 +46,19 @@ const CHECK_TR = {
   'web.no_closure_signal': 'İşletmenin kapandığına dair herkese açık bir işaret yok',
 };
 
+// Listing platform kinds (src/platforms.mjs labels).
+const PLATFORM_TR = {
+  'menu / QR-menu provider': 'menü / QR menü sağlayıcısı',
+  'food delivery / ordering': 'yemek siparişi / teslimat',
+  'review / directory': 'yorum / rehber sitesi',
+  'booking / travel': 'rezervasyon / seyahat',
+  'marketplace / services': 'pazar yeri / hizmet platformu',
+  'social network / link hub': 'sosyal ağ / bağlantı sayfası',
+  maps: 'harita',
+  'maps / search': 'harita / arama',
+};
+const platformTr = (label) => PLATFORM_TR[label] || label;
+
 const HOW_TR = {
   'its homepage is a search result that names the business': 'ana sayfası, işletmeyi adıyla anan bir arama sonucu',
   'a search result about the business names this domain': 'işletmeyle ilgili bir arama sonucu bu alan adını anıyor',
@@ -92,7 +105,7 @@ const SUMMARY_TR = [
   [/^No business name to (?:check the site against|search for)$/, () => 'Karşılaştırılacak işletme adı yok'],
   [/^No website of its own among (\d+) search result\(s\)(?:; listings only: ([^;]+))?(?:; (.+) did not load and nothing ties it to the business)?$/,
     (m) => `${m[1]} arama sonucunda kendi web sitesi yok${m[2] ? `; yalnızca listelemeler: ${m[2]}` : ''}${m[3] ? `; ${m[3]} açılmadı ve onu işletmeye bağlayan bir şey yok` : ''}`],
-  [/^(\S+) is a listing platform \((.+)\), not the business's own website$/, (m) => `${m[1]} bir listeleme platformu (${m[2]}), işletmenin kendi sitesi değil`],
+  [/^(\S+) is a listing platform \((.+)\), not the business's own website$/, (m) => `${m[1]} bir listeleme platformu (${platformTr(m[2])}), işletmenin kendi sitesi değil`],
   [/^(\S+) is a site-builder address that does not name the business, so it is not treated as its own website$/, (m) => `${m[1]} işletmenin adını taşımayan bir site kurucu adresi; kendi sitesi sayılmadı`],
   [/^(\S+) was given by the user as the business's website$/, (m) => `${m[1]}, kullanıcı tarafından işletmenin sitesi olarak verildi`],
   [/^(\S+) names the business \(([\w:-]+): “(.*)”\)$/, (m) => `${m[1]} işletmenin adını taşıyor (${m[2]}: “${m[3]}”)`],
@@ -216,4 +229,19 @@ export function modelDetailText(detail, lang) {
     }
     return part;
   }).join(' · ');
+}
+
+// The recorded examples' rule-based stand-in, named in the trace and the model calls panel.
+const SAMPLE_MODEL = 'sample (rule-based)';
+/** A model name for display: real model ids as sent; the stand-in in the page's language. */
+export function modelName(model, lang) {
+  return lang === 'tr' && model === SAMPLE_MODEL ? 'örnek (kurallara dayalı)' : String(model ?? '');
+}
+
+/**
+ * The facts under the business name on the health card. A domain that the checks showed is not the
+ * business's own website (a listing or menu platform) is not shown as its address.
+ */
+export function cardFacts(ctx) {
+  return [ctx?.ownSite === false ? null : ctx?.domain, ctx?.city, ctx?.phone].filter(Boolean);
 }

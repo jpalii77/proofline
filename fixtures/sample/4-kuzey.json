@@ -7,9 +7,9 @@
   "listedPhone": "+90 222 555 40 18",
   "blurb": "Café with no website of its own, only a QR-menu page and Instagram. The planner mistakes the menu platform for its site.",
   "planted": [
-    { "type": "no_contact_path", "rationale": "The homepage at qrmenu.example has no contact form or tap-to-call link." },
-    { "type": "phone_unconfirmed", "rationale": "+90 222 555 40 18 is not on qrmenu.example." },
-    { "type": "possibly_renamed", "rationale": "qrmenu.example calls itself “QRMenu”, not “Kuzey Kafe”; the café may have been renamed." }
+    { "type": "no_contact_path", "rationale": "The homepage at qrmenu.example has no contact form or tap-to-call link.", "rationale_tr": "qrmenu.example ana sayfasında iletişim formu ya da tıkla-ara bağlantısı yok." },
+    { "type": "phone_unconfirmed", "rationale": "+90 222 555 40 18 is not on qrmenu.example.", "rationale_tr": "+90 222 555 40 18 qrmenu.example üzerinde yok." },
+    { "type": "possibly_renamed", "rationale": "qrmenu.example calls itself “QRMenu”, not “Kuzey Kafe”; the café may have been renamed.", "rationale_tr": "qrmenu.example kendine “QRMenu” diyor, “Kuzey Kafe” değil; kafenin adı değişmiş olabilir." }
   ],
   "io": {
     "dns": { "qrmenu.example": { "a": ["192.0.2.90"], "aaaa": [] } },

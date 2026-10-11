@@ -279,7 +279,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   }
 
   // 5. Propose claims (reasoning model), only from the catalog
-  const proposeOut = await ask('propose', { ctx, observations, catalog: catalogForPrompt(), discovery: discovery.results || [] });
+  const proposeOut = await ask('propose', { ctx, observations, catalog: catalogForPrompt(), discovery: discovery.results || [], lang: reportLang });
   if (proposeOut.error) partial.push(`Claim proposer did not answer (${proposeOut.error}); only claims code can put to the gate by itself were checked.`);
   const proposals = Array.isArray(proposeOut.json?.claims) ? proposeOut.json.claims.slice(0, 16) : [];
   const claims = [];

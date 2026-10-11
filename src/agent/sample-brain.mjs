@@ -122,7 +122,7 @@ export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
       });
     },
 
-    propose: ({ ctx, observations }) => {
+    propose: ({ ctx, observations, lang }) => {
       const claims = [];
       const add = (type, rationale) => claims.push({ type, rationale });
       if (ctx.domain && ctx.ownSite) {
@@ -148,7 +148,8 @@ export function createSampleBrain(sample, { thinkMs = 0 } = {}) {
       if (map.pass === true) add('on_map', map.summary);
       if (map.pass === false) add('not_on_map', map.summary);
       if (obs(observations, 'web.no_closure_signal').pass === false) add('possibly_closed', obs(observations, 'web.no_closure_signal').summary);
-      for (const p of sample.planted || []) claims.push(p);
+      // The planted (wrong) claims carry their reason in Turkish too, for a Turkish report.
+      for (const p of sample.planted || []) claims.push({ type: p.type, rationale: (lang === 'tr' && p.rationale_tr) || p.rationale });
       return reply({ claims });
     },
 
