@@ -1,0 +1,2540 @@
+{
+  "day": "2026-10-11",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "erguvan",
+      "query": "Erguvan Kasrı, Ankara",
+      "note": "outdoor wedding venue; its domain had no DNS record on 5 Oct",
+      "ms": 19459,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 14,
+        "notChecked": 6,
+        "modelCalls": 4,
+        "tokens": 5132,
+        "rewritesRejected": 0,
+        "ms": 19459
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Erguvan Kasrı is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "OpenStreetMap listing check returned no match (osm.listed: false) for Erguvan Kasrı in Ankara",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Erguvan Kasrı",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Erguvan Kasrı",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 68,
+              "at": "2026-10-11T00:27:54.673Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:27:54.673Z",
+          "ownerText": "Your restaurant isn’t showing up on popular map apps because it’s not listed on OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "site_unreachable",
+          "type": "site_unreachable",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "erguvankasri.com does not load (two attempts failed).",
+          "rationale": "DNS resolution failed (dns.resolves: false) and HTTP reachability check failed (http.reachable: false) for erguvankasri.com",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erguvankasri.com",
+                "name": "Erguvan Kasrı",
+                "city": "Ankara",
+                "query": "Erguvan Kasrı Ankara official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://erguvankasri.com/"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erguvankasri.com",
+                "name": "Erguvan Kasrı",
+                "city": "Ankara",
+                "query": "Erguvan Kasrı Ankara official website phone",
+                "userGiven": false
+              },
+              "pass": false,
+              "summary": "erguvankasri.com does not load and never appeared as a web address in the search results — no own website found",
+              "observed": {
+                "host": "erguvankasri.com",
+                "ties": [],
+                "unproven": true
+              },
+              "ms": 1517,
+              "at": "2026-10-11T00:27:54.605Z",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://erguvankasri.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: erguvankasri.com is not the business's own website",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "The domain is the business's own website: expected pass, got fail — erguvankasri.com does not load and never appeared as a web address in the search results — no own website found",
+          "checkedAt": "2026-10-11T00:27:54.605Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your venue is missing from OpenStreetMap, which many navigation apps and websites use to show locations.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5301,
+          "usage": {
+            "in": 866,
+            "out": 998,
+            "total": 1864,
+            "reasoning": 896
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4253,
+          "usage": {
+            "in": 1163,
+            "out": 702,
+            "total": 1865,
+            "reasoning": 609
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 989,
+          "usage": {
+            "in": 163,
+            "out": 255,
+            "total": 418,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3715,
+          "usage": {
+            "in": 275,
+            "out": 710,
+            "total": 985,
+            "reasoning": 501
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "risus",
+      "query": "Risus Wedding, Ankara",
+      "note": "wedding venue; its old domain showed a for-sale page on 5 Oct",
+      "ms": 18008,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4823,
+        "rewritesRejected": 0,
+        "ms": 18008
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Risus Wedding; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned false: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Risus Wedding",
+                "city": "Ankara",
+                "query": "Risus Wedding Ankara official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Risus Wedding",
+                "city": "Ankara",
+                "query": "Risus Wedding Ankara official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s); listings only: https://yandex.com/maps/org/risus_wedding/1287276954",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://yandex.com/maps/org/risus_wedding/1287276954"
+                ]
+              },
+              "ms": 2906,
+              "at": "2026-10-11T00:28:15.904Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:28:15.905Z",
+          "ownerText": "We couldn't find a website for Risus Wedding; it appears only on listings."
+        },
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Risus Wedding is listed on OpenStreetMap.",
+          "rationale": "osm.listed check passed: Found “Risus Wedding” (Risus Wedding, Turgut Özal Bulvarı, İncek Mahallesi, Gölbaşı, Ankara, Central Anatolia Region, 06830, Turkey)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Risus Wedding",
+                "city": "Ankara"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Risus Wedding",
+                "city": "Ankara"
+              },
+              "pass": true,
+              "summary": "Found “Risus Wedding” (Risus Wedding, Turgut Özal Bulvarı, İncek Mahallesi, Gölbaşı, Ankara, Central Anatolia Region, 06830, Turkey)",
+              "observed": {
+                "name": "Risus Wedding",
+                "display_name": "Risus Wedding, Turgut Özal Bulvarı, İncek Mahallesi, Gölbaşı, Ankara, Central Anatolia Region, 06830, Turkey",
+                "lat": "39.7999665",
+                "lon": "32.6962407",
+                "osm": "node/12319329232",
+                "phone": null,
+                "website": null,
+                "score": 1
+              },
+              "ms": 80,
+              "at": "2026-10-11T00:28:15.985Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:28:15.985Z",
+          "ownerText": "Your business is listed on OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "No website of its own was found for Risus Wedding; it shows up only on listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Risus Wedding is listed on OpenStreetMap, showing you already have a basic online presence.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2727,
+          "usage": {
+            "in": 1390,
+            "out": 411,
+            "total": 1801,
+            "reasoning": 358
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2944,
+          "usage": {
+            "in": 769,
+            "out": 495,
+            "total": 1264,
+            "reasoning": 382
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1738,
+          "usage": {
+            "in": 286,
+            "out": 451,
+            "total": 737,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3664,
+          "usage": {
+            "in": 299,
+            "out": 722,
+            "total": 1021,
+            "reasoning": 472
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "melina",
+      "query": "Melina Wedding House, Ankara",
+      "note": "event hall; only Instagram and directories on 5 Oct",
+      "ms": 14702,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 3635,
+        "rewritesRejected": 0,
+        "ms": 14702
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Melina Wedding House is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Melina Wedding House",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Melina Wedding House",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 92,
+              "at": "2026-10-11T00:28:36.004Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:28:36.004Z",
+          "ownerText": "Your venue isn’t showing up on the map many apps use."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Melina Wedding House; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 5 search result(s); listings only: https://www.instagram.com/melinaweddinghouse?hl=en, https://x.com/MelinaWedding/status/1134541386387218432?lang=bn, https://www.instagram.com/melinaweddinghouse/reels, https://x.com/MelinaWedding",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Melina Wedding House",
+                "city": "Ankara",
+                "query": "Melina Wedding House Ankara official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Melina Wedding House",
+                "city": "Ankara",
+                "query": "Melina Wedding House Ankara official website phone"
+              },
+              "pass": null,
+              "summary": "Not settled: melinaweddinghouse.com uses the name “Melina Wedding House” but nothing on it or in search ties it to Ankara; it may be a namesake",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "yandex.ru",
+                    "pass": false,
+                    "summary": "yandex.ru does not identify “Melina Wedding House” (page says “untitled”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "melinaweddinghouse.com",
+                    "pass": null,
+                    "summary": "melinaweddinghouse.com uses the name “Melina Wedding House” but nothing on it or in search ties it to Ankara; it may be a namesake"
+                  }
+                ],
+                "listings": [
+                  "https://www.instagram.com/reel/DQl4tAaCPS-",
+                  "https://www.pinterest.com/melinawedding",
+                  "https://www.facebook.com/MelinaWeddingHouse/photos/1224518953144744",
+                  "https://www.instagram.com/p/DPKJuh7CEcT"
+                ]
+              },
+              "ms": 2326,
+              "at": "2026-10-11T00:28:35.912Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Not settled: melinaweddinghouse.com uses the name “Melina Wedding House” but nothing on it or in search ties it to Ankara; it may be a namesake)",
+          "checkedAt": "2026-10-11T00:28:35.912Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your venue does not appear on OpenStreetMap, meaning many navigation apps and local search results may not show your exact location.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2378,
+          "usage": {
+            "in": 875,
+            "out": 375,
+            "total": 1250,
+            "reasoning": 278
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2725,
+          "usage": {
+            "in": 815,
+            "out": 427,
+            "total": 1242,
+            "reasoning": 277
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 826,
+          "usage": {
+            "in": 161,
+            "out": 204,
+            "total": 365,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3261,
+          "usage": {
+            "in": 265,
+            "out": 513,
+            "total": 778,
+            "reasoning": 269
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "golden",
+      "query": "Golden Boutique Hotel, Ankara",
+      "note": "hotel; own domain did not load on 5 Oct, booking sites only",
+      "ms": 19628,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 4000,
+        "rewritesRejected": 0,
+        "ms": 19628
+      },
+      "verified": [
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Golden Boutique Hotel is listed on OpenStreetMap.",
+          "rationale": "osm.listed check passed: Found “Golden Boutique Hotel” (Golden Boutique Hotel, Boğaz Sokak, Gaziosmanpaşa Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06680, Turkey).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Golden Boutique Hotel",
+                "city": "Ankara"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Golden Boutique Hotel",
+                "city": "Ankara"
+              },
+              "pass": true,
+              "summary": "Found “Golden Boutique Hotel” (Golden Boutique Hotel, Boğaz Sokak, Gaziosmanpaşa Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06680, Turkey)",
+              "observed": {
+                "name": "Golden Boutique Hotel",
+                "display_name": "Golden Boutique Hotel, Boğaz Sokak, Gaziosmanpaşa Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06680, Turkey",
+                "lat": "39.8989065",
+                "lon": "32.8656379",
+                "osm": "way/228007955",
+                "phone": null,
+                "website": null,
+                "score": 1
+              },
+              "ms": 93,
+              "at": "2026-10-11T00:28:59.037Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:28:59.037Z",
+          "ownerText": "You can find Golden Boutique Hotel on OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Golden Boutique Hotel; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check was not settled: goldenboutiquehotel.com uses the name “Golden Boutique Hotel” but nothing on it or in search ties it to Ankara; it may be a namesake, and business.ownSite is false.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Golden Boutique Hotel",
+                "city": "Ankara",
+                "query": "Golden Boutique Hotel Ankara official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Golden Boutique Hotel",
+                "city": "Ankara",
+                "query": "Golden Boutique Hotel Ankara official website phone"
+              },
+              "pass": true,
+              "summary": "Own website found: golden-boutique.ankarahotels.org names the business (title: “Golden Boutique Hotel Ankara, Turkey”)",
+              "observed": {
+                "host": "golden-boutique.ankarahotels.org",
+                "tried": [
+                  {
+                    "host": "travelyalla.com",
+                    "pass": false,
+                    "summary": "travelyalla.com does not identify “Golden Boutique Hotel” (page says “Book hotels and flights at the best prices with TravelYalla”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "golden-boutique.ankarahotels.org",
+                    "pass": true,
+                    "summary": "golden-boutique.ankarahotels.org names the business (title: “Golden Boutique Hotel Ankara, Turkey”)"
+                  }
+                ],
+                "listings": [
+                  "https://www.expedia.com/Ankara-Hotels-Golden-Boutique-Hotel.h3610286.Hotel-Information"
+                ]
+              },
+              "ms": 2588,
+              "at": "2026-10-11T00:28:58.944Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: expected fail, got pass — Own website found: golden-boutique.ankarahotels.org names the business (title: “Golden Boutique Hotel Ankara, Turkey”)",
+          "checkedAt": "2026-10-11T00:28:58.944Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The hotel is currently visible on OpenStreetMap, confirming basic online presence.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3349,
+          "usage": {
+            "in": 860,
+            "out": 554,
+            "total": 1414,
+            "reasoning": 462
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2846,
+          "usage": {
+            "in": 804,
+            "out": 500,
+            "total": 1304,
+            "reasoning": 354
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 589,
+          "usage": {
+            "in": 195,
+            "out": 120,
+            "total": 315,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4096,
+          "usage": {
+            "in": 257,
+            "out": 710,
+            "total": 967,
+            "reasoning": 533
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "pelops",
+      "query": "Pelops Boutique Otel, Ankara",
+      "note": "hotel; no own site seen on 5 Oct",
+      "ms": 16990,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4951,
+        "rewritesRejected": 0,
+        "ms": 16990
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Pelops Boutique Otel; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check passed false: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Pelops Boutique Otel",
+                "city": "Ankara",
+                "query": "Pelops Boutique Otel Ankara official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Pelops Boutique Otel",
+                "city": "Ankara",
+                "query": "Pelops Boutique Otel Ankara official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s); listings only: https://www.google.com.ng/travel/hotels/entity/ChoI0LGU0YaYr-PnARoNL2cvMTFjczZjdmt0XxAB/prices?ved=2ahUKEwism-fNg-eWAxVsssUCHfB4FUIQrfoIegUIBBDmAQ&ts=CAEaBAoCGgAqBAoAGgA&ap=ugEGcHJpY2Vz",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://www.google.com.ng/travel/hotels/entity/ChoI0LGU0YaYr-PnARoNL2cvMTFjczZjdmt0XxAB/prices?ved=2ahUKEwism-fNg-eWAxVsssUCHfB4FUIQrfoIegUIBBDmAQ&ts=CAEaBAoCGgAqBAoAGgA&ap=ugEGcHJpY2Vz"
+                ]
+              },
+              "ms": 2578,
+              "at": "2026-10-11T00:29:18.877Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:29:18.877Z",
+          "ownerText": "Your hotel doesn’t have its own website; it appears only on travel listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Pelops Boutique Otel is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check passed false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Pelops Boutique Otel",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Pelops Boutique Otel",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 89,
+              "at": "2026-10-11T00:29:18.966Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:29:18.966Z",
+          "ownerText": "Your hotel isn’t listed on OpenStreetMap, so it may not show up in some map apps."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The hotel does not have a dedicated website of its own and is found only on third‑party platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Pelops Boutique Otel is missing from OpenStreetMap, which many navigation apps use.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1855,
+          "usage": {
+            "in": 1508,
+            "out": 244,
+            "total": 1752,
+            "reasoning": 179
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2849,
+          "usage": {
+            "in": 742,
+            "out": 489,
+            "total": 1231,
+            "reasoning": 415
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1579,
+          "usage": {
+            "in": 344,
+            "out": 445,
+            "total": 789,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4170,
+          "usage": {
+            "in": 318,
+            "out": 861,
+            "total": 1179,
+            "reasoning": 578
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "query": "A2 Sürücü Kursu, Ankara",
+      "note": "driving school; https failed, http worked on 5 Oct",
+      "ms": 20049,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4632,
+        "rewritesRejected": 0,
+        "ms": 20049
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "A2 Sürücü Kursu is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "A2 Sürücü Kursu",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "A2 Sürücü Kursu",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 73,
+              "at": "2026-10-11T00:29:43.741Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:29:43.741Z",
+          "ownerText": "Your driving school isn’t listed on OpenStreetMap, so some map apps might not show it."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for A2 Sürücü Kursu; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned false: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "A2 Sürücü Kursu",
+                "city": "Ankara",
+                "query": "A2 Sürücü Kursu Ankara official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "A2 Sürücü Kursu",
+                "city": "Ankara",
+                "query": "A2 Sürücü Kursu Ankara official website phone"
+              },
+              "pass": true,
+              "summary": "Own website found: aysansurucukursu.com names the business (title: “Aysan Sürücü Kursu”)",
+              "observed": {
+                "host": "aysansurucukursu.com",
+                "tried": [
+                  {
+                    "host": "aysansurucukursu.com",
+                    "pass": true,
+                    "summary": "aysansurucukursu.com names the business (title: “Aysan Sürücü Kursu”)"
+                  }
+                ],
+                "listings": []
+              },
+              "ms": 2126,
+              "at": "2026-10-11T00:29:43.668Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: expected fail, got pass — Own website found: aysansurucukursu.com names the business (title: “Aysan Sürücü Kursu”)",
+          "checkedAt": "2026-10-11T00:29:43.668Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business is absent from OpenStreetMap, a data source used by many map apps and local search tools.",
+          "cites": [
+            "not_on_map"
+          ]
+        },
+        {
+          "text": "Without a map listing, potential customers searching for driving schools in Ankara may overlook your location.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2878,
+          "usage": {
+            "in": 1700,
+            "out": 408,
+            "total": 2108,
+            "reasoning": 351
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2795,
+          "usage": {
+            "in": 756,
+            "out": 391,
+            "total": 1147,
+            "reasoning": 317
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1038,
+          "usage": {
+            "in": 169,
+            "out": 211,
+            "total": 380,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4001,
+          "usage": {
+            "in": 272,
+            "out": 725,
+            "total": 997,
+            "reasoning": 457
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "vipgarden",
+      "query": "VIP Garden, İstanbul",
+      "note": "wedding garden; its domain showed an unrelated betting page on 5 Oct",
+      "ms": 18151,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4391,
+        "rewritesRejected": 0,
+        "ms": 18151
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for VIP Garden; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "VIP Garden",
+                "city": "İstanbul",
+                "query": "VIP Garden İstanbul official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "VIP Garden",
+                "city": "İstanbul",
+                "query": "VIP Garden İstanbul official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s); listings only: https://www.instagram.com/p/Dd4ED3ODWdZ",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "tracxn.com",
+                    "pass": false,
+                    "summary": "tracxn.com does not identify “VIP Garden” (page says “Technology & Data for Venture Capital, Corp Dev, Investment Banks | Tracxn”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": [
+                  "https://www.instagram.com/p/Dd4ED3ODWdZ"
+                ]
+              },
+              "ms": 2246,
+              "at": "2026-10-11T00:30:06.798Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:06.798Z",
+          "ownerText": "We couldn't find a website for VIP Garden—it only shows up on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "VIP Garden is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "VIP Garden",
+                "city": "İstanbul"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "VIP Garden",
+                "city": "İstanbul"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 79,
+              "at": "2026-10-11T00:30:06.877Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:06.877Z",
+          "ownerText": "VIP Garden isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have a dedicated website, which means you rely solely on third‑party platforms for visibility.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business is missing from OpenStreetMap, so many map apps cannot show your location to potential customers.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2506,
+          "usage": {
+            "in": 1446,
+            "out": 319,
+            "total": 1765,
+            "reasoning": 265
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2868,
+          "usage": {
+            "in": 717,
+            "out": 453,
+            "total": 1170,
+            "reasoning": 381
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1056,
+          "usage": {
+            "in": 241,
+            "out": 282,
+            "total": 523,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3003,
+          "usage": {
+            "in": 301,
+            "out": 632,
+            "total": 933,
+            "reasoning": 394
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "dentikonya",
+      "query": "Dent-i Konya, Konya",
+      "note": "dental clinic; site showed a WordPress error on 5 Oct",
+      "ms": 21728,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 20,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5511,
+        "rewritesRejected": 0,
+        "ms": 21728
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "dentikonya.com.tr loads and shows real content.",
+          "rationale": "site.own_site passed (domain names business), dns.resolves passed, http.reachable passed",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "name": "Dent-i Konya",
+                "city": "Konya",
+                "query": "Dent-i Konya Konya official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://dentikonya.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://dentikonya.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "name": "Dent-i Konya",
+                "city": "Konya",
+                "query": "Dent-i Konya Konya official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "dentikonya.com.tr names the business (title: “Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği”)",
+              "observed": {
+                "host": "dentikonya.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://dentikonya.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names konya"
+              },
+              "ms": 2055,
+              "at": "2026-10-11T00:30:29.397Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://dentikonya.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://dentikonya.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://dentikonya.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 233,
+              "at": "2026-10-11T00:30:29.630Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://dentikonya.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği”)",
+              "observed": {
+                "title": "Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-11T00:30:29.631Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:29.631Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "dentikonya.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed with certificate expiry 36 days (≥30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "name": "Dent-i Konya",
+                "city": "Konya",
+                "query": "Dent-i Konya Konya official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "dentikonya.com.tr"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "name": "Dent-i Konya",
+                "city": "Konya",
+                "query": "Dent-i Konya Konya official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "dentikonya.com.tr names the business (title: “Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği”)",
+              "observed": {
+                "host": "dentikonya.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://dentikonya.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names konya"
+              },
+              "ms": 4,
+              "at": "2026-10-11T00:30:29.635Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 36 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-16T05:48:53.000Z",
+                "daysLeft": 36,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 107,
+              "at": "2026-10-11T00:30:29.742Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "dentikonya.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://dentikonya.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://dentikonya.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://dentikonya.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://dentikonya.com.tr/"
+              },
+              "ms": 329,
+              "at": "2026-10-11T00:30:30.071Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:30.071Z",
+          "ownerText": "Your site is secure and always uses https."
+        },
+        {
+          "id": "phone_confirmed",
+          "type": "phone_confirmed",
+          "area": "contact",
+          "tone": "good",
+          "statement": "3322654245 is the business's own number: it is listed on its website.",
+          "rationale": "page.phone_listed passed showing phone 3322654245 on site",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "name": "Dent-i Konya",
+                "city": "Konya",
+                "query": "Dent-i Konya Konya official website phone",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://dentikonya.com.tr/",
+                "phone": "3322654245"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "dentikonya.com.tr",
+                "name": "Dent-i Konya",
+                "city": "Konya",
+                "query": "Dent-i Konya Konya official website phone",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "dentikonya.com.tr names the business (title: “Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği”)",
+              "observed": {
+                "host": "dentikonya.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Dent-i Konya – Denti Konya Ağız ve Diş Sağlığı Polikliniği",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://dentikonya.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names konya"
+              },
+              "ms": 4,
+              "at": "2026-10-11T00:30:30.075Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://dentikonya.com.tr/",
+                "phone": "3322654245"
+              },
+              "pass": true,
+              "summary": "3322654245 is listed on the site",
+              "observed": {
+                "looked_for": "3322654245",
+                "on_page": [
+                  "3322654245"
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-11T00:30:30.076Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:30.076Z",
+          "ownerText": "Your phone number is listed on your site."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Dent-i Konya is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false indicating no matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Dent-i Konya",
+                "city": "Konya"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Dent-i Konya",
+                "city": "Konya"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {
+                "name": "Can Dent Ağız ve Diş Sağlığı Polikliniği",
+                "display_name": "Can Dent Ağız ve Diş Sağlığı Polikliniği, Beyşehir Caddesi, Selçuk Mahallesi, Konya, Selçuklu, Konya, Central Anatolia Region, 42090, Turkey",
+                "lat": "37.8797377",
+                "lon": "32.4568741",
+                "osm": "node/14022161031",
+                "phone": null,
+                "website": null,
+                "score": 0.103,
+                "query": "dent konya, Konya"
+              },
+              "ms": 1131,
+              "at": "2026-10-11T00:30:31.207Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:31.207Z",
+          "ownerText": "Dent-i Konya is missing from OpenStreetMap, which many map apps reuse."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The domain has a valid HTTPS certificate for over 30 days and redirects visitors to HTTPS.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The phone number 3322654245 is confirmed as your own and is listed on your website.",
+          "cites": [
+            "phone_confirmed"
+          ]
+        },
+        {
+          "text": "Dent-i Konya is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3028,
+          "usage": {
+            "in": 992,
+            "out": 524,
+            "total": 1516,
+            "reasoning": 449
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3689,
+          "usage": {
+            "in": 1183,
+            "out": 667,
+            "total": 1850,
+            "reasoning": 532
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1901,
+          "usage": {
+            "in": 498,
+            "out": 554,
+            "total": 1052,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3557,
+          "usage": {
+            "in": 406,
+            "out": 687,
+            "total": 1093,
+            "reasoning": 373
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "hera",
+      "query": "Hera Butik Hotel, Alaçatı",
+      "note": "hotel; own domain did not load on 5 Oct",
+      "ms": 17844,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4171,
+        "rewritesRejected": 0,
+        "ms": 17844
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Hera Butik Hotel; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 5 search result(s); listings only: https://www.instagram.com/herahotelalacati",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Hera Butik Hotel",
+                "city": "Alaçatı",
+                "query": "Hera Butik Hotel Alaçatı official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Hera Butik Hotel",
+                "city": "Alaçatı",
+                "query": "Hera Butik Hotel Alaçatı official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s); listings only: https://yandex.com.tr/maps/org/hera_butik_hotels_alacati/74906586138, https://www.linkedin.com/company/hera-butik-otel",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://yandex.com.tr/maps/org/hera_butik_hotels_alacati/74906586138",
+                  "https://www.linkedin.com/company/hera-butik-otel"
+                ]
+              },
+              "ms": 3449,
+              "at": "2026-10-11T00:30:53.571Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:53.571Z",
+          "ownerText": "We couldn't find a website for your hotel; it shows up only on listings."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Hera Butik Hotel is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Hera Butik Hotel",
+                "city": "Alaçatı"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Hera Butik Hotel",
+                "city": "Alaçatı"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 72,
+              "at": "2026-10-11T00:30:53.643Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:30:53.643Z",
+          "ownerText": "Your hotel isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The hotel has no own website and is only present on external booking platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "The property is missing from OpenStreetMap, which reduces its visibility in map‑based searches.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2878,
+          "usage": {
+            "in": 904,
+            "out": 380,
+            "total": 1284,
+            "reasoning": 315
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2630,
+          "usage": {
+            "in": 758,
+            "out": 484,
+            "total": 1242,
+            "reasoning": 397
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 935,
+          "usage": {
+            "in": 281,
+            "out": 243,
+            "total": 524,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3938,
+          "usage": {
+            "in": 316,
+            "out": 805,
+            "total": 1121,
+            "reasoning": 517
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "sunset",
+      "query": "Sunset Boutique Hotel, Antalya",
+      "note": "hotel; https failed, http worked on 5 Oct",
+      "ms": 20212,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4274,
+        "rewritesRejected": 0,
+        "ms": 20212
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Sunset Boutique Hotel; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned false: No website of its own among 5 search result(s); listings only: https://www.facebook.com/sunsethotelbali.gr, https://www.hotels.com/ho710191328/sunset-boutique-hotel-apartments-kemer-turkey, https://www.expedia.com/Kemer-Hotels-Sunset-Boutique-Hotel-Apartments.h22162229.Hotel-Information, https://www.booking.com/hotel/tr/sunset-pansiyon.html",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Sunset Boutique Hotel",
+                "city": "Antalya",
+                "query": "Sunset Boutique Hotel Antalya official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Sunset Boutique Hotel",
+                "city": "Antalya",
+                "query": "Sunset Boutique Hotel Antalya official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s)",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "obilet.com",
+                    "pass": false,
+                    "summary": "obilet.com does not identify “Sunset Boutique Hotel” (page says “Find and Book Cheap Bus Tickets - obilet.com”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "otelz.com",
+                    "pass": false,
+                    "summary": "otelz.com does not identify “Sunset Boutique Hotel” (page says “En Uygun Oteller ve Otel Fiyatları ile Rezervasyon | Otelz”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": []
+              },
+              "ms": 4592,
+              "at": "2026-10-11T00:31:17.487Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:31:17.487Z",
+          "ownerText": "We couldn't find a website for Sunset Boutique Hotel; it only appears on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Sunset Boutique Hotel is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Sunset Boutique Hotel",
+                "city": "Antalya"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Sunset Boutique Hotel",
+                "city": "Antalya"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 77,
+              "at": "2026-10-11T00:31:17.564Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:31:17.564Z",
+          "ownerText": "Sunset Boutique Hotel isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The hotel lacks an independent website, appearing only on external listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "The property is missing from OpenStreetMap, reducing its visibility in map applications used by travelers.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3125,
+          "usage": {
+            "in": 764,
+            "out": 570,
+            "total": 1334,
+            "reasoning": 468
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2907,
+          "usage": {
+            "in": 848,
+            "out": 544,
+            "total": 1392,
+            "reasoning": 368
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1334,
+          "usage": {
+            "in": 228,
+            "out": 270,
+            "total": 498,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3831,
+          "usage": {
+            "in": 322,
+            "out": 728,
+            "total": 1050,
+            "reasoning": 470
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "sirince",
+      "query": "Şirince Bahçe Hotel, İzmir",
+      "note": "hotel; own domain did not load on 5 Oct",
+      "ms": 19728,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 6,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4660,
+        "rewritesRejected": 0,
+        "ms": 19728
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Şirince Bahçe Hotel; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check passed false: No website of its own among 5 search result(s); listings only: TripAdvisor",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Şirince Bahçe Hotel",
+                "city": "İzmir",
+                "query": "Şirince Bahçe Hotel İzmir official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Şirince Bahçe Hotel",
+                "city": "İzmir",
+                "query": "Şirince Bahçe Hotel İzmir official website phone"
+              },
+              "pass": false,
+              "summary": "No website of its own among 5 search result(s); listings only: https://www.trivago.com/en-US/odr/hotels-%C5%9Firince-turkey?search=200-419694",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "otelz.com",
+                    "pass": false,
+                    "summary": "otelz.com does not identify “Şirince Bahçe Hotel” (page says “En Uygun Oteller ve Otel Fiyatları ile Rezervasyon | Otelz”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": [
+                  "https://www.trivago.com/en-US/odr/hotels-%C5%9Firince-turkey?search=200-419694"
+                ]
+              },
+              "ms": 2167,
+              "at": "2026-10-11T00:31:42.089Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:31:42.089Z",
+          "ownerText": "We couldn't find a website for your hotel; it only appears on listing sites."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Şirince Bahçe Hotel is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check passed false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Şirince Bahçe Hotel",
+                "city": "İzmir"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Şirince Bahçe Hotel",
+                "city": "İzmir"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 101,
+              "at": "2026-10-11T00:31:42.190Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:31:42.190Z",
+          "ownerText": "Your hotel isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have an owned website; your hotel shows up only on external listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your hotel is missing from OpenStreetMap, which many navigation apps and travel sites rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4530,
+          "usage": {
+            "in": 873,
+            "out": 906,
+            "total": 1779,
+            "reasoning": 796
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3001,
+          "usage": {
+            "in": 932,
+            "out": 503,
+            "total": 1435,
+            "reasoning": 423
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1094,
+          "usage": {
+            "in": 274,
+            "out": 296,
+            "total": 570,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3197,
+          "usage": {
+            "in": 336,
+            "out": 540,
+            "total": 876,
+            "reasoning": 269
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "santral",
+      "query": "Santral Ankara Diş, Ankara",
+      "note": "dental clinic; site loads (a healthy case)",
+      "ms": 35284,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 6,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4443,
+        "rewritesRejected": 0,
+        "ms": 35284
+      },
+      "verified": [
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Santral Ankara Diş is listed on OpenStreetMap.",
+          "rationale": "osm.listed check passed true: Found “Santral” (Santral, Bağcı Caddesi, Yayla Mahallesi, Keçiören, Ankara, Central Anatolia Region, 06220, Turkey)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Santral Ankara Diş",
+                "city": "Ankara"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Santral Ankara Diş",
+                "city": "Ankara"
+              },
+              "pass": true,
+              "summary": "Found “Santral” (Santral, Bağcı Caddesi, Yayla Mahallesi, Keçiören, Ankara, Central Anatolia Region, 06220, Turkey)",
+              "observed": {
+                "name": "Santral",
+                "display_name": "Santral, Bağcı Caddesi, Yayla Mahallesi, Keçiören, Ankara, Central Anatolia Region, 06220, Turkey",
+                "lat": "39.9881923",
+                "lon": "32.8203520",
+                "osm": "node/3885127112",
+                "phone": null,
+                "website": null,
+                "score": 0.533,
+                "query": "santral ankara, Ankara"
+              },
+              "ms": 1131,
+              "at": "2026-10-11T00:32:20.807Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-11T00:32:20.807Z",
+          "ownerText": "Your business shows up on OpenStreetMap, making it easy for customers to find you."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Santral Ankara Diş; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check passed false: No website of its own among 5 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Santral Ankara Diş",
+                "city": "Ankara",
+                "query": "Santral Ankara Diş Ankara official website phone"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Santral Ankara Diş",
+                "city": "Ankara",
+                "query": "Santral Ankara Diş Ankara official website phone"
+              },
+              "pass": true,
+              "summary": "Own website found: santralankara.com is tied to “Santral Ankara Diş”: a search result about the business names this domain (https://www.instagram.com/santralankara?hl=en)",
+              "observed": {
+                "host": "santralankara.com",
+                "tried": [
+                  {
+                    "host": "santralankara.com",
+                    "pass": true,
+                    "summary": "santralankara.com is tied to “Santral Ankara Diş”: a search result about the business names this domain (https://www.instagram.com/santralankara?hl=en)"
+                  }
+                ],
+                "listings": [
+                  "https://www.instagram.com/santralankara?hl=en",
+                  "https://www.sikayetvar.com/santral-ankara-dis-poliklinigi",
+                  "https://yandex.com/maps/org/santral_ankara_di_poliklini_i/238691747657"
+                ]
+              },
+              "ms": 17901,
+              "at": "2026-10-11T00:32:19.675Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: expected fail, got pass — Own website found: santralankara.com is tied to “Santral Ankara Diş”: a search result about the business names this domain (https://www.instagram.com/santralankara?hl=en)",
+          "checkedAt": "2026-10-11T00:32:19.676Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your practice is currently only visible on OpenStreetMap, with no verified website or detailed contact information found.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2453,
+          "usage": {
+            "in": 1376,
+            "out": 354,
+            "total": 1730,
+            "reasoning": 276
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3284,
+          "usage": {
+            "in": 887,
+            "out": 564,
+            "total": 1451,
+            "reasoning": 457
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 930,
+          "usage": {
+            "in": 189,
+            "out": 188,
+            "total": 377,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4029,
+          "usage": {
+            "in": 257,
+            "out": 628,
+            "total": 885,
+            "reasoning": 402
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

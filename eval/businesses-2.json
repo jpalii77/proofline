@@ -1,0 +1,14 @@
+[
+  { "id": "erguvan", "query": "Erguvan Kasrı, Ankara", "note": "outdoor wedding venue; its domain had no DNS record on 5 Oct" },
+  { "id": "risus", "query": "Risus Wedding, Ankara", "note": "wedding venue; its old domain showed a for-sale page on 5 Oct" },
+  { "id": "melina", "query": "Melina Wedding House, Ankara", "note": "event hall; only Instagram and directories on 5 Oct" },
+  { "id": "golden", "query": "Golden Boutique Hotel, Ankara", "note": "hotel; own domain did not load on 5 Oct, booking sites only" },
+  { "id": "pelops", "query": "Pelops Boutique Otel, Ankara", "note": "hotel; no own site seen on 5 Oct" },
+  { "id": "a2", "query": "A2 Sürücü Kursu, Ankara", "note": "driving school; https failed, http worked on 5 Oct" },
+  { "id": "vipgarden", "query": "VIP Garden, İstanbul", "note": "wedding garden; its domain showed an unrelated betting page on 5 Oct" },
+  { "id": "dentikonya", "query": "Dent-i Konya, Konya", "note": "dental clinic; site showed a WordPress error on 5 Oct" },
+  { "id": "hera", "query": "Hera Butik Hotel, Alaçatı", "note": "hotel; own domain did not load on 5 Oct" },
+  { "id": "sunset", "query": "Sunset Boutique Hotel, Antalya", "note": "hotel; https failed, http worked on 5 Oct" },
+  { "id": "sirince", "query": "Şirince Bahçe Hotel, İzmir", "note": "hotel; own domain did not load on 5 Oct" },
+  { "id": "santral", "query": "Santral Ankara Diş, Ankara", "note": "dental clinic; site loads (a healthy case)" }
+]

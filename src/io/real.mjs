@@ -126,6 +126,7 @@ export function createRealIO({ net, tavily, nominatimContact = '', fetchImpl = g
         return {
           results: rows.map((r) => ({
             name: r.name, display_name: r.display_name, lat: r.lat, lon: r.lon, osm_type: r.osm_type, osm_id: r.osm_id,
+            kind: r.category && r.type ? `${r.category}=${r.type}` : null,
             phone: r.extratags?.phone || r.extratags?.['contact:phone'] || null,
             website: r.extratags?.website || r.extratags?.['contact:website'] || null,
           })),

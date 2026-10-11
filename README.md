@@ -117,11 +117,15 @@ The page is built for someone who has never heard of Proofline:
 
 ## Accuracy
 
-> **Measurement in progress (Oct 2026).** The live agent is being run on a list of real businesses; every claim the gate keeps is then checked independently. Results will be published in [`docs/accuracy.md`](docs/accuracy.md). No numbers are shown until that check is done.
+The live agent runs on lists of 12 real Turkish small businesses; every claim the gate keeps is then checked by hand, outside Proofline (DNS, curl, openssl, the full homepage, OpenStreetMap, web search). Each error found becomes a fix with a regression test, and the next round re-measures. Full method, every verdict and every error: [`docs/accuracy.md`](docs/accuracy.md).
 
 | Round | Date | Businesses | Claims proposed | Dropped by the gate | Kept | Kept and correct (independent check) | Accuracy of kept claims |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | — | — | — | — | — | — | — |
+| 1 | 2026-10-08 | 12 online shops | 40 | 7 | 33 | 24 | 73% |
+| 2 | 2026-10-08, after round-1 fixes | same 12 | 39 | 6 | 33 | 29 | 88% |
+| 3 | 2026-10-11, after round-2 fixes | 12 new local businesses (venues, hotels, clinics) | 26 | 5 | 21 | 18 | 86% |
+
+Round 3 is the honest test: businesses the earlier fixes were not made for. Its 3 wrong claims came from two causes (a site that answers on http only; a one-word map match of the wrong kind of place), both now fixed with tests.
 
 ## Setup
 
@@ -185,7 +189,7 @@ Where it lives:
 
 ## Tests
 
-**189 tests in 25 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
+**199 tests in 26 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace).
 
 ## Reference
 

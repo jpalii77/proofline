@@ -39,7 +39,7 @@ for (const [i, item] of list.entries()) {
   const models = [];
   let res;
   try {
-    res = await runAgent({ query: w.query, io: w.io, brain: w.brain, emit: (e) => { if (e.type === 'model') models.push({ role: e.role, model: e.model, ms: e.ms, usage: e.usage || null, outcome: e.outcome }); } });
+    res = await runAgent({ query: w.query, io: w.io, brain: w.brain, emit: (e) => { if (e.type === 'model') models.push({ role: e.role, model: e.model, ms: e.ms, usage: e.usage || null, outcome: e.outcome, format: e.format || null }); } });
   } catch (e) {
     res = { error: String(e && e.message ? e.message : e) };
   }

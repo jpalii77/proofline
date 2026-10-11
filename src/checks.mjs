@@ -10,7 +10,7 @@ import { invalidHostSentence, isValidHostname } from './hostname.mjs';
 import { isHostLimit } from './limits.mjs';
 import { classifyHost } from './platforms.mjs';
 import {
-  canonName, domainsIn, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
+  canonName, coreTokens, domainsIn, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
   pageTitle, phoneKey, visibleText,
 } from './text.mjs';
 
@@ -149,7 +149,9 @@ function placeTie(p, results, host, city) {
 function hostLabelNames(sub, name) {
   const label = fold(sub).replace(/ /g, '');
   const tokens = nameTokens(name).filter((t) => t.length >= 3);
-  return tokens.length > 0 && tokens.every((t) => label.includes(t));
+  // the trade words alone are not the name: "aysansurucukursu" holds "surucu kursu" but not "A2" (round 3)
+  const core = coreTokens(name).filter((t) => t.length >= 2);
+  return tokens.length > 0 && tokens.every((t) => label.includes(t)) && core.every((t) => label.includes(t));
 }
 
 /**
@@ -168,6 +170,11 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
   }
   if (userGiven) return { pass: true, summary: `${host} was given by the user as the business's website`, observed: { host, userGiven: true } };
   if (!name) return { pass: null, summary: 'No business name to check the site against', observed: { host } };
+  // (a site builder's subdomain that names the business was already let through above)
+  const parent = cls.kind === 'builder' ? null : foreignParent(host, name);
+  if (parent) {
+    return { pass: false, summary: `${host} is a page on ${parent}, a site that does not carry the business's name, so it is not its own website`, observed: { host, parent } };
+  }
 
   const ties = searchTies(results, host, name);
   if (needSearchTie) {
@@ -176,7 +183,13 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
       : { pass: searchError ? null : false, summary: searchError ? `Search failed: ${searchError}` : `No search result ties ${host} to “${name}”; a different name on an unverified site is not evidence of a rename`, observed: { host, ties } };
   }
 
-  const p = await page(io, `https://${host}/`);
+  let p = await page(io, `https://${host}/`);
+  // Some small sites answer on plain http only (round 3: sunsetboutiquehotel.com, a broken https setup).
+  // That is still their site; whether https works is a separate check (http.reachable, tls.cert_valid).
+  if (!okStatus(p.status) && !isHostLimit(p.error)) {
+    const plain = await page(io, `http://${host}/`);
+    if (okStatus(plain.status)) p = { ...plain, plainHttp: true };
+  }
   const loaded = okStatus(p.status);
   let id = loaded ? pageIdentity(p, name) : { identified: false };
   const labelNames = hostLabelNames(host.split('.')[0], name);
@@ -218,11 +231,54 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
   };
 }
 
+// Second-level suffixes, so "lumen.com.tr" is a registrable domain and not a subdomain of "com.tr".
+const SECOND_LEVEL = new Set(['com', 'net', 'org', 'gen', 'web', 'biz', 'info', 'av', 'bel', 'pol', 'k12', 'edu', 'gov', 'co', 'ac', 'tv']);
+
+/** The registrable domain a host belongs to: "a.b.example.com.tr" -> "example.com.tr". */
+export function registrable(host) {
+  const parts = String(host || '').toLowerCase().split('.').filter(Boolean);
+  if (parts.length <= 2) return parts.join('.');
+  const n = parts.length >= 3 && SECOND_LEVEL.has(parts[parts.length - 2]) && parts[parts.length - 1].length === 2 ? 3 : 2;
+  return parts.slice(-n).join('.');
+}
+
+/**
+ * A subdomain of a site that does not carry the business's name is a page on someone else's site
+ * (round 3: golden-boutique.ankarahotels.org is a hotel directory). Returns that site, or null.
+ * "www." and the business's own subdomains (shop.lumencoffee.com) are not affected.
+ */
+export function foreignParent(host, name) {
+  const h = String(host || '').toLowerCase().replace(/^www\./, '');
+  const base = registrable(h);
+  if (!base || base === h || !name) return null;
+  const label = fold(base.split('.')[0]).replace(/ /g, '');
+  // trade words do not count: "ankarahotels" holds "hotel", not "Golden"
+  const tokens = coreTokens(name).filter((t) => t.length >= 3);
+  if (!tokens.length || tokens.some((t) => label.includes(t))) return null;
+  return base;
+}
+
 /** "Naramica" -> naramica.com, naramica.com.tr. Short or generic names are not guessed (elle.com is a magazine). */
 export function obviousDomains(name) {
   const slug = fold(name).replace(/[^a-z0-9]/g, '');
   if (slug.length < 7 || !nameTokens(name).length) return [];
   return [`${slug}.com`, `${slug}.com.tr`];
+}
+
+// Trade words in a name, and the OpenStreetMap kinds ("category=type") such a place can have.
+const TRADE_KINDS = [
+  { words: ['dis', 'dental', 'dentist', 'agiz', 'poliklinik', 'poliklinigi', 'klinik', 'clinic'], kinds: /^(amenity=(dentist|clinic|doctors|hospital)|healthcare=)/, label: 'a clinic' },
+  { words: ['kafe', 'cafe', 'coffee', 'kahve', 'pub', 'bar', 'restaurant', 'restoran', 'lokanta', 'meyhane'], kinds: /^(amenity=(cafe|pub|bar|restaurant|fast_food|biergarten|ice_cream|food_court|nightclub)|shop=(coffee|bakery|pastry|confectionery))/, label: 'a cafe, bar or restaurant' },
+  { words: ['otel', 'hotel', 'hotels', 'pansiyon', 'motel', 'hostel'], kinds: /^(tourism=(hotel|guest_house|hostel|motel|apartment|chalet|camp_site)|building=hotel)/, label: 'a hotel' },
+];
+
+/** "a clothes shop (shop=clothes)" when a map match is not the kind of place the name says; else null. */
+export function kindMismatch(name, kind) {
+  if (!kind) return null;
+  const words = new Set(fold(name).split(' '));
+  const trade = TRADE_KINDS.find((t) => t.words.some((w) => words.has(w)));
+  if (!trade || trade.kinds.test(kind)) return null;
+  return `a ${kind.split('=')[1].replace(/_/g, ' ')} (${kind}), not ${trade.label}`;
 }
 
 export const CHECKS = {
@@ -460,14 +516,19 @@ export const CHECKS = {
       const best = (r.results || [])
         .map((x) => ({ ...x, score: nameSimilarity(name, x.name || String(x.display_name || '').split(',')[0]) }))
         .sort((a, b) => b.score - a.score)[0];
-      const pass = !!best && best.score >= 0.5;
+      let pass = !!best && best.score >= 0.5;
+      // The name says what kind of place it is ("… Diş", "… Kafe", "… Otel"). A match of another kind is a
+      // different place (round 3: "Santral Ankara Diş" matched "Santral", a clothes shop).
+      const wrongKind = pass ? kindMismatch(name, best.kind) : null;
+      if (wrongKind) pass = false;
       return {
         pass,
-        summary: pass ? `Found “${best.name}” (${best.display_name})` : 'No matching place on OpenStreetMap',
+        summary: pass ? `Found “${best.name}” (${best.display_name})`
+          : wrongKind ? `Only “${best.name}” matched, and it is ${wrongKind}; no matching place on OpenStreetMap` : 'No matching place on OpenStreetMap',
         observed: best ? {
           name: best.name, display_name: best.display_name, lat: best.lat, lon: best.lon,
           osm: best.osm_type && best.osm_id ? `${best.osm_type}/${best.osm_id}` : null,
-          phone: best.phone || null, website: best.website || null, score: Number(best.score.toFixed(3)),
+          phone: best.phone || null, website: best.website || null, score: Number(best.score.toFixed(3)), kind: best.kind || null,
           ...(retried ? { query: `${core}${at}` } : {}),
         } : (retried ? { query: `${core}${at}` } : {}),
       };

@@ -1,0 +1,26 @@
+{
+  "run": "eval/runs/2026-10-11-r3.json",
+  "list": "eval/businesses-2.json (12 local businesses never used in rounds 1-2: wedding venues, hotels, dental clinics, a driving school)",
+  "checkedBy": "Independent re-check outside Proofline on 2026-10-11: dig (DNS), curl (HTTP and HTTPS, page titles, full homepage HTML), openssl s_client (certificate end date), Nominatim free-text search with several name variants and extratags (what kind of place a match is), web search for an own site.",
+  "verdicts": {
+    "erguvan": { "not_on_map": "right (no Erguvan Kasrı on OSM; only parks named Erguvan)" },
+    "risus": { "no_own_website": "right (risuswedding.com has no DNS record; search shows Yandex Maps and directories only)", "on_map": "right ('Risus Wedding', Turgut Özal Bulvarı, İncek, Gölbaşı, Ankara)" },
+    "melina": { "not_on_map": "right" },
+    "golden": { "on_map": "right ('Golden Boutique Hotel', Boğaz Sokak, Gaziosmanpaşa, Çankaya, Ankara)" },
+    "pelops": { "no_own_website": "right (only booking sites: Otelz, Neredekal, Ucuzabilet; no own domain resolves)", "not_on_map": "right (OSM's only 'Hotel Pelops' is in Olympia, Greece)" },
+    "a2": { "not_on_map": "right" },
+    "vipgarden": { "no_own_website": "right as stated (vipgardenkirdugunu.com.tr now serves an unrelated betting page, so there is no working site of its own); the more useful finding, that its old domain shows a betting site, was not made", "not_on_map": "right (OSM's 'Vip Garden' entries are in Rome, Bologna and Moldova)" },
+    "dentikonya": { "site_online": "right (HTTP 200, the clinic's own page)", "https_healthy": "right (certificate ends 16 Nov 2026 = 36 days; http 301 to https)", "phone_confirmed": "right (0332 265 42 45 is on the homepage)", "not_on_map": "right" },
+    "hera": { "no_own_website": "right (herabutikhotel.com has no DNS record; search shows booking sites only)", "not_on_map": "right" },
+    "sunset": { "no_own_website": "wrong: sunsetboutiquehotel.com is its own site ('Sunset Boutique Hotel & Apartments - Cirali'); it answers on http only (https fails), so a probe that tries https alone misses it", "not_on_map": "wrong: OSM has it as 'Sunset Pansiyon and Apartments', Çıralı, Kemer, Antalya (same place; its site says pansiyon, Çıralı)" },
+    "sirince": { "no_own_website": "right (sirincebahce.com has no DNS record; booking sites only)", "not_on_map": "right" },
+    "santral": { "on_map": "wrong: the match 'Santral' on Bağcı Caddesi, Keçiören is a clothes shop (shop=clothes), not the dental clinic; the retry without generic words left one word that matches anything" }
+  },
+  "dropped": {
+    "erguvan": { "site_unreachable": "true claim lost, arguably: erguvankasri.com has no DNS record and directories gave it on 5 Oct; nothing in this run's search tied it to the business, so the gate refused to call it the business's site" },
+    "melina": { "no_own_website": "true claim lost: melinaweddinghouse.com has no DNS record; the identity check could not settle it (possible namesake), which is the cautious outcome" },
+    "golden": { "no_own_website": "true claim lost, for a wrong reason: golden-boutique.ankarahotels.org is a hotel directory page, not the hotel's own site (goldenboutiquehotel.com.tr has no DNS record)" },
+    "a2": { "no_own_website": "rightly dropped (a2mtsk.com is its site), but for a wrong reason: aysansurucukursu.com ('Aysan Sürücü Kursu') is another school; only the generic words 'Sürücü Kursu' matched" },
+    "santral": { "no_own_website": "rightly dropped (santralankara.com is linked from its Instagram)" }
+  }
+}

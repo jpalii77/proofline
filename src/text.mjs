@@ -35,10 +35,16 @@ function trigrams(s) {
   return out;
 }
 
-/** 0..1 similarity of two business names (Jaccard over trigrams of distinctive tokens). */
-export function nameSimilarity(a, b) {
-  const ta = nameTokens(a).join(' ');
-  const tb = nameTokens(b).join(' ');
+// Words that name a trade ("Sürücü Kursu", "Butik Otel", "Ağız ve Diş Sağlığı"). Shared trade words make two
+// different businesses look alike: "A2 Sürücü Kursu" and "Aysan Sürücü Kursu" (round 3). They stay in the name
+// (unlike GENERIC above), but a match must also hold on what is left once they are set aside.
+const TRADE = new Set([
+  'surucu', 'kursu', 'kurs', 'otel', 'hotel', 'hotels', 'butik', 'boutique', 'pansiyon', 'apart', 'motel',
+  'wedding', 'dugun', 'davet', 'salonu', 'house', 'evi', 'organizasyon', 'garden', 'bahce', 'kir',
+  'poliklinik', 'poliklinigi', 'agiz', 'sagligi', 'merkezi', 'hastanesi', 'veteriner', 'guzellik', 'kuafor', 'berber',
+]);
+
+function trigramSim(ta, tb) {
   if (!ta || !tb) return 0;
   if (ta === tb) return 1;
   const A = trigrams(ta);
@@ -46,6 +52,29 @@ export function nameSimilarity(a, b) {
   let inter = 0;
   for (const x of A) if (B.has(x)) inter++;
   return inter / (A.size + B.size - inter);
+}
+
+/** The distinctive words of a name without its trade words ("A2 Sürücü Kursu" -> ["a2"]); all of them if none is left. */
+export function coreTokens(s) {
+  const all = nameTokens(s);
+  const core = all.filter((t) => !TRADE.has(t));
+  return core.length ? core : all;
+}
+
+/** 0..1 similarity of two business names (Jaccard over trigrams of distinctive tokens). */
+export function nameSimilarity(a, b) {
+  const ta = nameTokens(a);
+  const tb = nameTokens(b);
+  const full = trigramSim(ta.join(' '), tb.join(' '));
+  // When both names keep something besides trade words, that part must match too (never raises a score).
+  const ca = ta.filter((t) => !TRADE.has(t));
+  const cb = tb.filter((t) => !TRADE.has(t));
+  if (ca.length && cb.length && ca.length < ta.length && cb.length < tb.length) {
+    // one core inside the other ("A2" in "A2 Ankara") is the same business; otherwise the cores must be alike
+    const inside = ca.every((t) => cb.includes(t)) || cb.every((t) => ca.includes(t));
+    return inside ? full : Math.min(full, trigramSim(ca.join(' '), cb.join(' ')));
+  }
+  return full;
 }
 
 /** Digits-only phone key, comparable across formats. Keeps the last 10 digits (national number). */
