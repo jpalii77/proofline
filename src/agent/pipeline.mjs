@@ -149,7 +149,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
         work,
         new Promise((_, reject) => { timer = setTimeout(() => reject(Object.assign(new Error(`no answer before the run time limit (${Math.round(left / 1000)} s left)`), { call: { model } })), left); }),
       ]);
-      Object.assign(call, { model: out.model || model, ms: out.ms ?? now() - started, usage: out.usage || null, ...(out.format ? { format: out.format } : {}) });
+      Object.assign(call, { model: out.model || model, ms: out.ms ?? now() - started, usage: out.usage || null, ...(out.format ? { format: out.format } : {}), ...(out.recordedAt ? { recordedAt: out.recordedAt } : {}) });
       return { json: out.json || {}, call };
     } catch (err) {
       Object.assign(call, {

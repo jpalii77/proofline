@@ -70,3 +70,26 @@ for (const sample0 of loadSamples()) {
     }
   });
 }
+
+// Found with the recorded Nemotron answers (12 Oct): two claims dropped in a row at an early post.
+// The first one falls back over the start of the track, so the next card must not get a head start.
+test('two drops in a row at an early post never touch', () => {
+  for (const [name, W, H, mode] of LAYOUTS) {
+    for (const dropAt of [0, 1]) {
+      const lanes = [0, 1, 2].map(() => ({ verdict: 'dropped', dropAt, touches: [0, 1, 2].slice(0, dropAt + 1) }));
+      const L = layoutFor(W, H, { kept: 1, dropped: 3 }, mode);
+      const plans = lanes.map((l) => planFor(l, L));
+      for (let i = 1; i < plans.length; i++) {
+        const a = plans[i - 1];
+        const gap = Math.max(a.leave - LEAD, 380);
+        const home = sample(plans[i], 0);
+        for (let u = gap; u <= a.end; u += 20) {
+          const pa = sample(a, u);
+          const pb = sample(plans[i], u - gap);
+          const touch = Math.abs(pa.x - pb.x) < L.cardW && Math.abs(pa.y - pb.y) < L.cardH;
+          assert.ok(Math.hypot(pb.x - home.x, pb.y - home.y) < 24 || !touch, `${name}, post ${dropAt}: card ${i} touches card ${i - 1} at ${u} ms`);
+        }
+      }
+    }
+  }
+});

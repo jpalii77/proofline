@@ -1,0 +1,233 @@
+{
+  "at": "2026-10-11",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "en": {
+    "plan": {
+      "json": {
+        "name": "Lumen Coffee Roasters",
+        "city": "Izmir",
+        "domain": "lumencoffee.example",
+        "phone": "2325550147",
+        "reasoning": "The business's own website is shown as https://lumencoffee.example/. The phone number matches the allowed format."
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 472,
+        "out": 375,
+        "total": 847,
+        "reasoning": 301
+      },
+      "ms": 2523,
+      "format": "json_schema"
+    },
+    "propose": {
+      "json": {
+        "claims": [
+          {
+            "type": "site_online",
+            "rationale": "site.own_site passed, dns.resolves passed, http.reachable passed, page.not_parked passed, page.name_match passed"
+          },
+          {
+            "type": "ssl_expiring_soon",
+            "rationale": "tls.cert_valid failed: certificate expires in 9 days (<30 days threshold)"
+          },
+          {
+            "type": "phone_confirmed",
+            "rationale": "page.phone_listed passed showing phone 2325550147 on the site and site.own_site confirmed the domain"
+          },
+          {
+            "type": "on_map",
+            "rationale": "osm.listed passed: found Lumen Coffee Roasters on map in Izmir"
+          }
+        ]
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 1161,
+        "out": 876,
+        "total": 2037,
+        "reasoning": 717
+      },
+      "ms": 4685,
+      "format": "json_schema"
+    },
+    "verify": {
+      "json": {
+        "claims": [
+          {
+            "id": "site_online",
+            "owner_text": "Your website loads and shows real content about Lumen Coffee Roasters."
+          },
+          {
+            "id": "ssl_expiring_soon",
+            "owner_text": "Your SSL certificate is close to expiration and should be renewed."
+          },
+          {
+            "id": "phone_confirmed",
+            "owner_text": "Your phone number is listed on your website, confirming it's yours."
+          },
+          {
+            "id": "on_map",
+            "owner_text": "Your business appears on OpenStreetMap."
+          }
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "usage": {
+        "in": 459,
+        "out": 903,
+        "total": 1362,
+        "reasoning": null
+      },
+      "ms": 6560,
+      "format": "json_schema"
+    },
+    "write": {
+      "json": {
+        "owner_summary": "Lumen Coffee Roasters’ website (lumencoffee.example) is reachable and displays real content. The site’s SSL certificate is set to expire within the next 30 days, which could trigger browser warnings. Their phone number is correctly listed on the site and the business appears on OpenStreetMap, showing solid contact and local presence.",
+        "pitch": {
+          "subject": "SSL certificate renewal for lumencoffee.example",
+          "opening": "Hi Lumen Coffee Roasters team,",
+          "findings": [
+            {
+              "text": "Your SSL certificate for lumencoffee.example is set to expire within 30 days.",
+              "cites": [
+                "ssl_expiring_soon"
+              ]
+            },
+            {
+              "text": "The website loads correctly and shows real content.",
+              "cites": [
+                "site_online"
+              ]
+            }
+          ],
+          "offer": "I can renew the SSL certificate, configure automatic renewal, and run a brief security audit to prevent any browser warnings.",
+          "closing": "Best regards,\n[Your Name]"
+        }
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 398,
+        "out": 828,
+        "total": 1226,
+        "reasoning": 615
+      },
+      "ms": 4193,
+      "format": "json_schema"
+    }
+  },
+  "tr": {
+    "propose": {
+      "json": {
+        "claims": [
+          {
+            "type": "site_online",
+            "rationale": "lumencoffee.example DNS kaydı çözümleniyor, HTTPS üzerinden HTTP 200 yanıtı veriyor ve sayfa gerçek içerik gösteriyor (parksız)."
+          },
+          {
+            "type": "ssl_expiring_soon",
+            "rationale": "lumencoffee.example için TLS sertifikası 9 gün sonra süresi doluyor, gerekli 30 günden az."
+          },
+          {
+            "type": "phone_confirmed",
+            "rationale": "Sayfada telefon numarası 2325550147 bulunuyor."
+          },
+          {
+            "type": "on_map",
+            "rationale": "OpenStreetMap’te Lumen Coffee Roasters, İzmir, Kıbrıs Şehitleri Caddesi, Alsancak konumunda listelenmiş."
+          }
+        ]
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 1181,
+        "out": 1040,
+        "total": 2221,
+        "reasoning": 847
+      },
+      "ms": 5153,
+      "format": "json_schema"
+    },
+    "verify": {
+      "json": {
+        "claims": [
+          {
+            "id": "site_online",
+            "owner_text": "Sizin web siteniz, gerçek içerik gösteriyor ve sorunsuz çalışıyor."
+          },
+          {
+            "id": "ssl_expiring_soon",
+            "owner_text": "Sertifikanız 30 gün içinde süresi biter."
+          },
+          {
+            "id": "phone_confirmed",
+            "owner_text": "Telefon numaranız 2325550147 ve sitenizde listeleniyor."
+          },
+          {
+            "id": "on_map",
+            "owner_text": "Siz Lumen Coffee Roasters'ı OpenStreetMap'te bulabilirsiniz."
+          }
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "usage": {
+        "in": 486,
+        "out": 1450,
+        "total": 1936,
+        "reasoning": null
+      },
+      "ms": 11320,
+      "format": "json_schema"
+    },
+    "write": {
+      "json": {
+        "owner_summary": "Lumen Coffee Roasters'in web sitesi aktif ve gerçek içerik gösteriyor. Ancak güvenlik sertifikası yakında süresi dolacak ve bu güvenlik riski oluşturuyor. Telefon numaranız site üzerinde doğrulanmış ve işletmeniz OpenStreetMap'te yer alıyor.",
+        "pitch": {
+          "subject": "SSL Sertifikanızın Yenilenmesi İçin Hızlı Destek",
+          "opening": "Sayın Lumen Coffee Roasters ekibi, sitenizin mevcut durumunu değerlendirdik ve bazı önemli noktaları paylaşmak istedim.",
+          "findings": [
+            {
+              "text": "Güvenlik sertifikanız (SSL) 30 gün içinde süresi dolacak; bu, ziyaretçilerinizin verilerinin güvenliğini tehdit edebilir.",
+              "cites": [
+                "ssl_expiring_soon"
+              ]
+            },
+            {
+              "text": "Web siteniz (lumencoffee.example) sorunsuz yükleniyor ve gerçek içerik sunuyor.",
+              "cites": [
+                "site_online"
+              ]
+            },
+            {
+              "text": "Telefon numaranız 2325550147, web sitenizde doğru şekilde listelenmiş ve onaylanmıştır.",
+              "cites": [
+                "phone_confirmed"
+              ]
+            },
+            {
+              "text": "İşletmeniz OpenStreetMap'te bulunuyor, bu da yerel görünürlüğünüzü artırıyor.",
+              "cites": [
+                "on_map"
+              ]
+            }
+          ],
+          "offer": "SSL sertifikanızı otomatik yenileme yapılandırarak, güvenlik uyarılarını önleyebilir ve site performansınızı izleyen basit bir bakım paketi sunabilirim.",
+          "closing": "Detayları konuşmak için uygun bir zaman bulursanız, memnuniyetle yanıtlarım. Saygılarımla, bir web freelancer"
+        }
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 425,
+        "out": 1313,
+        "total": 1738,
+        "reasoning": 897
+      },
+      "ms": 6475,
+      "format": "json_schema"
+    }
+  }
+}

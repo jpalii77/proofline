@@ -2,7 +2,7 @@
 // they are never logged, returned to the browser or written anywhere.
 
 import { createNemotronBrain } from './agent/nemotron-brain.mjs';
-import { createSampleBrain } from './agent/sample-brain.mjs';
+import { exampleBrain } from './agent/recorded-brain.mjs';
 import { createNodeNet } from './io/net-node.mjs';
 import { createRealIO } from './io/real.mjs';
 import { createSampleIO, findSample, loadSamples } from './io/sample.mjs';
@@ -60,7 +60,7 @@ export function wiringFor(cfg, query, { fetchImpl, pace = false } = {}) {
     if (!sample) return { error: 'Sample mode knows four fictional businesses. Pick one of the examples, or add keys for live mode.' };
     return {
       io: createSampleIO(sample, { latency: pace ? [60, 240] : null }),
-      brain: createSampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
+      brain: exampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
       query: sample.input,
     };
   }

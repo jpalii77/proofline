@@ -13,6 +13,7 @@
     "cli:sample": "SAMPLE_MODE=true node scripts/run-cli.mjs",
     "models": "node scripts/list-models.mjs",
     "schema-probe": "node scripts/schema-probe.mjs",
-    "accuracy": "node scripts/accuracy-run.mjs"
+    "accuracy": "node scripts/accuracy-run.mjs",
+    "record-samples": "node scripts/record-samples.mjs"
   }
 }

@@ -1,0 +1,189 @@
+{
+  "at": "2026-10-11",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "en": {
+    "plan": {
+      "json": {
+        "name": "Kuzey Kafe",
+        "city": "Eskişehir",
+        "domain": null,
+        "phone": "2225554018",
+        "reasoning": "The business name and city match the query. The only contact number found matches the allowed phone, while the provided URLs are QR-menu and Instagram listings, which are not considered the business's own website."
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 453,
+        "out": 453,
+        "total": 906,
+        "reasoning": 368
+      },
+      "ms": 2948,
+      "format": "json_schema"
+    },
+    "propose": {
+      "json": {
+        "claims": [
+          {
+            "type": "no_own_website",
+            "rationale": "web.own_site_found check returned false: No website of its own among 2 search result(s); listings only: https://qrmenu.example/kuzey-kafe, https://www.instagram.com/kuzeykafe/"
+          },
+          {
+            "type": "on_map",
+            "rationale": "osm.listed check returned true: Found \"Kuzey Kafe\" (Kuzey Kafe, Adalar, Odunpazarı, Eskişehir, Türkiye)"
+          }
+        ]
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 789,
+        "out": 402,
+        "total": 1191,
+        "reasoning": 281
+      },
+      "ms": 3048,
+      "format": "json_schema"
+    },
+    "verify": {
+      "json": {
+        "claims": [
+          {
+            "id": "no_own_website",
+            "owner_text": "We couldn't find a website for your cafe; you appear only on listings and platforms."
+          },
+          {
+            "id": "on_map",
+            "owner_text": "Your cafe is listed on OpenStreetMap."
+          }
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "usage": {
+        "in": 265,
+        "out": 334,
+        "total": 599,
+        "reasoning": null
+      },
+      "ms": 2555,
+      "format": "json_schema"
+    },
+    "write": {
+      "json": {
+        "owner_summary": "Kuzey Kafe currently does not have its own website and appears only on third‑party listings and platforms. Its presence is limited to a listing on OpenStreetMap, which shows the business location but provides little information for potential customers. This restricted online footprint makes it harder for the café to attract new visitors and control its brand message.",
+        "pitch": {
+          "subject": "Boost Kuzey Kafe’s visibility with a simple, professional website",
+          "opening": "Hello Kuzey Kafe team,",
+          "findings": [
+            {
+              "text": "The café does not own a website and relies solely on external listings for online exposure.",
+              "cites": [
+                "no_own_website"
+              ]
+            },
+            {
+              "text": "While the business is visible on OpenStreetMap, this platform offers only basic location details without menus, hours, or booking options.",
+              "cites": [
+                "on_map"
+              ]
+            }
+          ],
+          "offer": "I can create a clean, mobile‑friendly website that showcases your menu, opening hours, location map, and contact form, helping you attract more local customers and manage your brand directly.",
+          "closing": "Please let me know if you’d like to discuss a quick proposal—I’m happy to answer any questions."
+        }
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 310,
+        "out": 774,
+        "total": 1084,
+        "reasoning": 521
+      },
+      "ms": 4489,
+      "format": "json_schema"
+    }
+  },
+  "tr": {
+    "propose": {
+      "json": {
+        "claims": [
+          {
+            "type": "no_own_website",
+            "rationale": "web.own_site_found check returned false: No website of its own among 2 search result(s); listings only: https://qrmenu.example/kuzey-kafe, https://www.instagram.com/kuzeykafe/"
+          },
+          {
+            "type": "on_map",
+            "rationale": "osm.listed check returned true: Found “Kuzey Kafe” (Kuzey Kafe, Adalar, Odunpazarı, Eskişehir, Türkiye)"
+          }
+        ]
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 809,
+        "out": 653,
+        "total": 1462,
+        "reasoning": 532
+      },
+      "ms": 3585,
+      "format": "json_schema"
+    },
+    "verify": {
+      "json": {
+        "claims": [
+          {
+            "id": "no_own_website",
+            "owner_text": "Siz, kendi web sitenizde yer almaz, sadece listelerde ve platformlarda görünüyorsunuz."
+          },
+          {
+            "id": "on_map",
+            "owner_text": "Siz, OpenStreetMap'te de listeleniyorsunuz."
+          }
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "usage": {
+        "in": 292,
+        "out": 924,
+        "total": 1216,
+        "reasoning": null
+      },
+      "ms": 6555,
+      "format": "json_schema"
+    },
+    "write": {
+      "json": {
+        "owner_summary": "Kuzey Kafe, kendi web sitesi olmadan sadece listeler ve platformlarda görünüyor. Ancak OpenStreetMap'te yer alıyor, bu da müşterilerin konumunu bulmasını kolaylaştırıyor. Bu durum, çevrimiçi varlığınızı güçlendirme fırsatı sunar.",
+        "pitch": {
+          "subject": "Kuzey Kafe için profesyonel bir web sitesi teklifi",
+          "opening": "Merhaba, Kuzey Kafe ekibi; sizin için özel hazırlanmış bir web sitesi önerisiyle iletişime geçiyorum.",
+          "findings": [
+            {
+              "text": "Şu anda kendi web siteniz bulunmuyor; sadece listeler ve platformlarda görünüyorsunuz.",
+              "cites": [
+                "no_own_website"
+              ]
+            },
+            {
+              "text": "OpenStreetMap'te yer alıyorsunuz, bu da müşterilerin konumunu bulmalarına yardımcı oluyor.",
+              "cites": [
+                "on_map"
+              ]
+            }
+          ],
+          "offer": "Menünüz, çalışma saatleriniz ve iletişim bilgilerinizi güncel tutabileceğiniz basit, mobil uyumlu bir web sitesi tasarlayıp, size yönetim kolaylığı sağlayacak bir içerik yönetim sistemi sunarım.",
+          "closing": "Detayları paylaşmak ve işbirliğimizi konuşmak için geri dönüşünüzü bekliyorum. İyi günler."
+        }
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 337,
+        "out": 716,
+        "total": 1053,
+        "reasoning": 392
+      },
+      "ms": 3644,
+      "format": "json_schema"
+    }
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "at": "2026-10-11",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "en": {
+    "plan": {
+      "json": {
+        "name": "Harbor Dental Studio",
+        "city": "Kadıköy",
+        "domain": "harbordental.example",
+        "phone": "2165558820",
+        "reasoning": "The search result explicitly lists the website as harbordental.example and the phone number as +90 216 555 88 20, matching the allowed values."
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 464,
+        "out": 444,
+        "total": 908,
+        "reasoning": 353
+      },
+      "ms": 3404,
+      "format": "json_schema"
+    },
+    "propose": {
+      "json": {
+        "claims": [
+          {
+            "type": "site_online",
+            "rationale": "dns.resolved passed and http.reachable passed show harbordental.example resolves and loads with HTTP 200."
+          },
+          {
+            "type": "domain_parked",
+            "rationale": "page.not_parked failed indicating a parked/placeholder marker (“This domain is for sale”) on the site."
+          },
+          {
+            "type": "https_healthy",
+            "rationale": "tls.cert_valid passed with certificate expiration in 212 days (>30 days)."
+          },
+          {
+            "type": "no_contact_path",
+            "rationale": "page.contact_path failed – no form, email, phone or WhatsApp contact found on homepage."
+          },
+          {
+            "type": "phone_unconfirmed",
+            "rationale": "page.phone_listed failed – phone number 2165558820 not present on the site."
+          },
+          {
+            "type": "on_map",
+            "rationale": "osm.listed passed – Harbor Dental Studio found on OpenStreetMap in Kadıköy."
+          }
+        ]
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 1188,
+        "out": 1107,
+        "total": 2295,
+        "reasoning": 881
+      },
+      "ms": 6551,
+      "format": "json_schema"
+    },
+    "verify": {
+      "json": {
+        "claims": [
+          {
+            "id": "domain_parked",
+            "owner_text": "Your domain currently shows a placeholder page instead of your practice."
+          },
+          {
+            "id": "https_healthy",
+            "owner_text": "Your site uses a valid HTTPS certificate and redirects securely."
+          },
+          {
+            "id": "no_contact_path",
+            "owner_text": "Your homepage doesn’t have a contact form or easy way for patients to reach you."
+          },
+          {
+            "id": "phone_unconfirmed",
+            "owner_text": "A phone number you see in other listings isn’t on your own website, so it might be outdated."
+          },
+          {
+            "id": "on_map",
+            "owner_text": "Your practice appears on OpenStreetMap, making it easy for people to find you."
+          }
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "usage": {
+        "in": 627,
+        "out": 1082,
+        "total": 1709,
+        "reasoning": null
+      },
+      "ms": 7583,
+      "format": "json_schema"
+    },
+    "write": {
+      "json": {
+        "owner_summary": "Harbor Dental Studio’s current domain displays a parked or placeholder page, which limits its reach to potential patients. While the site uses a valid HTTPS certificate, it lacks any visible contact options such as a form, email link, tap‑to‑call, or WhatsApp button, and the phone number shown in listings does not appear on the website itself. The business is correctly mapped on OpenStreetMap, indicating a solid local presence.",
+        "pitch": {
+          "subject": "Quick ideas to boost Harbor Dental Studio’s online presence",
+          "opening": "Hi Harbor Dental Studio team, I came across your site and noticed a few easy wins that could help more patients find and contact you.",
+          "findings": [
+            {
+              "text": "The domain harbordental.example shows a parked/for‑sale page instead of an active business site, hurting visibility.",
+              "cites": [
+                "domain_parked"
+              ]
+            },
+            {
+              "text": "The homepage provides no contact form, email link, tap‑to‑call, or WhatsApp option, making it hard for visitors to reach you.",
+              "cites": [
+                "no_contact_path"
+              ]
+            },
+            {
+              "text": "The phone number 2165558820 listed in directories is not present on your own site, so it may be outdated or missed by callers.",
+              "cites": [
+                "phone_unconfirmed"
+              ]
+            }
+          ],
+          "offer": "I can build a clean, mobile‑friendly website that replaces the placeholder, adds clear contact channels, and ensures your phone number is displayed prominently—plus basic SEO to improve local search rankings.",
+          "closing": "Let me know if you’d like to discuss a quick audit or a starter package. Best regards, [Your Name]"
+        }
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 456,
+        "out": 673,
+        "total": 1129,
+        "reasoning": 315
+      },
+      "ms": 3793,
+      "format": "json_schema"
+    }
+  },
+  "tr": {
+    "propose": {
+      "json": {
+        "claims": [
+          {
+            "type": "site_online",
+            "rationale": "site.own_site passed true ve http.reachable passed true, dolayısıyla harbordental.example sitesi erişilebilir."
+          },
+          {
+            "type": "domain_parked",
+            "rationale": "page.not_parked check false, 'Parked/placeholder marker found: \"This domain is for sale\"' olduğu için domain park edilmiştir."
+          },
+          {
+            "type": "https_healthy",
+            "rationale": "tls.cert_valid passed true (sertifika 211 gün sonra sona erecek) ve http.https_redirect passed true, bu yüzden HTTPS sağlıklı."
+          },
+          {
+            "type": "no_contact_path",
+            "rationale": "page.contact_path check false, ana sayfada iletişim formu, e-posta, telefon veya WhatsApp bulunamadı."
+          },
+          {
+            "type": "phone_unconfirmed",
+            "rationale": "page.phone_listed check false, telefon numarası 2165558820 sitede bulunamadı."
+          },
+          {
+            "type": "on_map",
+            "rationale": "osm.listed check true, ‘Harbor Dental Studio’ Kadıköy’de OpenStreetMap üzerinde bulundu."
+          }
+        ]
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 1208,
+        "out": 1051,
+        "total": 2259,
+        "reasoning": 776
+      },
+      "ms": 6283,
+      "format": "json_schema"
+    },
+    "verify": {
+      "json": {
+        "claims": [
+          {
+            "id": "domain_parked",
+            "owner_text": "Sizin için harbordental.example şu anda park edilmiş bir sayfa gösteriyor."
+          },
+          {
+            "id": "https_healthy",
+            "owner_text": "Sizin için harbordental.example geçerli bir sertifika taşıyor ve https:// adresine yönlendiriyor."
+          },
+          {
+            "id": "no_contact_path",
+            "owner_text": "Sizin için harbordental.example ana sayfasında iletişim formu, e‑posta, telefon veya WhatsApp bağlantısı yok."
+          },
+          {
+            "id": "phone_unconfirmed",
+            "owner_text": "Sizin için 2165558820 numarası sitenizde yer almıyor, bu yüzden güncel olmayabilir."
+          },
+          {
+            "id": "on_map",
+            "owner_text": "Sizin için Harbor Dental Studio, OpenStreetMap'te listeleniyor."
+          }
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "usage": {
+        "in": 654,
+        "out": 1123,
+        "total": 1777,
+        "reasoning": null
+      },
+      "ms": 8290,
+      "format": "json_schema"
+    },
+    "write": {
+      "json": {
+        "owner_summary": "Harbor Dental Studio'nun web sitesi şu anda parked bir sayfa gösteriyor, bu da potansiyel hastaların sizi bulmasını zorlaştırıyor. Site HTTPS üzerinden güvenli bir bağlantı sunuyor ve OpenStreetMap'te listelenmiş olsa da, iletişim formu veya telefon/WhatsApp linki bulunmuyor ve listedeki telefon numaranız site üzerinde doğrulanamıyor.",
+        "pitch": {
+          "subject": "Web sitenizi profesyonel ve ulaşılabilir hale getirelim",
+          "opening": "Merhaba Harbor Dental Studio ekibi, sizinle çalışarak sitenizin hem görsel hem de işlevsel açıdan iyileştirilmesini öneriyorum.",
+          "findings": [
+            {
+              "text": "Site şu anda parked bir sayfa gösteriyor; bu, potansiyel hastaların sizi online olarak bulmasını zorlaştırıyor.",
+              "cites": [
+                "domain_parked"
+              ]
+            },
+            {
+              "text": "Ana sayfada iletişim formu, e-posta linki, tap-to-call veya WhatsApp butonu bulunmuyor, bu da yeni randevu alma sürecinizi zorlaştırıyor.",
+              "cites": [
+                "no_contact_path"
+              ]
+            },
+            {
+              "text": "Listelerde görünen 2165558820 numaranız site üzerinde yer almıyor ve doğrulanamıyor; bu, telefon üzerinden ulaşımda eski bilgilerin kullanılmasına yol açabilir.",
+              "cites": [
+                "phone_unconfirmed"
+              ]
+            }
+          ],
+          "offer": "Ben, sizin için modern, mobil uyumlu bir web sitesi tasarlayıp, açık iletişim kanalları ekleyip, domaininizi aktif bir içerikle güncelleyerek ve telefon bilgilerinizi site üzerinde doğrulayarak, hasta獲得 ve güven artırmanıza yardımcı olurum.",
+          "closing": "Detayları konuşmak için uygun bir zaman bulursanız, memnuniyetle yanıtlarımı beklerim. Saygılarımla, [İsminiz]"
+        }
+      },
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "usage": {
+        "in": 483,
+        "out": 1394,
+        "total": 1877,
+        "reasoning": 936
+      },
+      "ms": 7251,
+      "format": "json_schema"
+    }
+  }
+}

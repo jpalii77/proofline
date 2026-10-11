@@ -69,7 +69,7 @@ test('/api/run?lang=tr runs in Turkish; live answers are cached per language', a
   const res = await app(new Request('https://demo.test/api/run?q=Lumen%20Coffee&lang=tr'));
   const text = await res.text();
   assert.match(text, /"lang":"tr"/);
-  assert.match(text, /Web siteniz açılıyor/);
+  assert.match(text, /[Ww]eb siteniz/, "owner text in Turkish (recorded Nemotron or the stand-in)");
   const plain = await (await app(new Request('https://demo.test/api/run?q=Lumen%20Coffee&lang=xx'))).text();
   assert.match(plain, /"lang":"en"/);
 

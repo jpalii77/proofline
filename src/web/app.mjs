@@ -14,7 +14,7 @@
 
 import { createNemotronBrain } from '../agent/nemotron-brain.mjs';
 import { REPORT_LANGS, runAgent } from '../agent/pipeline.mjs';
-import { createSampleBrain } from '../agent/sample-brain.mjs';
+import { exampleBrain } from '../agent/recorded-brain.mjs';
 import { runCheck } from '../checks.mjs';
 import { gateClaim } from '../claims.mjs';
 import { budgetFetch, createWorkerNet } from '../io/net-worker.mjs';
@@ -149,7 +149,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
         await runAgent({
           query: sample.input,
           io: createSampleIO(sample, { latency: pace ? [60, 240] : null }),
-          brain: createSampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
+          brain: exampleBrain(sample, { thinkMs: pace ? 650 : 0 }),
           emit,
           lang,
         });
@@ -212,7 +212,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
       // Samples are deterministic: replay the run without delays to get the same claims back.
       const sample = loadSamples().find((s) => s.id === runId.split('.')[1]);
       if (!sample) return json({ error: 'Run expired. Start a new check.' }, 404);
-      const out = await runAgent({ query: sample.input, io: createSampleIO(sample), brain: createSampleBrain(sample) });
+      const out = await runAgent({ query: sample.input, io: createSampleIO(sample), brain: exampleBrain(sample) });
       const found = [...(out.report?.verified || []), ...(out.report?.dropped || [])].find((c) => c.id === claimId);
       if (found) { const { evidence, verdict, dropReason, ...plain } = found; claim = plain; } // eslint-disable-line no-unused-vars
       io = createSampleIO(sample);

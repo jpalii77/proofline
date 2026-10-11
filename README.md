@@ -76,7 +76,9 @@ Every report has a panel that lists each Nemotron call of that run:
 - tokens in / out (and reasoning tokens when present), read from the response's `usage` field by `parseUsage` in [`src/llm.mjs`](src/llm.mjs). A missing field is shown as unknown, never estimated;
 - the outcome of code's checks on the answer: **accepted**, **partly rejected** (for example a Nano rewrite that introduced a number), **rejected**, or **no answer** (with the reason).
 
-A summary line reads "N model calls · X tokens · Y claims dropped by the gate". The recorded examples use a rule-based stand-in instead of the model, so their panel says "no tokens".
+A summary line reads "N model calls · X tokens · Y claims dropped by the gate".
+
+**Recorded Nemotron answers in the examples.** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (English and Turkish; the plan step once, 7 calls per example) and saves every answer with its model id, tokens, latency and output format in [`fixtures/recorded/`](fixtures/recorded). The demo then replays them ([`src/agent/recorded-brain.mjs`](src/agent/recorded-brain.mjs)): the panel says "recorded on <date>, no new tokens", every call carries that label, and the code checks after each answer (gate, number check, citation lint) run again on the replay. The planted wrong claims are added after the model's own proposals and say "planted for this demo, not proposed by the model". A step with no recording falls back to the rule-based stand-in and is named as such; with no recordings at all the examples use the stand-in and the panel says "no tokens".
 
 ![Model calls panel (recorded example)](docs/screenshots/5-model-calls.jpg)
 
@@ -225,7 +227,7 @@ A page about the business on a platform proves it is *present* there, never what
 | Lumen Coffee Roasters | Certificate expires in 9 days, phone confirmed on its site | "Site is down" |
 | Harbor Dental Studio | Domain shows a for-sale page; listed phone not on site | "Certificate invalid" |
 | Atlas Bike Repair | Renamed site, closure signal, no HTTPS redirect; first request times out | "Phone confirmed" |
-| Kuzey Kafe | No website of its own, only a QR-menu page and Instagram; the planner mistakes the menu platform for its site | "No contact path", "phone not on its site", "renamed" — all made against the platform page |
+| Kuzey Kafe | No website of its own, only a QR-menu page and Instagram. The rule-based stand-in mistakes the menu platform for its site; the recorded Nemotron answer does not (it picks no domain) | "No contact path", "phone not on its site", "renamed" — all about a site it does not have. Stand-in: the gate drops them. Recorded Nemotron: they never reach the gate (no own domain, so the catalog refuses them) |
 
 ### When something fails
 

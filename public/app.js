@@ -452,22 +452,34 @@ function legacyCalls(events) {
   return out;
 }
 
+/** The day a recorded example was recorded, in the page's language ("12 Oct 2026" / "12 Eki 2026"). */
+function recordedDate(at) {
+  const d = new Date(at);
+  if (Number.isNaN(d.getTime())) return String(at);
+  return d.toLocaleDateString(getLang() === 'tr' ? 'tr-TR' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+}
+
 function modelSummary(r, calls) {
   const known = calls.filter((c) => c.usage);
   const tokens = known.length ? known.reduce((n, c) => n + (c.usage.total ?? ((c.usage.in || 0) + (c.usage.out || 0))), 0) : null;
   const n = calls.filter((c) => !c.skipped).length;
   const standIn = calls.length > 0 && calls.every((c) => /sample/.test(c.model));
-  const parts = [t('models.calls', { n }), standIn ? t('models.standIn') : tokens == null ? t('ev.tokensNone') : t('models.tokens', { n: fmt(tokens) }), t('models.droppedByGate', { n: r.stats.dropped })];
+  const recorded = calls.some((c) => c.recordedAt);
+  const tokenText = tokens == null ? t('ev.tokensNone') : t(recorded ? 'models.tokensRecorded' : 'models.tokens', { n: fmt(tokens) });
+  const parts = [t('models.calls', { n }), standIn ? t('models.standIn') : tokenText, t('models.droppedByGate', { n: r.stats.dropped })];
   if (r.stats.rewritesRejected) parts.push(t('models.rewritesRejected', { n: r.stats.rewritesRejected }));
   return parts.join(' · ');
 }
 
 function modelPanel(r, calls) {
   const sample = calls.length > 0 && calls.every((c) => /sample/.test(c.model));
+  const recordedAt = calls.find((c) => c.recordedAt)?.recordedAt;
   return h('section', { class: 'block models', id: 'models', 'aria-labelledby': 'models-h' },
     h('div', { class: 'models-head' },
       h('h2', { id: 'models-h' }, t('models.title')),
-      h('p', {}, sample
+      h('p', {}, recordedAt
+        ? t('models.recorded', { date: recordedDate(recordedAt) })
+        : sample
         ? t('models.sample')
         : `${t('models.live')}${calls.length && !calls.some((c) => c.usage) ? ` ${t('models.noTokens')}` : ''}`)),
     calls.length ? h('ol', { class: 'calls' }, calls.map((c) => h('li', { class: `call o-${c.outcome}` },
@@ -476,7 +488,8 @@ function modelPanel(r, calls) {
         h('span', { class: 'tier' }, tierText(c.tier)),
         h('code', {}, modelName(c.model, getLang())),
         // Structured output: the reply was decoded to a JSON Schema (or fell back to plain JSON mode).
-        FORMAT_KEY[c.format] ? h('span', { class: 'tier' }, t(FORMAT_KEY[c.format])) : null),
+        FORMAT_KEY[c.format] ? h('span', { class: 'tier' }, t(FORMAT_KEY[c.format])) : null,
+        c.recordedAt ? h('span', { class: 'tier' }, t('models.recordedTag', { date: recordedDate(c.recordedAt) })) : null),
       h('div', { class: 'call-nums' },
         h('span', {}, secs(c.ms || 0)),
         h('span', {}, c.usage ? t('models.in', { n: fmt(c.usage.in) }) : t('models.tokensDash')),

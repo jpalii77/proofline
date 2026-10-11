@@ -5,7 +5,7 @@
   "city": "Eskişehir",
   "domain": "qrmenu.example",
   "listedPhone": "+90 222 555 40 18",
-  "blurb": "Café with no website of its own, only a QR-menu page and Instagram. The planner mistakes the menu platform for its site.",
+  "blurb": "Café with no website of its own, only a QR-menu page and Instagram. Claims about “its website” made from the menu platform must not get through.",
   "planted": [
     { "type": "no_contact_path", "rationale": "The homepage at qrmenu.example has no contact form or tap-to-call link.", "rationale_tr": "qrmenu.example ana sayfasında iletişim formu ya da tıkla-ara bağlantısı yok." },
     { "type": "phone_unconfirmed", "rationale": "+90 222 555 40 18 is not on qrmenu.example.", "rationale_tr": "+90 222 555 40 18 qrmenu.example üzerinde yok." },

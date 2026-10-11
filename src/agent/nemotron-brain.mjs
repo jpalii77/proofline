@@ -3,6 +3,11 @@
 //   verify                  -> fast tier (set NEBIUS_FAST_MODEL to a Nemotron Nano ID)
 // Every prompt sends a JSON Schema (structured output) and every answer is checked by code afterwards.
 
+// Reply budgets. Nemotron thinks before it answers and the thinking counts against max_tokens: on
+// 11 Oct 2026 the Nano rewrite used ~1,100 of 1,200 tokens in English and ran out (empty reply) on
+// 2 of 4 Turkish runs; the Turkish writer used 1,394 of 1,400. Room to finish, still capped.
+export const MAX_TOKENS = { plan: 1200, propose: 2000, verify: 2500, write: 2400 };
+
 const RULES = 'Reply with one JSON object only. No markdown. Never invent facts, domains, phone numbers or numbers.';
 
 // The words people read (owner lines, summary, pitch) follow the language picked on the page.
@@ -56,6 +61,7 @@ export function createNemotronBrain(llm) {
 
     plan: ({ query, parsed, discovery, grounding }) => llm.chat({
       tier: 'reasoning',
+      maxTokens: MAX_TOKENS.plan,
       schema: SCHEMAS.plan({ grounding }),
       system: `You identify a small business from a user query and web search results. ${RULES}
 Pick the business's own website domain and its main phone ONLY from the allowed lists. If unsure, use null.
@@ -76,7 +82,7 @@ Schema: {"name": string|null, "city": string|null, "domain": string|null, "phone
     propose: ({ ctx, observations, catalog, lang }) => llm.chat({
       tier: 'reasoning',
       schema: SCHEMAS.propose({ catalog }),
-      maxTokens: 1500,
+      maxTokens: MAX_TOKENS.propose,
       system: `You are an auditor proposing claims about a business's web presence. ${RULES}
 You may only use claim types from the catalog. Propose every claim the observations support, good or bad.
 A code gate will re-run the checks behind each claim; claims that fail are dropped and shown as dropped, so do not pad.
@@ -88,6 +94,7 @@ ${lang === 'tr' ? 'Write each rationale in Turkish; keep claim types, domains, p
 
     verify: ({ ctx, claims, lang }) => llm.chat({
       tier: 'fast',
+      maxTokens: MAX_TOKENS.verify,
       schema: SCHEMAS.verify({ claims }),
       system: `Rewrite each verified claim as one short, friendly sentence for the business owner (no jargon). ${RULES}
 ${languageRule(lang)}
@@ -98,7 +105,7 @@ Do not add numbers, dates or facts not in the claim or its evidence. Schema: {"c
     write: ({ ctx, claims, lang }) => llm.chat({
       tier: 'reasoning',
       schema: SCHEMAS.write({ claims }),
-      maxTokens: 1400,
+      maxTokens: MAX_TOKENS.write,
       system: `You write two things from VERIFIED claims only. ${RULES}
 ${languageRule(lang)}
 1) owner_summary: 2-3 plain sentences for the owner about their digital health.
