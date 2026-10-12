@@ -14,10 +14,16 @@ import {
   pageTitle, phoneKey, visibleText,
 } from './text.mjs';
 
-/** The discovery search. The pipeline and the own-site checks use the same query. */
+/**
+ * The discovery search. The pipeline and the own-site checks use the same query.
+ * The plain name (and city) finds the business's own site far more often than "… official website phone":
+ * 8 of 9 known own sites vs 5 of 9 on the same 12 businesses (12 Oct 2026, scripts/search-variants.mjs),
+ * with 10 results instead of 5 (DISCOVERY_RESULTS; still 1 Tavily credit per search).
+ */
+export const DISCOVERY_RESULTS = 10;
 export function discoveryQuery({ name, city, domain } = {}) {
   if (!name && domain) return `${domain} business contact`;
-  return `${name || ''} ${city || ''} official website phone`.replace(/\s+/g, ' ').trim();
+  return `${name || ''} ${city || ''}`.replace(/\s+/g, ' ').trim();
 }
 
 // Parking, for-sale, suspended and placeholder pages. Matched on the title and the visible text.
@@ -33,7 +39,20 @@ const PARKED = [
   /\bcoming soon\b|\bçok yakında\b/i,
   // "osepet.com for sale | Spaceship.com", "Domain for sale" (round 4)
   /\bdomain for sale\b|\b[a-z0-9-]+\.[a-z]{2,}(\.[a-z]{2})? (is )?for sale\b/i,
+  // "Yakında Başlatılacak" (round 6: osepet.net, a website-builder placeholder), "launching soon"
+  /\byakında (başlatılacak|açılacak|hizmetinizde|sizlerle)\b|\byap[ıi]m aşamas[ıi]nda\b|\blaunching soon\b|\bunder construction\b/i,
 ];
+
+/**
+ * A phone number made of a counting run or one repeated digit ("0212 123 45 67", "555 555 55 55") is a
+ * template's placeholder, not evidence (round 6: a template-looking shop page listed 212 123 45 67).
+ */
+export function placeholderPhone(raw) {
+  const key = phoneKey(raw);
+  if (!key) return false;
+  const local = key.slice(-7);
+  return /^(\d)\1{6}$/.test(local) || '0123456789'.includes(local) || '9876543210'.includes(local);
+}
 
 /** A parked, for-sale or placeholder page (the same markers as page.not_parked). */
 function isParked(p) {
@@ -157,6 +176,9 @@ function exactIdentity(p, name) {
   for (const [field, value] of fields) {
     if (!value) continue;
     for (const part of titleParts(value)) {
+      // A title that is only an address ("osepet.net", a site builder's default) counts like the address
+      // itself: only for names of 7+ letters (round 7: osepet.net, an unclaimed "launching soon" page).
+      if (looksLikeDomain(part.trim())) { if (labelIsName(part.trim(), name)) return { field, value }; continue; }
       if ((want && nameTokens(part).join(' ') === want) || compactSame(part, name)) return { field, value };
     }
   }
@@ -395,6 +417,12 @@ export const CHECKS = {
       const namesake = tried.find((t) => t.pass === null && /namesake/.test(t.summary));
       if (namesake) return { pass: null, summary: `Not settled: ${namesake.summary}`, observed: { tried, listings } };
       const unloaded = tried.filter((t) => t.pass === null).map((t) => t.host);
+      // A one-word name with nothing else ("Shout") belongs to many businesses: not finding a site in its
+      // results says nothing about the one the user means (round 6: the Turkish shop has shout.com.tr).
+      // (a long, unusual single word such as "Vatkalimon" is specific enough: same 7-letter line as labelIsName)
+      if ((!city || looksLikeDomain(city)) && coreTokens(name).length < 2 && fold(name).replace(/ /g, '').length < 7) {
+        return { pass: null, summary: `Not settled: only “${name}” was given, a name many businesses share; no own site among ${results.length} result(s) does not show this one has none`, observed: { tried, listings, ambiguousName: true } };
+      }
       return {
         pass: false,
         summary: `No website of its own among ${results.length} search result(s)${listings.length ? `; listings only: ${[...new Set(listings)].slice(0, 4).join(', ')}` : ''}${unloaded.length ? `; ${unloaded.join(', ')} did not load and nothing ties it to the business` : ''}`,
@@ -530,6 +558,7 @@ export const CHECKS = {
     async run(io, { url, phone }) {
       const key = phoneKey(phone);
       if (!key) return { pass: null, summary: 'No phone number to look for', observed: {} };
+      if (placeholderPhone(phone)) return { pass: null, summary: `${phone} looks like a template's placeholder number, so it proves nothing either way`, observed: { looked_for: key, placeholder: true } };
       const p = await page(io, url);
       if (!okStatus(p.status)) return { pass: null, summary: 'Page did not load', observed: { status: p.status ?? null } };
       const telLinks = [...p.html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1]);

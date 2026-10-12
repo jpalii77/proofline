@@ -1,0 +1,39 @@
+{
+  "run": "eval/runs/2026-10-12-r6.json",
+  "list": "eval/businesses-3.json (same bare-name list as rounds 4-5), after the discovery search change: plain name (and city) with 10 results instead of '... official website phone' with 5",
+  "checkedBy": "Independent re-check on 2026-10-12: curl and full page text, openssl s_client, http redirect probe, WebFetch reading of the homepage, earlier round-4/5 checks and the prospect list's records.",
+  "summary": { "kept": 30, "right": 17, "wrong": 7, "unverifiable": 6, "dropped": 4 },
+  "verdicts": {
+    "hilalav": { "not_on_map": "right" },
+    "erenhobi": { "site_online": "right", "https_healthy": "right (ends 15 Dec 2026)", "phone_unconfirmed": "right as stated (0312 447 04 49 not on the site)", "not_on_map": "right" },
+    "petankara": { "site_online": "right (its own shop, newly found by the plain-name search)", "https_healthy": "right (ends 23 Nov 2026 = 42 days; http to https)", "not_on_map": "right" },
+    "aktifim": {
+      "site_online": "unverifiable: aktifimkozmetik.com ('Aktifim Kozmetik') may be the business, but it looks like a template: links to '#', generic address 'Güzellik Sk. No:12'; the prospect list records kozmetikvagonu.com",
+      "no_https_redirect": "unverifiable (true for that site; ownership unsettled)",
+      "phone_confirmed": "wrong: 0212 123 45 67 is a placeholder-looking sequential number, not evidence of the business's phone",
+      "not_on_map": "right"
+    },
+    "markapia": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "lostmind": {
+      "site_online": "wrong business: lostminds.com is 'Lost Minds', a software and games company; the planner turned 'Lost Mind' into 'Lost Minds' and the address then matched the planner's name",
+      "https_healthy": "wrong business (same site)",
+      "no_contact_path": "wrong business (same site)",
+      "not_on_map": "wrong business (statement is about 'Lost Minds')"
+    },
+    "tokerbebe": { "site_online": "right (tokerkids.com is Toker Bebe's Çayyolu site)", "https_healthy": "right (ends 13 Nov 2026 = 32 days; http to https)", "not_on_map": "right" },
+    "tubabutik": { "not_on_map": "unverifiable (OSM 'Tuba' clothes shop in Fatih not tied to it)" },
+    "shout": { "no_own_website": "wrong: the Turkish shop Shout has shout.com.tr; a bare one-word name cannot support 'no website of its own'" },
+    "osepet": {
+      "site_online": "wrong: osepet.net shows only 'Yakında Başlatılacak' (launching soon), a GoDaddy placeholder; the parked-page check does not know this Turkish phrase",
+      "https_healthy": "unverifiable (true for that domain; ownership unsettled)",
+      "no_contact_path": "unverifiable (placeholder page)",
+      "not_on_map": "right"
+    },
+    "modalila": { "no_own_website": "unverifiable (as in rounds 4-5)", "not_on_map": "right" }
+  },
+  "lessons": [
+    "The plain-name search finds more real own sites (Pet Ankara, Toker Bebe newly found), so the planner chose correctly in 11/12 cases in scripts/ultra-compare.mjs",
+    "But it also surfaces more namesakes and placeholders: precision fell to 17 of 24 checkable (71%) from 18 of 20 (90%) in round 5",
+    "Needed before shipping: (1) bare query: identity checks use the typed name, not the planner's tidier name ('Lost Minds'); (2) bare one-word name: 'no website of its own' is not settled; (3) Turkish placeholder phrases ('yakında başlatılacak') are parked pages; (4) sequential placeholder phone numbers are not evidence"
+  ]
+}

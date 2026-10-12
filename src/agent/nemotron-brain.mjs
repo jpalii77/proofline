@@ -6,7 +6,8 @@
 // Reply budgets. Nemotron thinks before it answers and the thinking counts against max_tokens: on
 // 11 Oct 2026 the Nano rewrite used ~1,100 of 1,200 tokens in English and ran out (empty reply) on
 // 2 of 4 Turkish runs; the Turkish writer used 1,394 of 1,400. Room to finish, still capped.
-export const MAX_TOKENS = { plan: 1200, propose: 2000, verify: 2500, write: 2400 };
+// The planner budget went from 1,200 to 2,000 after Nemotron 3 Ultra ran out on one of 12 plans (12 Oct).
+export const MAX_TOKENS = { plan: 2000, propose: 2000, verify: 2500, write: 2400 };
 
 const RULES = 'Reply with one JSON object only. No markdown. Never invent facts, domains, phone numbers or numbers.';
 

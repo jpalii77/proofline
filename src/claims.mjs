@@ -10,9 +10,11 @@ import { CHECKS, runCheck } from './checks.mjs';
 // not a listing platform, and tied to the business by its own page or by search results.
 // A rename claim needs the stronger tie (search results), since a name mismatch on an
 // unverified domain usually just means it is somebody else's site.
+// Identity is checked with the city the user typed (see pipeline: identityCity); older reports have only city.
+const idCity = (c) => ('identityCity' in c ? c.identityCity : c.city) || null;
 const ownSite = (c, extra = {}) => ({
   check: 'site.own_site',
-  params: { host: c.domain, name: c.name || null, city: c.city || null, query: c.searchQuery || null, userGiven: !!c.userGivenDomain, ...extra },
+  params: { host: c.domain, name: c.name || null, city: idCity(c), query: c.searchQuery || null, userGiven: !!c.userGivenDomain, ...extra },
   expect: true,
 });
 
@@ -113,7 +115,7 @@ export const CLAIM_TYPES = {
   no_own_website: {
     area: 'reach', tone: 'issue', needs: ['name'],
     proof: (c) => [
-      { check: 'web.own_site_found', params: { name: c.name, city: c.city || null, query: c.searchQuery || null }, expect: false },
+      { check: 'web.own_site_found', params: { name: c.name, city: idCity(c), query: c.searchQuery || null }, expect: false },
     ],
     statement: (c) => `No website of its own was found for ${c.name}; it shows up only on listings and platforms.`,
   },

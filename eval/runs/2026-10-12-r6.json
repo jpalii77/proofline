@@ -1,0 +1,4010 @@
+{
+  "day": "2026-10-12",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "hilalav",
+      "query": "Hilal AV Market",
+      "note": "hunting/outdoor e-shop (Saker list, Oct 2026); name only",
+      "ms": 23299,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 6,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 6573,
+        "rewritesRejected": 0,
+        "ms": 23298
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Hilal AV Market is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check passed false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": "Adana"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": "Adana"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 84,
+              "at": "2026-10-12T00:41:12.551Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:41:12.551Z",
+          "ownerText": "Your store isn’t showing up on many map apps because it’s not listed on OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Hilal AV Market; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check not settled: hilalavmarket.com uses the name “Hilal AV Market” but nothing on it or in search ties it to Adana; it may be a namesake",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": "Adana",
+                "query": "Hilal AV Market"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Hilal AV Market",
+                "city": "Adana",
+                "query": "Hilal AV Market"
+              },
+              "pass": null,
+              "summary": "Not settled: hilalavmarket.com uses the name “Hilal AV Market” but nothing on it or in search ties it to Adana; it may be a namesake",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "orionarms.com.tr",
+                    "pass": false,
+                    "summary": "orionarms.com.tr does not identify “Hilal AV Market” (page says “Orion Arms Savunma Sanayi Tic. Ltd. Şti.”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "hilalavmarket.com",
+                    "pass": null,
+                    "summary": "hilalavmarket.com uses the name “Hilal AV Market” but nothing on it or in search ties it to Adana; it may be a namesake",
+                    "guessed": true
+                  }
+                ],
+                "listings": []
+              },
+              "ms": 4072,
+              "at": "2026-10-12T00:41:12.466Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Not settled: hilalavmarket.com uses the name “Hilal AV Market” but nothing on it or in search ties it to Adana; it may be a namesake)",
+          "checkedAt": "2026-10-12T00:41:12.467Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The business is missing from OpenStreetMap, a key data source for many navigation services.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5089,
+          "usage": {
+            "in": 2963,
+            "out": 847,
+            "total": 3810,
+            "reasoning": 741
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3715,
+          "usage": {
+            "in": 847,
+            "out": 659,
+            "total": 1506,
+            "reasoning": 563
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1657,
+          "usage": {
+            "in": 163,
+            "out": 233,
+            "total": 396,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3367,
+          "usage": {
+            "in": 268,
+            "out": 593,
+            "total": 861,
+            "reasoning": 399
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "erenhobi",
+      "query": "Eren Hobi",
+      "note": "hobby supplies e-shop (Saker list); name only",
+      "ms": 23884,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 21,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6599,
+        "rewritesRejected": 0,
+        "ms": 23884
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "erenhobi.com loads and shows real content.",
+          "rationale": "site.own_site passed (erenhobi.com names the business), dns.resolves passed (address record), http.reachable passed (HTTP 200), page.not_parked passed (real content)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "erenhobi.com names the business (title: “erenhobi.com”)",
+              "observed": {
+                "host": "erenhobi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "erenhobi.com",
+                  "score": 1
+                },
+                "ties": [],
+                "place": "the homepage names ankara"
+              },
+              "ms": 1748,
+              "at": "2026-10-12T00:41:38.193Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://erenhobi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 251,
+              "at": "2026-10-12T00:41:38.444Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “erenhobi.com”)",
+              "observed": {
+                "title": "erenhobi.com",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:41:38.445Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:41:38.445Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "erenhobi.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "http.https_redirect passed (http redirects to https), tls.cert_valid passed (certificate valid for 64 days)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "erenhobi.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "erenhobi.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "erenhobi.com names the business (title: “erenhobi.com”)",
+              "observed": {
+                "host": "erenhobi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "erenhobi.com",
+                  "score": 1
+                },
+                "ties": [],
+                "place": "the homepage names ankara"
+              },
+              "ms": 4,
+              "at": "2026-10-12T00:41:38.450Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "erenhobi.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 64 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-15T17:17:31.000Z",
+                "daysLeft": 64,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 44,
+              "at": "2026-10-12T00:41:38.494Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "erenhobi.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://erenhobi.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://erenhobi.com/",
+                    "status": 307
+                  },
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://erenhobi.com/"
+              },
+              "ms": 403,
+              "at": "2026-10-12T00:41:38.897Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:41:38.897Z",
+          "ownerText": "Your site uses a secure HTTPS connection that stays valid."
+        },
+        {
+          "id": "phone_unconfirmed",
+          "type": "phone_unconfirmed",
+          "area": "contact",
+          "tone": "risk",
+          "statement": "3124470449 (from listings) is not on the business's own site; it may be outdated.",
+          "rationale": "page.phone_listed passed false (phone 3124470449 not on site)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://erenhobi.com/",
+                "phone": "3124470449"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "erenhobi.com",
+                "name": "Eren Hobi",
+                "city": "Ankara",
+                "query": "Eren Hobi",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "erenhobi.com names the business (title: “erenhobi.com”)",
+              "observed": {
+                "host": "erenhobi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "erenhobi.com",
+                  "score": 1
+                },
+                "ties": [],
+                "place": "the homepage names ankara"
+              },
+              "ms": 5,
+              "at": "2026-10-12T00:41:38.902Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://erenhobi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://erenhobi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://erenhobi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-12T00:41:38.902Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://erenhobi.com/",
+                "phone": "3124470449"
+              },
+              "pass": false,
+              "summary": "3124470449 is not on the site (site lists: 5413115654)",
+              "observed": {
+                "looked_for": "3124470449",
+                "on_page": [
+                  "5413115654"
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:41:38.903Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:41:38.903Z",
+          "ownerText": "The phone number listed elsewhere isn’t on your site, so it might be outdated."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Eren Hobi is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false (no matching place on OpenStreetMap)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Eren Hobi",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Eren Hobi",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 91,
+              "at": "2026-10-12T00:41:38.994Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:41:38.994Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The phone number shown in listings (312‑447‑0449) is not found on your website and could be outdated.",
+          "cites": [
+            "phone_unconfirmed"
+          ]
+        },
+        {
+          "text": "Your business does not appear on OpenStreetMap, which many navigation apps rely on for local search.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3833,
+          "usage": {
+            "in": 1705,
+            "out": 643,
+            "total": 2348,
+            "reasoning": 532
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5588,
+          "usage": {
+            "in": 1109,
+            "out": 966,
+            "total": 2075,
+            "reasoning": 791
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2888,
+          "usage": {
+            "in": 440,
+            "out": 614,
+            "total": 1054,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3583,
+          "usage": {
+            "in": 400,
+            "out": 722,
+            "total": 1122,
+            "reasoning": 470
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "petankara",
+      "query": "Pet Ankara, Ankara",
+      "note": "pet shop (Saker list); name + city",
+      "ms": 21901,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 18,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 6849,
+        "rewritesRejected": 0,
+        "ms": 21901
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "petankara.com.tr loads and shows real content.",
+          "rationale": "site.own_site passed, dns.resolves passed, http.reachable passed, http.https_redirect passed, tls.cert_valid passed, page.not_parked passed, page.contact_path passed, page.name_match passed",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "petankara.com.tr",
+                "name": "Pet Ankara",
+                "city": "Ankara",
+                "query": "Pet Ankara Ankara",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://petankara.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://petankara.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "petankara.com.tr",
+                "name": "Pet Ankara",
+                "city": "Ankara",
+                "query": "Pet Ankara Ankara",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "petankara.com.tr names the business (title: “Kedi-Köpek-Evcil Hayvan Ürünleri Uygun Fiyata Pet Ankara'da”)",
+              "observed": {
+                "host": "petankara.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Kedi-Köpek-Evcil Hayvan Ürünleri Uygun Fiyata Pet Ankara'da",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.petankara.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 2025,
+              "at": "2026-10-12T00:42:05.321Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://petankara.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.petankara.com.tr/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.petankara.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://petankara.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.petankara.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 300,
+              "at": "2026-10-12T00:42:05.621Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://petankara.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Kedi-Köpek-Evcil Hayvan Ürünleri Uygun Fiyata Pet Ankara'da”)",
+              "observed": {
+                "title": "Kedi-Köpek-Evcil Hayvan Ürünleri Uygun Fiyata Pet Ankara'da",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:42:05.622Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:05.622Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "petankara.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate valid with 42 days remaining (≥30) and HTTP to HTTPS redirect works",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "petankara.com.tr",
+                "name": "Pet Ankara",
+                "city": "Ankara",
+                "query": "Pet Ankara Ankara",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "petankara.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "petankara.com.tr"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "petankara.com.tr",
+                "name": "Pet Ankara",
+                "city": "Ankara",
+                "query": "Pet Ankara Ankara",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "petankara.com.tr names the business (title: “Kedi-Köpek-Evcil Hayvan Ürünleri Uygun Fiyata Pet Ankara'da”)",
+              "observed": {
+                "host": "petankara.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Kedi-Köpek-Evcil Hayvan Ürünleri Uygun Fiyata Pet Ankara'da",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.petankara.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 15,
+              "at": "2026-10-12T00:42:05.637Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "petankara.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 42 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-23T23:00:03.000Z",
+                "daysLeft": 42,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 113,
+              "at": "2026-10-12T00:42:05.750Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "petankara.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.petankara.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://petankara.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.petankara.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.petankara.com.tr/"
+              },
+              "ms": 354,
+              "at": "2026-10-12T00:42:06.104Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:06.104Z",
+          "ownerText": "Your site uses a valid HTTPS certificate that lasts more than 30 days."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Pet Ankara is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "OSM listing check failed: only “Ankara Pet” matched, no matching place for Pet Ankara in Ankara",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Pet Ankara",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Pet Ankara",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "Only “Ankara Pet” matched: the same words in another order, so another place; no matching place on OpenStreetMap",
+              "observed": {
+                "name": "Ankara Pet",
+                "display_name": "Ankara Pet, Lizbon Caddesi, Ata Mahallesi, Ankara, Çankaya, Ankara, Central Anatolia Region, 06460, Turkey",
+                "lat": "39.8715138",
+                "lon": "32.8253248",
+                "osm": "node/11203819493",
+                "phone": "+90 312 476 16 00",
+                "website": "https://ankarapet.com/",
+                "score": 0.692,
+                "kind": "shop=pet"
+              },
+              "ms": 164,
+              "at": "2026-10-12T00:42:06.268Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:06.268Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which some map apps rely on."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads correctly and displays real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The business is missing from OpenStreetMap, which many map applications rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4701,
+          "usage": {
+            "in": 2288,
+            "out": 842,
+            "total": 3130,
+            "reasoning": 742
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4284,
+          "usage": {
+            "in": 1183,
+            "out": 819,
+            "total": 2002,
+            "reasoning": 679
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1532,
+          "usage": {
+            "in": 416,
+            "out": 298,
+            "total": 714,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3567,
+          "usage": {
+            "in": 340,
+            "out": 663,
+            "total": 1003,
+            "reasoning": 448
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "aktifim",
+      "query": "Aktifim",
+      "note": "sports/outdoor e-shop (Saker list); name only",
+      "ms": 22672,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 5,
+        "verified": 4,
+        "dropped": 1,
+        "checksRun": 22,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6224,
+        "rewritesRejected": 0,
+        "ms": 22672
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "aktifimkozmetik.com loads and shows real content.",
+          "rationale": "http.reachable passed: Loaded with HTTP 200",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://aktifimkozmetik.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://aktifimkozmetik.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "aktifimkozmetik.com names the business (title: “Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı”)",
+              "observed": {
+                "host": "aktifimkozmetik.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://aktifimkozmetik.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names istanbul"
+              },
+              "ms": 1918,
+              "at": "2026-10-12T00:42:28.729Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://aktifimkozmetik.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://aktifimkozmetik.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://aktifimkozmetik.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 60,
+              "at": "2026-10-12T00:42:28.789Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://aktifimkozmetik.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı”)",
+              "observed": {
+                "title": "Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:42:28.790Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:28.790Z",
+          "ownerText": "Your site loads and shows real content about Aktifim Kozmetik."
+        },
+        {
+          "id": "no_https_redirect",
+          "type": "no_https_redirect",
+          "area": "security",
+          "tone": "issue",
+          "statement": "Typing aktifimkozmetik.com without https keeps visitors on an insecure connection.",
+          "rationale": "http.https_redirect failed: http:// stays on plain HTTP (http://aktifimkozmetik.com/)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "aktifimkozmetik.com"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "aktifimkozmetik.com names the business (title: “Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı”)",
+              "observed": {
+                "host": "aktifimkozmetik.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://aktifimkozmetik.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names istanbul"
+              },
+              "ms": 2,
+              "at": "2026-10-12T00:42:28.915Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "aktifimkozmetik.com"
+              },
+              "pass": false,
+              "summary": "http:// stays on plain HTTP (http://aktifimkozmetik.com/)",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://aktifimkozmetik.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "http://aktifimkozmetik.com/"
+              },
+              "ms": 0,
+              "at": "2026-10-12T00:42:28.915Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:28.915Z",
+          "ownerText": "Visitors who type your address without https stay on an insecure connection."
+        },
+        {
+          "id": "phone_confirmed",
+          "type": "phone_confirmed",
+          "area": "contact",
+          "tone": "good",
+          "statement": "2121234567 is the business's own number: it is listed on its website.",
+          "rationale": "page.phone_listed passed: 2121234567 is listed on the site",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://aktifimkozmetik.com/",
+                "phone": "2121234567"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "aktifimkozmetik.com names the business (title: “Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı”)",
+              "observed": {
+                "host": "aktifimkozmetik.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://aktifimkozmetik.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names istanbul"
+              },
+              "ms": 2,
+              "at": "2026-10-12T00:42:28.917Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://aktifimkozmetik.com/",
+                "phone": "2121234567"
+              },
+              "pass": true,
+              "summary": "2121234567 is listed on the site",
+              "observed": {
+                "looked_for": "2121234567",
+                "on_page": [
+                  "2121234567"
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:42:28.918Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:28.918Z",
+          "ownerText": "The phone number 2121234567 is listed on your site as yours."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Aktifim is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Aktifim",
+                "city": "İstanbul"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Aktifim",
+                "city": "İstanbul"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 79,
+              "at": "2026-10-12T00:42:28.997Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:28.997Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "aktifimkozmetik.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed: Certificate expires in 66 day(s) (needs ≥ 30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "aktifimkozmetik.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "name": "Aktifim",
+                "city": "İstanbul",
+                "query": "Aktifim",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "aktifimkozmetik.com names the business (title: “Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı”)",
+              "observed": {
+                "host": "aktifimkozmetik.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Aktifim Kozmetik — Profesyonel Saç & Cilt Bakımı",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://aktifimkozmetik.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names istanbul"
+              },
+              "ms": 2,
+              "at": "2026-10-12T00:42:28.792Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "aktifimkozmetik.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 66 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-17T09:02:22.000Z",
+                "daysLeft": 66,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 37,
+              "at": "2026-10-12T00:42:28.829Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "aktifimkozmetik.com"
+              },
+              "pass": false,
+              "summary": "http:// stays on plain HTTP (http://aktifimkozmetik.com/)",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://aktifimkozmetik.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "http://aktifimkozmetik.com/"
+              },
+              "ms": 84,
+              "at": "2026-10-12T00:42:28.913Z",
+              "expect": true,
+              "matched": false
+            }
+          ],
+          "dropReason": "Plain HTTP upgrades to HTTPS: expected pass, got fail — http:// stays on plain HTTP (http://aktifimkozmetik.com/)",
+          "checkedAt": "2026-10-12T00:42:28.913Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The domain aktifimkozmetik.com loads and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The phone number 2121234567 is confirmed as yours and appears on the website.",
+          "cites": [
+            "phone_confirmed"
+          ]
+        },
+        {
+          "text": "Visitors who type the domain without https stay on an insecure connection, exposing them to potential risks.",
+          "cites": [
+            "no_https_redirect"
+          ]
+        },
+        {
+          "text": "Aktifim is missing from OpenStreetMap, which many map applications rely on for local search.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3433,
+          "usage": {
+            "in": 1173,
+            "out": 567,
+            "total": 1740,
+            "reasoning": 478
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4173,
+          "usage": {
+            "in": 1171,
+            "out": 795,
+            "total": 1966,
+            "reasoning": 619
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 4126,
+          "usage": {
+            "in": 465,
+            "out": 694,
+            "total": 1159,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4918,
+          "usage": {
+            "in": 398,
+            "out": 961,
+            "total": 1359,
+            "reasoning": 646
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "markapia",
+      "query": "Markapia",
+      "note": "e-shop (Saker list, archived 11 Oct: no proven issue); a healthy case",
+      "ms": 20956,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5844,
+        "rewritesRejected": 0,
+        "ms": 20956
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "markapia.com loads and shows real content.",
+          "rationale": "site.own_site pass true confirms the domain marks the business; http.reachable pass true shows the site loads with HTTP 200.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "markapia.com",
+                "name": "Markapia",
+                "city": "Istanbul",
+                "query": "Markapia",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://markapia.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://markapia.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "markapia.com",
+                "name": "Markapia",
+                "city": "Istanbul",
+                "query": "Markapia",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "markapia.com names the business (og:site_name: “Kadın & Erkek Giyim & Ev Tekstil Ürünleri - Markapia”)",
+              "observed": {
+                "host": "markapia.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Kadın & Erkek Giyim & Ev Tekstil Ürünleri - Markapia",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://markapia.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names istanbul"
+              },
+              "ms": 2722,
+              "at": "2026-10-12T00:42:56.982Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://markapia.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://markapia.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://markapia.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 56,
+              "at": "2026-10-12T00:42:57.038Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://markapia.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Kadın & Erkek Giyim & Ev Tekstil Ürünleri - Markapia”)",
+              "observed": {
+                "title": "Kadın & Erkek Giyim & Ev Tekstil Ürünleri - Markapia",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-12T00:42:57.040Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:57.040Z",
+          "ownerText": "The website loads and shows real content about your business."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "markapia.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "http.https_redirect pass true shows HTTP redirects to HTTPS; tls.cert_valid pass true shows certificate is valid for at least 30 days (expires in 45 days).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "markapia.com",
+                "name": "Markapia",
+                "city": "Istanbul",
+                "query": "Markapia",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "markapia.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "markapia.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "markapia.com",
+                "name": "Markapia",
+                "city": "Istanbul",
+                "query": "Markapia",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "markapia.com names the business (og:site_name: “Kadın & Erkek Giyim & Ev Tekstil Ürünleri - Markapia”)",
+              "observed": {
+                "host": "markapia.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Kadın & Erkek Giyim & Ev Tekstil Ürünleri - Markapia",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://markapia.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names istanbul"
+              },
+              "ms": 9,
+              "at": "2026-10-12T00:42:57.049Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "markapia.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 45 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-26T09:07:53.000Z",
+                "daysLeft": 45,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 35,
+              "at": "2026-10-12T00:42:57.084Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "markapia.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://markapia.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://markapia.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://markapia.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://markapia.com/"
+              },
+              "ms": 79,
+              "at": "2026-10-12T00:42:57.163Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:57.163Z",
+          "ownerText": "The site uses a secure connection and redirects to HTTPS."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Markapia is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed pass false indicates no matching place for Markapia on OpenStreetMap in Istanbul.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Markapia",
+                "city": "Istanbul"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Markapia",
+                "city": "Istanbul"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 88,
+              "at": "2026-10-12T00:42:57.251Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:42:57.251Z",
+          "ownerText": "No issues found"
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and displays real content, confirming a solid foundation.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The HTTPS certificate is valid for over 30 days, ensuring secure connections for visitors.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Markapia is currently absent from OpenStreetMap, which many map applications rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2741,
+          "usage": {
+            "in": 1620,
+            "out": 390,
+            "total": 2010,
+            "reasoning": 329
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5162,
+          "usage": {
+            "in": 1045,
+            "out": 974,
+            "total": 2019,
+            "reasoning": 835
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2250,
+          "usage": {
+            "in": 372,
+            "out": 445,
+            "total": 817,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3502,
+          "usage": {
+            "in": 324,
+            "out": 674,
+            "total": 998,
+            "reasoning": 439
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "lostmind",
+      "query": "Lost Mind",
+      "note": "clothing e-shop (Saker list, archived 11 Oct); ambiguous name",
+      "ms": 28246,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5807,
+        "rewritesRejected": 0,
+        "ms": 28246
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "lostminds.com loads and shows real content.",
+          "rationale": "site.own_site confirms lostminds.com names the business; http.reachable shows the site loads with HTTP 200.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "lostminds.com",
+                "name": "Lost Minds",
+                "city": null,
+                "query": "Lost Mind",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://lostminds.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://lostminds.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "lostminds.com",
+                "name": "Lost Minds",
+                "city": null,
+                "query": "Lost Mind",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "lostminds.com names the business (address: “lostminds.com”)",
+              "observed": {
+                "host": "lostminds.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "lostminds.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2401,
+              "at": "2026-10-12T00:43:27.655Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://lostminds.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://lostminds.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://lostminds.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 176,
+              "at": "2026-10-12T00:43:27.832Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://lostminds.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Lost Minds - News”)",
+              "observed": {
+                "title": "Lost Minds - News",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:43:27.833Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:43:27.833Z",
+          "ownerText": "Your website loads and shows real content for visitors."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "lostminds.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid shows certificate valid for 80 days, meeting the ≥30 day threshold.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "lostminds.com",
+                "name": "Lost Minds",
+                "city": null,
+                "query": "Lost Mind",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "lostminds.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "lostminds.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "lostminds.com",
+                "name": "Lost Minds",
+                "city": null,
+                "query": "Lost Mind",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "lostminds.com names the business (address: “lostminds.com”)",
+              "observed": {
+                "host": "lostminds.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "lostminds.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2,
+              "at": "2026-10-12T00:43:27.835Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "lostminds.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 80 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-31T17:38:15.000Z",
+                "daysLeft": 80,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 329,
+              "at": "2026-10-12T00:43:28.164Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "lostminds.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://lostminds.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://lostminds.com/",
+                    "status": 302
+                  },
+                  {
+                    "url": "https://lostminds.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://lostminds.com/"
+              },
+              "ms": 496,
+              "at": "2026-10-12T00:43:28.660Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:43:28.660Z",
+          "ownerText": "Your site uses a secure connection that stays valid for a while."
+        },
+        {
+          "id": "no_contact_path",
+          "type": "no_contact_path",
+          "area": "contact",
+          "tone": "issue",
+          "statement": "The homepage has no contact form, email link, tap-to-call or WhatsApp link.",
+          "rationale": "page.contact_path failed: no form, email, phone or WhatsApp contact on the homepage.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "lostminds.com",
+                "name": "Lost Minds",
+                "city": null,
+                "query": "Lost Mind",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.contact_path",
+              "params": {
+                "url": "https://lostminds.com/"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "lostminds.com",
+                "name": "Lost Minds",
+                "city": null,
+                "query": "Lost Mind",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "lostminds.com names the business (address: “lostminds.com”)",
+              "observed": {
+                "host": "lostminds.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "lostminds.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2,
+              "at": "2026-10-12T00:43:28.662Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.contact_path",
+              "title": "Visitors can get in touch from the site",
+              "params": {
+                "url": "https://lostminds.com/"
+              },
+              "pass": false,
+              "summary": "No form, email, phone or WhatsApp contact on the homepage",
+              "observed": {
+                "form": false,
+                "mailto": false,
+                "tel": false,
+                "whatsapp": false,
+                "email": false,
+                "phone": false
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:43:28.663Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:43:28.663Z",
+          "ownerText": "Your homepage doesn’t have a way for people to get in touch right away."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Lost Minds is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed: no matching place on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Lost Minds",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Lost Minds",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 92,
+              "at": "2026-10-12T00:43:28.755Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:43:28.755Z",
+          "ownerText": "Your business isn’t listed on map services like OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The homepage lacks any contact form, email link, tap‑to‑call or WhatsApp option, making it hard for prospects to reach you.",
+          "cites": [
+            "no_contact_path"
+          ]
+        },
+        {
+          "text": "Lost Minds is not listed on OpenStreetMap, so many map‑based apps and local search results don’t show your location.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4398,
+          "usage": {
+            "in": 1121,
+            "out": 749,
+            "total": 1870,
+            "reasoning": 685
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4775,
+          "usage": {
+            "in": 1013,
+            "out": 841,
+            "total": 1854,
+            "reasoning": 694
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2824,
+          "usage": {
+            "in": 403,
+            "out": 596,
+            "total": 999,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3674,
+          "usage": {
+            "in": 373,
+            "out": 711,
+            "total": 1084,
+            "reasoning": 467
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "tokerbebe",
+      "query": "Toker Bebe",
+      "note": "baby products e-shop (Saker list)",
+      "ms": 37932,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 7205,
+        "rewritesRejected": 0,
+        "ms": 37932
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "tokerkids.com loads and shows real content.",
+          "rationale": "DNS resolves (tokerkids.com has 1 address record) and site reachable with HTTP 200 (Loaded with HTTP 200)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "tokerkids.com",
+                "name": "Toker Bebe",
+                "city": "Ankara",
+                "query": "Toker Bebe",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://tokerkids.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://tokerkids.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "tokerkids.com",
+                "name": "Toker Bebe",
+                "city": "Ankara",
+                "query": "Toker Bebe",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "tokerkids.com names the business (og:site_name: “Toker Bebe ; Bebek ve Çocuk Giyim Mağazası ve Toker Bebe Okul Kıyafetleri Toker Bebe Çayyolu”)",
+              "observed": {
+                "host": "tokerkids.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Toker Bebe ; Bebek ve Çocuk Giyim Mağazası ve Toker Bebe Okul Kıyafetleri Toker Bebe Çayyolu",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://tokerkids.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 4630,
+              "at": "2026-10-12T00:44:04.626Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://tokerkids.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://tokerkids.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://tokerkids.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 2562,
+              "at": "2026-10-12T00:44:07.188Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://tokerkids.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Toker Bebe ; Bebek ve Çocuk Giyim Mağazası ve Toker Bebe Okul Kıyafetleri Toker Bebe Çayyolu”)",
+              "observed": {
+                "title": "Toker Bebe ; Bebek ve Çocuk Giyim Mağazası ve Toker Bebe Okul Kıyafetleri Toker Bebe Çayyolu",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:44:07.189Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:44:07.189Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "tokerkids.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate valid for 32 days (≥30) and HTTP redirects to HTTPS (http:// redirects to https://tokerkids.com/)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "tokerkids.com",
+                "name": "Toker Bebe",
+                "city": "Ankara",
+                "query": "Toker Bebe",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "tokerkids.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "tokerkids.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "tokerkids.com",
+                "name": "Toker Bebe",
+                "city": "Ankara",
+                "query": "Toker Bebe",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "tokerkids.com names the business (og:site_name: “Toker Bebe ; Bebek ve Çocuk Giyim Mağazası ve Toker Bebe Okul Kıyafetleri Toker Bebe Çayyolu”)",
+              "observed": {
+                "host": "tokerkids.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Toker Bebe ; Bebek ve Çocuk Giyim Mağazası ve Toker Bebe Okul Kıyafetleri Toker Bebe Çayyolu",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://tokerkids.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names ankara"
+              },
+              "ms": 12,
+              "at": "2026-10-12T00:44:07.201Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "tokerkids.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 32 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-13T20:18:21.000Z",
+                "daysLeft": 32,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 36,
+              "at": "2026-10-12T00:44:07.237Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "tokerkids.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://tokerkids.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://tokerkids.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://tokerkids.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://tokerkids.com/"
+              },
+              "ms": 2511,
+              "at": "2026-10-12T00:44:09.748Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:44:09.748Z",
+          "ownerText": "Your site uses a secure HTTPS connection that’s good for a while."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Toker Bebe is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place on OpenStreetMap for Toker Bebe in Ankara",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Toker Bebe",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Toker Bebe",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 90,
+              "at": "2026-10-12T00:44:09.838Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:44:09.838Z",
+          "ownerText": "Your business isn’t showing up on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and presents genuine content, confirming a solid online foundation.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The website uses a valid HTTPS certificate (valid for over 30 days) and redirects visitors to a secure connection, protecting user data.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Toker Bebe is currently absent from OpenStreetMap, which many navigation apps rely on, reducing discoverability for local customers.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2633,
+          "usage": {
+            "in": 2584,
+            "out": 401,
+            "total": 2985,
+            "reasoning": 330
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4656,
+          "usage": {
+            "in": 1149,
+            "out": 784,
+            "total": 1933,
+            "reasoning": 657
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3667,
+          "usage": {
+            "in": 438,
+            "out": 788,
+            "total": 1226,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3685,
+          "usage": {
+            "in": 336,
+            "out": 725,
+            "total": 1061,
+            "reasoning": 479
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "tubabutik",
+      "query": "Tuba Butik",
+      "note": "women's clothing e-shop (Saker list)",
+      "ms": 20938,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 6,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 6070,
+        "rewritesRejected": 0,
+        "ms": 20938
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Tuba Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check for Tuba Butik in İstanbul returned false",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Tuba Butik",
+                "city": "İstanbul"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Tuba Butik",
+                "city": "İstanbul"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {
+                "name": "Tuba",
+                "display_name": "Tuba, Akdeniz Caddesi, Akdeniz, Akşemsettin Mahallesi, Istanbul, Fatih, Istanbul, Marmara Region, 34080, Turkey",
+                "lat": "41.0187013",
+                "lon": "28.9459685",
+                "osm": "node/5243950769",
+                "phone": null,
+                "website": null,
+                "score": 0.455,
+                "kind": "shop=clothes"
+              },
+              "ms": 84,
+              "at": "2026-10-12T00:44:37.131Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:44:37.131Z",
+          "ownerText": "Your shop doesn’t appear on maps that many apps use."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Tuba Butik; it shows up only on listings and platforms.",
+          "rationale": "business.ownSite is false and web.own_site_found did not confirm a matching site for Tuba Butik in İstanbul",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Tuba Butik",
+                "city": "İstanbul",
+                "query": "Tuba Butik"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Tuba Butik",
+                "city": "İstanbul",
+                "query": "Tuba Butik"
+              },
+              "pass": null,
+              "summary": "Not settled: tubabutik.com uses the name “Tuba Butik” but nothing on it or in search ties it to İstanbul; it may be a namesake",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "tubabutik.com",
+                    "pass": null,
+                    "summary": "tubabutik.com uses the name “Tuba Butik” but nothing on it or in search ties it to İstanbul; it may be a namesake"
+                  },
+                  {
+                    "host": "lonca.co",
+                    "pass": false,
+                    "summary": "lonca.co does not identify “Tuba Butik” (page says “Fill your boutique with unique wholesale clothing from Turkey”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": [
+                  "https://x.com/tubabutikcom?lang=en",
+                  "https://www.facebook.com/butiktuba?locale=tr_TR",
+                  "https://www.sikayetvar.com/tuba-butik",
+                  "https://www.instagram.com/tubaolmez?hl=en",
+                  "https://play.google.com/store/apps/details?id=com.ticimax.androidbase.tubabutik&hl=en_US"
+                ]
+              },
+              "ms": 1836,
+              "at": "2026-10-12T00:44:37.047Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Not settled: tubabutik.com uses the name “Tuba Butik” but nothing on it or in search ties it to İstanbul; it may be a namesake)",
+          "checkedAt": "2026-10-12T00:44:37.047Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business does not appear on OpenStreetMap, a source used by many map applications.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3968,
+          "usage": {
+            "in": 2577,
+            "out": 662,
+            "total": 3239,
+            "reasoning": 542
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4405,
+          "usage": {
+            "in": 837,
+            "out": 747,
+            "total": 1584,
+            "reasoning": 670
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1048,
+          "usage": {
+            "in": 161,
+            "out": 174,
+            "total": 335,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3955,
+          "usage": {
+            "in": 265,
+            "out": 647,
+            "total": 912,
+            "reasoning": 436
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "shout",
+      "query": "Shout",
+      "note": "e-shop (Saker list, archived 11 Oct); very common word, namesake risk",
+      "ms": 19694,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 4,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 5133,
+        "rewritesRejected": 0,
+        "ms": 19694
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Shout; it shows up only on listings and platforms.",
+          "rationale": "No website of its own among 8 search result(s); listings only: https://www.youtube.com/watch?v=nEjLFpU2pJ4, https://www.youtube.com/watch?v=Ye7FKc1JQe4; merriam-webster.com did not load and nothing ties it to the business",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Shout",
+                "city": null,
+                "query": "Shout"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Shout",
+                "city": null,
+                "query": "Shout"
+              },
+              "pass": false,
+              "summary": "No website of its own among 8 search result(s); listings only: https://www.youtube.com/watch?v=nEjLFpU2pJ4, https://www.youtube.com/watch?v=Ye7FKc1JQe4; merriam-webster.com did not load and nothing ties it to the business",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "en.wikipedia.org",
+                    "pass": false,
+                    "summary": "en.wikipedia.org is a page on wikipedia.org, a site that does not carry the business's name, so it is not its own website"
+                  },
+                  {
+                    "host": "merriam-webster.com",
+                    "pass": null,
+                    "summary": "merriam-webster.com did not load and no search result ties it to “Shout”"
+                  },
+                  {
+                    "host": "genius.com",
+                    "pass": false,
+                    "summary": "genius.com does not identify “Shout” (page says “Genius | Song Lyrics & Knowledge”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "dictionary.cambridge.org",
+                    "pass": false,
+                    "summary": "dictionary.cambridge.org is a page on cambridge.org, a site that does not carry the business's name, so it is not its own website"
+                  },
+                  {
+                    "host": "open.spotify.com",
+                    "pass": false,
+                    "summary": "open.spotify.com is a page on spotify.com, a site that does not carry the business's name, so it is not its own website"
+                  }
+                ],
+                "listings": [
+                  "https://www.youtube.com/watch?v=nEjLFpU2pJ4",
+                  "https://www.youtube.com/watch?v=Ye7FKc1JQe4"
+                ]
+              },
+              "ms": 3677,
+              "at": "2026-10-12T00:45:01.811Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:45:01.811Z",
+          "ownerText": "We couldn't find a website for Shout; it only shows up on listings and platforms."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Shout has no owned website and is visible only through listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3274,
+          "usage": {
+            "in": 2212,
+            "out": 456,
+            "total": 2668,
+            "reasoning": 402
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3211,
+          "usage": {
+            "in": 790,
+            "out": 462,
+            "total": 1252,
+            "reasoning": 373
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1160,
+          "usage": {
+            "in": 230,
+            "out": 193,
+            "total": 423,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2859,
+          "usage": {
+            "in": 258,
+            "out": 532,
+            "total": 790,
+            "reasoning": 330
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "loky",
+      "query": "Loky",
+      "note": "e-shop (Saker list); short name, namesake risk",
+      "ms": 18490,
+      "error": null,
+      "grade": "–",
+      "stats": {
+        "proposed": 1,
+        "verified": 0,
+        "dropped": 1,
+        "checksRun": 4,
+        "notChecked": 3,
+        "modelCalls": 3,
+        "tokens": 3575,
+        "rewritesRejected": 0,
+        "ms": 18490
+      },
+      "verified": [],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Loky; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found summary: Not settled: lokyai.com only loosely matches “Loky” (title: “Loky AI - The Unified Agentic Data Infrastructure”); with no city or website given, it may be a namesake",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Loky",
+                "city": null,
+                "query": "Loky"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Loky",
+                "city": null,
+                "query": "Loky"
+              },
+              "pass": null,
+              "summary": "Not settled: lokyai.com only loosely matches “Loky” (title: “Loky AI - The Unified Agentic Data Infrastructure”); with no city or website given, it may be a namesake",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "coingecko.com",
+                    "pass": null,
+                    "summary": "coingecko.com did not load and no search result ties it to “Loky”"
+                  },
+                  {
+                    "host": "lokyai.com",
+                    "pass": null,
+                    "summary": "lokyai.com only loosely matches “Loky” (title: “Loky AI - The Unified Agentic Data Infrastructure”); with no city or website given, it may be a namesake"
+                  },
+                  {
+                    "host": "pypi.org",
+                    "pass": false,
+                    "summary": "pypi.org does not identify “Loky” (page says “PyPI · The Python Package Index”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "open.spotify.com",
+                    "pass": false,
+                    "summary": "open.spotify.com is a page on spotify.com, a site that does not carry the business's name, so it is not its own website"
+                  },
+                  {
+                    "host": "soundcloud.com",
+                    "pass": false,
+                    "summary": "soundcloud.com does not identify “Loky” (page says “Stream and listen to music online for free with SoundCloud”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": [
+                  "https://www.facebook.com/itslokymusic",
+                  "https://www.youtube.com/c/LokyMusic"
+                ]
+              },
+              "ms": 4583,
+              "at": "2026-10-12T00:45:26.064Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Not settled: lokyai.com only loosely matches “Loky” (title: “Loky AI - The Unified Agentic Data Infrastructure”); with no city or website given, it may be a namesake)",
+          "checkedAt": "2026-10-12T00:45:26.064Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2826,
+          "usage": {
+            "in": 1292,
+            "out": 454,
+            "total": 1746,
+            "reasoning": 396
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2950,
+          "usage": {
+            "in": 757,
+            "out": 483,
+            "total": 1240,
+            "reasoning": 410
+          },
+          "outcome": "rejected",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2260,
+          "usage": {
+            "in": 204,
+            "out": 385,
+            "total": 589,
+            "reasoning": 302
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "osepet",
+      "query": "Osepet",
+      "note": "Shopier seller (Saker list): expected no website of its own",
+      "ms": 24652,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6614,
+        "rewritesRejected": 0,
+        "ms": 24652
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "osepet.net loads and shows real content.",
+          "rationale": "http.reachable passed (Loaded with HTTP 200) and dns.resolves passed (osepet.net has 2 address record(s))",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "osepet.net",
+                "name": "Osepet",
+                "city": "Ankara",
+                "query": "Osepet",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://osepet.net/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://osepet.net/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "osepet.net",
+                "name": "Osepet",
+                "city": "Ankara",
+                "query": "Osepet",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "osepet.net names the business (og:site_name: “osepet.net”)",
+              "observed": {
+                "host": "osepet.net",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "osepet.net",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.tiktok.com/@osepet.net",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Osepet/mentions",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Osepet/photos",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.shopier.com/osepetnet",
+                    "how": "a search result about the business names this domain"
+                  }
+                ],
+                "place": "a search result for this site names ankara (https://www.facebook.com/Osepet/mentions)"
+              },
+              "ms": 2457,
+              "at": "2026-10-12T00:45:48.118Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://osepet.net/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://osepet.net/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://osepet.net/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 64,
+              "at": "2026-10-12T00:45:48.182Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://osepet.net/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “osepet.net”)",
+              "observed": {
+                "title": "osepet.net",
+                "marker": null
+              },
+              "ms": 0,
+              "at": "2026-10-12T00:45:48.182Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:45:48.182Z",
+          "ownerText": "Your site is online and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "osepet.net has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed (Certificate expires in 183 day(s) (needs ≥ 30)) and http.https_redirect passed (http:// redirects to https://osepet.net/)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "osepet.net",
+                "name": "Osepet",
+                "city": "Ankara",
+                "query": "Osepet",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "osepet.net",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "osepet.net"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "osepet.net",
+                "name": "Osepet",
+                "city": "Ankara",
+                "query": "Osepet",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "osepet.net names the business (og:site_name: “osepet.net”)",
+              "observed": {
+                "host": "osepet.net",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "osepet.net",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.tiktok.com/@osepet.net",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Osepet/mentions",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Osepet/photos",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.shopier.com/osepetnet",
+                    "how": "a search result about the business names this domain"
+                  }
+                ],
+                "place": "a search result for this site names ankara (https://www.facebook.com/Osepet/mentions)"
+              },
+              "ms": 6,
+              "at": "2026-10-12T00:45:48.188Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "osepet.net",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 183 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2027-04-13T14:15:44.000Z",
+                "daysLeft": 183,
+                "issuer": "GoDaddy.com",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 125,
+              "at": "2026-10-12T00:45:48.313Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "osepet.net"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://osepet.net/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://osepet.net/",
+                    "status": 308
+                  },
+                  {
+                    "url": "https://osepet.net/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://osepet.net/"
+              },
+              "ms": 180,
+              "at": "2026-10-12T00:45:48.493Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:45:48.493Z",
+          "ownerText": "Your site uses a secure connection."
+        },
+        {
+          "id": "no_contact_path",
+          "type": "no_contact_path",
+          "area": "contact",
+          "tone": "issue",
+          "statement": "The homepage has no contact form, email link, tap-to-call or WhatsApp link.",
+          "rationale": "page.contact_path failed (No form, email, phone or WhatsApp contact on the homepage)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "osepet.net",
+                "name": "Osepet",
+                "city": "Ankara",
+                "query": "Osepet",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.contact_path",
+              "params": {
+                "url": "https://osepet.net/"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "osepet.net",
+                "name": "Osepet",
+                "city": "Ankara",
+                "query": "Osepet",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "osepet.net names the business (og:site_name: “osepet.net”)",
+              "observed": {
+                "host": "osepet.net",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "osepet.net",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.tiktok.com/@osepet.net",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Osepet/mentions",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Osepet/photos",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.shopier.com/osepetnet",
+                    "how": "a search result about the business names this domain"
+                  }
+                ],
+                "place": "a search result for this site names ankara (https://www.facebook.com/Osepet/mentions)"
+              },
+              "ms": 5,
+              "at": "2026-10-12T00:45:48.498Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.contact_path",
+              "title": "Visitors can get in touch from the site",
+              "params": {
+                "url": "https://osepet.net/"
+              },
+              "pass": false,
+              "summary": "No form, email, phone or WhatsApp contact on the homepage",
+              "observed": {
+                "form": false,
+                "mailto": false,
+                "tel": false,
+                "whatsapp": false,
+                "email": false,
+                "phone": false
+              },
+              "ms": 1,
+              "at": "2026-10-12T00:45:48.499Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:45:48.499Z",
+          "ownerText": "Your homepage doesn’t have an easy way for customers to contact you."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Osepet is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed (No matching place on OpenStreetMap)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Osepet",
+                "city": "Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Osepet",
+                "city": "Ankara"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 94,
+              "at": "2026-10-12T00:45:48.593Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:45:48.593Z",
+          "ownerText": "Your business isn’t listed on maps that many people use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and serves content over HTTPS.",
+          "cites": [
+            "site_online",
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The homepage currently has no contact form, email link, tap‑to‑call or WhatsApp option.",
+          "cites": [
+            "no_contact_path"
+          ]
+        },
+        {
+          "text": "Osepet is missing from OpenStreetMap, which many map applications rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4611,
+          "usage": {
+            "in": 1308,
+            "out": 811,
+            "total": 2119,
+            "reasoning": 748
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4648,
+          "usage": {
+            "in": 1013,
+            "out": 855,
+            "total": 1868,
+            "reasoning": 683
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3762,
+          "usage": {
+            "in": 402,
+            "out": 885,
+            "total": 1287,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4624,
+          "usage": {
+            "in": 373,
+            "out": 967,
+            "total": 1340,
+            "reasoning": 671
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "modalila",
+      "query": "Modalilacomm",
+      "note": "Shopier seller (Saker list): expected no website of its own",
+      "ms": 18394,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5136,
+        "rewritesRejected": 0,
+        "ms": 18394
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Modalilacomm; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found failed: No website of its own among 9 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null,
+                "query": "Modalilacomm"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null,
+                "query": "Modalilacomm"
+              },
+              "pass": false,
+              "summary": "No website of its own among 9 search result(s)",
+              "observed": {
+                "tried": [],
+                "listings": []
+              },
+              "ms": 1791,
+              "at": "2026-10-12T00:46:12.811Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:46:12.811Z",
+          "ownerText": "We couldn't find a website for Modalilacomm; it only shows up on listings."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Modalilacomm is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Modalilacomm",
+                "city": null
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 84,
+              "at": "2026-10-12T00:46:12.896Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-12T00:46:12.896Z",
+          "ownerText": "Modalilacomm isn’t listed on OpenStreetMap, so it may not appear in some map apps."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The business has no dedicated website, appearing only on third‑party listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "It is not listed on OpenStreetMap, which many navigation apps use.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2952,
+          "usage": {
+            "in": 1712,
+            "out": 410,
+            "total": 2122,
+            "reasoning": 365
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3243,
+          "usage": {
+            "in": 712,
+            "out": 540,
+            "total": 1252,
+            "reasoning": 470
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2638,
+          "usage": {
+            "in": 226,
+            "out": 525,
+            "total": 751,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3843,
+          "usage": {
+            "in": 302,
+            "out": 709,
+            "total": 1011,
+            "reasoning": 478
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

@@ -128,10 +128,14 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 3 | 2026-10-11, after round-2 fixes | 12 new local businesses (venues, hotels, clinics) | 26 | 5 | 21 | 18 | 86% |
 | 4 | 2026-10-12, stress test | 12 new online shops, **bare name only** (no city, no domain) | 27 | 1 | 26 | 12 of 23 checkable | 52% |
 | 5 | 2026-10-12, after round-4 fixes | same 12, bare names | 25 | 3 | 22 | 18 of 20 checkable | **90%** |
+| 6 | 2026-10-12, new discovery search | same 12, bare names | 34 | 4 | 30 | 17 of 24 checkable | 71% |
+| 7 | 2026-10-12, new search + round-6 guards | same 12, bare names | 30 | 4 | 26 | 21 of 21 checkable | **100%** |
 
 Round 3 is the honest test: businesses the earlier fixes were not made for. Its 3 wrong claims came from two causes (a site that answers on http only; a one-word map match of the wrong kind of place), both now fixed with tests.
 
 Round 4 looks for the limits on purpose: one-word names like "Shout" or "Loky" with nothing else. The agent took foreign namesakes (a US TV service, an AI company) for Turkish shops: 7 of its 11 wrong claims. Lesson for users today: add the city or the domain. 4 of its 5 error types are now fixed with tests (a bare name must match exactly, or the address must be the whole name; no map match on a one-word name without a city); see [`docs/accuracy.md`](docs/accuracy.md). Round 5 re-measured the same list after those fixes: 90% (18 of 20 checkable), no foreign namesakes left; where the name alone cannot settle who the business is, the report now says "not settled" instead of guessing.
+
+Rounds 6–7 improved the Tavily discovery search: the plain name (and city) with 10 results finds the business's own site in 8 of 9 cases, against 5 of 9 for "name official website phone" with 5 results, at the same cost of one credit. More sites found also meant more namesakes and placeholder pages (round 6: 71%), so four more guards followed; round 7, same list: 21 of 21 checkable kept claims correct, with more true findings than round 5. We also measured Nemotron 3 Ultra against Super on the planner's decision: with the better search Super was right in 11 of 12, Ultra in 10 of 12, so the planner stays on Super ([`docs/accuracy.md`](docs/accuracy.md)).
 
 ## Setup
 

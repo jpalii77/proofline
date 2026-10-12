@@ -1,12 +1,12 @@
 # Proofline accuracy
 
-**Status: round 5 measured (12 Oct 2026): on the hardest input so far, 12 online shops queried by bare name only (no city, no domain), 90% of the kept claims that could be checked are correct (18 of 20; 2 could not be settled), up from 52% in round 4 on the same list before its fixes. The foreign-namesake errors (7 in round 4) are gone; of the 2 wrong claims left, one is a known limit (a shop whose site has another name) and one (a bare name the planner narrowed to another company) is fixed with a test. Round 3, on businesses queried with their city: 86% (18 of 21).**
+**Status: round 7 measured (12 Oct 2026): on the hardest input, 12 online shops queried by bare name only, 21 of 21 checkable kept claims were correct (5 more could not be settled), with more true findings than before on this list (26 kept, vs 22 in round 5). Two changes got there: a better discovery search (the plain name with 10 Tavily results instead of "name official website phone" with 5: the business's own site appeared in 8 of 9 cases instead of 5 of 9), and four identity guards that round 6 showed the better search needed. Round 3, on businesses typed with their city: 86% (18 of 21).**
 
 ## Method
 
 1. The live agent (Tavily + Nemotron 3 Super on Nebius Token Factory + live checks) runs on a fixed list of 12 real Turkish small businesses: rounds 1–2 on `eval/businesses.json` (mostly online shops); round 3 on a new list, `eval/businesses-2.json` (wedding venues, hotels, dental clinics and a driving school in five cities), so the fixes are tested on businesses they were not made for; round 4 on another new list, `eval/businesses-3.json` (online shops, bare names only), to find the limits.
 2. Every run is saved (`eval/runs/<date>.json`): claims proposed, claims the gate kept, claims it dropped (with reason), model calls.
-3. Each kept claim is re-checked independently, outside Proofline (curl, openssl, the full page HTML, Nominatim, direct domain probes), and marked right or wrong (`eval/verdicts.json` for round 1, `eval/verdicts-r2.json` for round 2, `eval/verdicts-r3.json` for round 3, `eval/verdicts-r4.json` and `eval/verdicts-r5.json` for rounds 4–5; rounds 3–5 also judge every dropped claim). A claim the check cannot settle is marked unverifiable and left out of the percentage.
+3. Each kept claim is re-checked independently, outside Proofline (curl, openssl, the full page HTML, Nominatim, direct domain probes), and marked right or wrong (`eval/verdicts.json` for round 1, `eval/verdicts-r2.json` for round 2, `eval/verdicts-r3.json` for round 3, `eval/verdicts-r4.json` to `eval/verdicts-r7.json` for rounds 4–7; rounds 3–7 also judge every dropped claim). A claim the check cannot settle is marked unverifiable and left out of the percentage.
 4. The table below is filled from those marks only.
 
 ## Results
@@ -18,6 +18,8 @@
 | 3 | 2026-10-11 (new list, after the round-2 fixes) | 12 | 26 | 5 | 21 | 18 | **86%** |
 | 4 | 2026-10-12 (new list, bare names only) | 12 | 27 | 1 | 26 | 12 of 23 checkable (3 unverifiable) | **52%** |
 | 5 | 2026-10-12 (same list, after the round-4 fixes) | 12 | 25 | 3 | 22 | 18 of 20 checkable (2 unverifiable) | **90%** |
+| 6 | 2026-10-12 (same list, new discovery search, before guards) | 12 | 34 | 4 | 30 | 17 of 24 checkable (6 unverifiable) | 71% |
+| 7 | 2026-10-12 (same list, new search + round-6 guards) | 12 | 30 | 4 | 26 | 21 of 21 checkable (5 unverifiable) | **100%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -26,6 +28,12 @@ Round 3 (new businesses): of the 5 dropped claims, 2 deserved it and 3 were true
 Round 4 (bare names): the one dropped claim deserved it (aktiv.com is not Aktifim). 11 kept claims were wrong: 7 about foreign namesakes (Shout → a US TV service and a place in Massachusetts; Loky → an AI company and a village in Madagascar), 2 "no website of its own" for shops that have one, 1 rename read from a title that is just the address, 1 map match on another pet shop with the same two words reversed. The run also missed 5 own sites without making a claim about them (listed in `eval/verdicts-r4.json`).
 
 Round 5 (same list, after the fixes): all 3 dropped claims deserved it (a "no website" for Hilal AV Market, whose site the planner's guessed city kept unsettled; leadiq.com taken for Shout; a "no website" for Loky with lokyai.com only loosely matching). 2 kept claims were wrong: Aktifim's "no website" (its site has another name; known limit) and a map claim about "Shout Outdoor Media", a company the planner narrowed the bare name "Shout" to (fixed after the round: such a guess between namesakes is not used, `tests/round4-identity.test.mjs`). Markapia and Tuba Butik now get their own sites checked: 5 more true findings than in round 4.
+
+Round 6 (new discovery search): the plain-name search found more real own sites (Pet Ankara, Toker Bebe), but also more namesakes and placeholders, and accuracy fell to 71%: the planner turned "Lost Mind" into "Lost Minds" (a games company) and its address then matched; "Shout" was told it has no website; osepet.net ("Yakında Başlatılacak", launching soon) counted as a real site; a template's 212 123 45 67 counted as the business's phone.
+
+Round 7 (same list, with four guards for those): no wrong kept claim (21 of 21 checkable). New true findings: Hilal AV Market's and Tuba Butik's own sites with their certificates, and a listed phone missing from Hilal's site. One true claim was lost on the cautious side (tokerkids.com is Toker Bebe's second site, but with a bare name its title only contains the name). After the round, a page whose only name is its own address no longer settles identity for names under 7 letters, which removes the 3 unverifiable osepet.net claims.
+
+Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
 What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false "no contact path"; Petpal is no longer confused with a US site; Vatkalimon's own site is found by trying the address built from its name; Sakal Kafe Pub is found on the map.
 
@@ -78,3 +86,14 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | Rename read from a page title that is the address itself ("erenhobi.com" vs "Eren Hobi") | 1 | Fixed (12 Oct): a title (or title part) that is the name written as one word, or the address itself, names the business | `tests/round4-identity.test.mjs` |
 | Map match on another shop with the same words reversed, one being the city ("Ankara Pet" for "Pet Ankara") | 1 | Fixed (12 Oct): when the name holds the city word, the map name must carry it in the same order (one may be part of the other) | `tests/round4-identity.test.mjs` |
 | For-sale pages written as "osepet.com for sale" or "Domain for sale" were not recognised as parked | 0 (found while fixing) | Fixed (12 Oct): both forms are parked markers | `tests/round4-identity.test.mjs` |
+
+### Round 6 (same list, new discovery search)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| Bare name: the planner's tidier name ("Lost Minds") and guessed city replaced the typed one, so a namesake's address matched | 4 | Fixed (12 Oct): with only a name typed, identity is checked against that name with no city; the planner's name is shown only if it is the same words, its city is used only for the map | `tests/round6-identity.test.mjs` |
+| "No website of its own" for a one-word common name ("Shout"; the Turkish shop has shout.com.tr) | 1 | Fixed (12 Oct): a single word under 7 letters with nothing else is "not settled"; longer unusual words (Vatkalimon) keep the old rule | `tests/round6-identity.test.mjs` |
+| A Turkish "launching soon" page (osepet.net, "Yakında Başlatılacak") counted as a real site | 1 | Fixed (12 Oct): "yakında başlatılacak / açılacak", "yapım aşamasında", "launching soon", "under construction" are placeholder markers | `tests/round6-identity.test.mjs` |
+| A template's sequential number (212 123 45 67) counted as the business's phone | 1 | Fixed (12 Oct): counting runs and repeated digits prove nothing either way | `tests/round6-identity.test.mjs` |
+| (found in round 7) A page whose only name is its address ("osepet.net") settled identity for a short name | 0 (3 unverifiable) | Fixed (12 Oct): such a title counts like the address itself, only for names of 7+ letters | `tests/round6-identity.test.mjs` |
+| Discovery search missed the business's own site in 4 of 9 cases ("name official website phone", 5 results) | (lost true findings) | Fixed (12 Oct): the plain name and city, 10 results; own site found in 8 of 9 (`scripts/search-variants.mjs`) | `tests/discovery-search.test.mjs` |

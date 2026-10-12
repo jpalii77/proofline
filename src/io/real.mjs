@@ -6,6 +6,8 @@
 // (src/io/net-node.mjs: getaddrinfo, node:tls) and on Cloudflare Workers (src/io/net-worker.mjs:
 // DNS-over-HTTPS, TLS trust from the fetch handshake, expiry from Certificate Transparency).
 
+import { DISCOVERY_RESULTS } from '../checks.mjs';
+
 const UA = 'Proofline/0.1 (+https://github.com/jpalii77/proofline; business profile verifier)';
 const MAX_BODY = 400_000;
 
@@ -138,7 +140,9 @@ export function createRealIO({ net, tavily, nominatimContact = '', fetchImpl = g
 
     async search(query, opts = {}) {
       if (!tavily) return { error: 'Tavily is not configured' };
-      return tavily.search(query, opts);
+      // Discovery reads 10 results (the own site is often not in the top 5); the closure check keeps 5.
+      const { purpose, ...rest } = opts;
+      return tavily.search(query, purpose === 'discover' ? { maxResults: DISCOVERY_RESULTS, ...rest } : rest);
     },
   };
 }

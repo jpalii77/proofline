@@ -228,13 +228,19 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
     planned = null;
     plan = { ...plan, name: null, city: null, phone: null };
   }
+  // With only a name typed (no city, no website), that name is the one fact the user gave. The planner's
+  // tidier name or guessed city can belong to a namesake (round 6: "Lost Mind" became "Lost Minds", a
+  // games company, and its address then matched). So identity is checked against the typed name, with no
+  // city; the planner's name is kept for display only, and its city only for the map lookup.
+  const bareQuery = !!parsed.name && !parsed.city && !parsed.domain;
   const ctx = {
-    name: plan.name || parsed.name || null,
+    name: (bareQuery ? parsed.name : plan.name || parsed.name) || null,
     city: [plan.city, parsed.city].find((c) => c && !looksLikeDomain(c)) || null,
     domain: planned || parsed.domain || null,
     phone: plan.phone || null,
     searchQuery,
   };
+  ctx.identityCity = bareQuery ? null : ctx.city;
   if (ctx.phone && !grounding.phones.includes(phoneKey(ctx.phone))) { guard.push(`phone ${ctx.phone} not seen in search results`); ctx.phone = null; }
   const modelRemoved = guard.length;
   ctx.userGivenDomain = !!(parsed.domain && ctx.domain === parsed.domain);
@@ -242,7 +248,13 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   // city, title-cased. Display only; checks keep using ctx.name.
   ctx.displayName = (parsed.domain && !plan.name)
     ? ctx.domain
-    : displayName({ raw: parsed.name || parsed.raw, planName: plan.name, city: ctx.city, results: discovery.results || [] }) || ctx.name || ctx.domain;
+    : displayName({
+      raw: parsed.name || parsed.raw,
+      // a bare query shows the planner's spelling only when it is the same words ("SHOUT", not "Lost Minds")
+      planName: bareQuery && plan.name && nameTokens(plan.name).join(' ') !== nameTokens(parsed.name).join(' ') ? null : plan.name,
+      city: ctx.city,
+      results: discovery.results || [],
+    }) || ctx.name || ctx.domain;
 
   const planCall = planOut.call;
   const settlePlan = () => {
@@ -267,13 +279,13 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   const observations = [];
   ctx.ownSite = false;
   if (ctx.domain) {
-    const own = await runCheck(gatherIO, 'site.own_site', { host: ctx.domain, name: ctx.name, city: ctx.city, query: searchQuery, userGiven: ctx.userGivenDomain });
+    const own = await runCheck(gatherIO, 'site.own_site', { host: ctx.domain, name: ctx.name, city: ctx.identityCity, query: searchQuery, userGiven: ctx.userGivenDomain });
     observations.push(own);
     if (own.pass === true) ctx.ownSite = true;
     else guard.push(`${own.summary} — website checks skipped`);
   }
   if (!ctx.ownSite && ctx.name) {
-    const found = await runCheck(gatherIO, 'web.own_site_found', { name: ctx.name, city: ctx.city, query: searchQuery });
+    const found = await runCheck(gatherIO, 'web.own_site_found', { name: ctx.name, city: ctx.identityCity, query: searchQuery });
     observations.push(found);
     const alt = found.pass === true ? found.observed.host : null;
     if (alt && alt !== ctx.domain && grounding.domains.includes(alt)) {

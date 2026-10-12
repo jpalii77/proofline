@@ -1,0 +1,558 @@
+{
+  "ultra": "nvidia/Nemotron-3-Ultra-550b-a55b",
+  "super": "nvidia/nemotron-3-super-120b-a12b",
+  "score": {
+    "nvidia/Nemotron-3-Ultra-550b-a55b": {
+      "right": 10,
+      "ms": 34322,
+      "tin": 25516,
+      "tout": 10501,
+      "failed": 0
+    },
+    "nvidia/nemotron-3-super-120b-a12b": {
+      "right": 11,
+      "ms": 41169,
+      "tin": 25516,
+      "tout": 7113,
+      "failed": 0
+    }
+  },
+  "rows": [
+    {
+      "query": "Shout",
+      "expect": [
+        null,
+        "shout.com.tr"
+      ],
+      "note": "bare common name; namesakes abroad (r4: Shout! TV)",
+      "searchError": null,
+      "allowed": [
+        "en.wikipedia.org",
+        "merriam-webster.com",
+        "youtube.com",
+        "genius.com",
+        "open.spotify.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": null,
+          "ok": true,
+          "ms": 1820,
+          "usage": {
+            "in": 2270,
+            "out": 328,
+            "total": 2598,
+            "reasoning": 271
+          },
+          "reasoning": "The query 'Shout' returns only song entries, a dictionary definition, and media links; no small business website or contact information is present."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": null,
+          "ok": true,
+          "ms": 2296,
+          "usage": {
+            "in": 2270,
+            "out": 327,
+            "total": 2597,
+            "reasoning": 272
+          },
+          "reasoning": "Search results refer to the song 'Shout' by various artists and its definition; no indication of a local business named Shout."
+        }
+      }
+    },
+    {
+      "query": "Loky",
+      "expect": [
+        null
+      ],
+      "note": "bare short name; r4 took lokyai.com (an AI company)",
+      "searchError": null,
+      "allowed": [
+        "play.google.com",
+        "no-more-jockeys.fandom.com",
+        "github.com",
+        "coingecko.com",
+        "pypi.org",
+        "open.spotify.com",
+        "stereofox.com",
+        "facebook.com",
+        "youtube.com",
+        "imdb.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": null,
+          "ok": true,
+          "ms": 3521,
+          "usage": {
+            "in": 1310,
+            "out": 1151,
+            "total": 2461,
+            "reasoning": 1077
+          },
+          "reasoning": "The query 'Loky' matches multiple entities; the app 'Loky' on Google Play appears to be a business service, but its own website is not among allowed domains, and no phone number is clearly associated."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": null,
+          "ok": true,
+          "ms": 4045,
+          "usage": {
+            "in": 1310,
+            "out": 693,
+            "total": 2003,
+            "reasoning": 619
+          },
+          "reasoning": "The search results show Loky as an app, library, coin, artist, or media entries, none of which include a distinct business website or phone number. Therefore domain and phone cannot be determined from the allowed lists."
+        }
+      }
+    },
+    {
+      "query": "Hilal AV Market",
+      "expect": [
+        "hilalavmarket.com"
+      ],
+      "note": "own site, title names products (r4/r5)",
+      "searchError": null,
+      "allowed": [
+        "yandex.com",
+        "hilalavmarket.com",
+        "hilalav.com.tr",
+        "instagram.com",
+        "sakaryaavbayi.com",
+        "atakansilah.com",
+        "seherav.com",
+        "robinhood.com",
+        "rocketreach.co",
+        "tracxn.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "hilalavmarket.com",
+          "ok": true,
+          "ms": 5000,
+          "usage": {
+            "in": 2963,
+            "out": 1691,
+            "total": 4654,
+            "reasoning": 1588
+          },
+          "reasoning": "The Yandex Maps listing shows Hilal AV Market in Adana, and the business's own website hilalavmarket.com is listed in the results. The phone number 5347084254 appears on the associated Instagram profile."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "hilalavmarket.com",
+          "ok": true,
+          "ms": 6188,
+          "usage": {
+            "in": 2963,
+            "out": 1154,
+            "total": 4117,
+            "reasoning": 1065
+          },
+          "reasoning": "The search result for hilalavmarket.com shows the business’s own site with privacy policy and references to Hilal AV Market, while the Yandex map is just a listing. The phone number cannot be confirmed from the provided snippets."
+        }
+      }
+    },
+    {
+      "query": "Eren Hobi",
+      "expect": [
+        "erenhobi.com"
+      ],
+      "note": "own site, title is the address (r4/r5)",
+      "searchError": null,
+      "allowed": [
+        "trendyol.com",
+        "eksisozluk.com",
+        "facebook.com",
+        "youtube.com",
+        "instagram.com",
+        "erenhobi.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "erenhobi.com",
+          "ok": true,
+          "ms": 2581,
+          "usage": {
+            "in": 1776,
+            "out": 724,
+            "total": 2500,
+            "reasoning": 629
+          },
+          "reasoning": "The business's own website is erenhobi.com, listed in allowed domains and search results. The phone number 3124470449 appears in the Instagram location result and matches the allowed phone list."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "erenhobi.com",
+          "ok": true,
+          "ms": 2922,
+          "usage": {
+            "in": 1776,
+            "out": 526,
+            "total": 2302,
+            "reasoning": 428
+          },
+          "reasoning": "The business operates its own website erenhobi.com and is described as an Ankara‑based hobby store. Its phone number appears as +90 312 447 04 49 in the Instagram location info."
+        }
+      }
+    },
+    {
+      "query": "Markapia",
+      "expect": [
+        "markapia.com"
+      ],
+      "note": "own site (r5)",
+      "searchError": null,
+      "allowed": [
+        "trendyol.com",
+        "flo.com.tr",
+        "san.ve",
+        "instagram.com",
+        "pazarama.com",
+        "n11.com",
+        "facebook.com",
+        "markapia.com",
+        "hepsiburada.com",
+        "aboutyou.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "markapia.com",
+          "ok": true,
+          "ms": 3065,
+          "usage": {
+            "in": 1944,
+            "out": 964,
+            "total": 2908,
+            "reasoning": 880
+          },
+          "reasoning": "Markapia is a clothing brand with its official website at markapia.com. The allowed phone number 4083509377 is associated with the brand's contact information."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "markapia.com",
+          "ok": true,
+          "ms": 3772,
+          "usage": {
+            "in": 1944,
+            "out": 667,
+            "total": 2611,
+            "reasoning": 598
+          },
+          "reasoning": "The search results show Markapia's own website at markapia.com and a seller entry indicating its base in Istanbul. No phone number for Markapia appears in the results."
+        }
+      }
+    },
+    {
+      "query": "Tuba Butik",
+      "expect": [
+        "tubabutik.com"
+      ],
+      "note": "own site (r5)",
+      "searchError": null,
+      "allowed": [
+        "trendyol.com",
+        "lonca.co",
+        "x.com",
+        "tubabutik.com",
+        "facebook.com",
+        "sikayetvar.com",
+        "instagram.com",
+        "zwankee.com",
+        "yandex.com.tr",
+        "play.google.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "tubabutik.com",
+          "ok": true,
+          "ms": 2614,
+          "usage": {
+            "in": 2745,
+            "out": 813,
+            "total": 3558,
+            "reasoning": 691
+          },
+          "reasoning": "The business's own website tubabutik.com appears in the search results and is an allowed domain. The phone number +905330118822 from a complaint site matches the allowed phone 5330118822, and the location is indicated as Istanbul (Beşiktaş/Şişli)."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "tubabutik.com",
+          "ok": true,
+          "ms": 3162,
+          "usage": {
+            "in": 2745,
+            "out": 569,
+            "total": 3314,
+            "reasoning": 472
+          },
+          "reasoning": "The business's own website appears at tubabutik.com in the search results. The phone number +905330118822 matches the allowed phone 5330118822."
+        }
+      }
+    },
+    {
+      "query": "Toker Bebe",
+      "expect": [
+        "tokerbebe.com"
+      ],
+      "note": "own site, Ankara store (r4 check)",
+      "searchError": null,
+      "allowed": [
+        "wanderlog.com",
+        "linkedin.com",
+        "tokerkids.com",
+        "yandex.com.tr",
+        "rocketreach.co",
+        "cot.com.tr",
+        "mapquest.com",
+        "find-and-update.company-information.service.gov.uk",
+        "trendyol.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "tokerkids.com",
+          "ok": false,
+          "ms": 1919,
+          "usage": {
+            "in": 2628,
+            "out": 456,
+            "total": 3084,
+            "reasoning": 375
+          },
+          "reasoning": "The business Toker Bebe is a baby clothing store located in Ankara, Turkey, with its own website at tokerkids.com shown in the search results. No phone number is available in the allowed list."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "tokerkids.com",
+          "ok": false,
+          "ms": 3082,
+          "usage": {
+            "in": 2628,
+            "out": 498,
+            "total": 3126,
+            "reasoning": 414
+          },
+          "reasoning": "The business operates a dedicated e‑commerce site at tokerkids.com, which appears in the search results as its own storefront. Other allowed domains are listings, maps or marketplaces, not the business’s own website."
+        }
+      }
+    },
+    {
+      "query": "Pet Ankara, Ankara",
+      "expect": [
+        "petankara.com.tr"
+      ],
+      "note": "own site; \"Ankara Pet\" is another shop (r4)",
+      "searchError": null,
+      "allowed": [
+        "wa.me",
+        "yelp.com",
+        "petankara.com.tr",
+        "instagram.com",
+        "petankaramagaza.com",
+        "hangarankara.com",
+        "facebook.com",
+        "epati.ankara.bel.tr"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "petankara.com.tr",
+          "ok": true,
+          "ms": 3216,
+          "usage": {
+            "in": 2286,
+            "out": 1022,
+            "total": 3308,
+            "reasoning": 937
+          },
+          "reasoning": "The business's own website is petankara.com.tr and its primary contact phone is 3122202029 as shown on WhatsApp and Instagram."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "petankara.com.tr",
+          "ok": true,
+          "ms": 2588,
+          "usage": {
+            "in": 2286,
+            "out": 436,
+            "total": 2722,
+            "reasoning": 351
+          },
+          "reasoning": "The business's own website appears in results as petankara.com.tr, and the WhatsApp listing provides the phone number 3122202029."
+        }
+      }
+    },
+    {
+      "query": "Osepet",
+      "expect": [
+        null
+      ],
+      "note": "Shopier seller; osepet.com is a for-sale page (r4/r5)",
+      "searchError": null,
+      "allowed": [
+        "tiktok.com",
+        "osepet.net",
+        "cl.pinterest.com",
+        "facebook.com",
+        "instagram.com",
+        "ecuadorpapers.org",
+        "shopier.com",
+        "drugs.com",
+        "ozempic.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "osepet.net",
+          "ok": false,
+          "ms": 4210,
+          "usage": {
+            "in": 1356,
+            "out": 1375,
+            "total": 2731,
+            "reasoning": 1304
+          },
+          "reasoning": "The business is referenced as Osepet.net on social media with a mention of Ankara. The domain osepet.net appears in result titles and is listed in allowed domains."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": null,
+          "ok": true,
+          "ms": 5095,
+          "usage": {
+            "in": 1356,
+            "out": 859,
+            "total": 2215,
+            "reasoning": 789
+          },
+          "reasoning": "No result shows osepet.net as a URL or plain text address; all links point to social media or platform pages. Therefore the business's own website domain cannot be determined from the provided data."
+        }
+      }
+    },
+    {
+      "query": "Santral Ankara Diş, Ankara",
+      "expect": [
+        "santralankara.com"
+      ],
+      "note": "dental clinic (r3)",
+      "searchError": null,
+      "allowed": [
+        "santralankara.com",
+        "santralkids.com.tr",
+        "disciler.net",
+        "facebook.com",
+        "yandex.com.tr",
+        "instagram.com",
+        "sikayetvar.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "santralankara.com",
+          "ok": true,
+          "ms": 1636,
+          "usage": {
+            "in": 2335,
+            "out": 518,
+            "total": 2853,
+            "reasoning": 408
+          },
+          "reasoning": "The official website santralankara.com appears in multiple results as the business's own site, and the landline 0312 346 00 46 (3123460046) is listed as the primary contact number."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "santralankara.com",
+          "ok": true,
+          "ms": 2995,
+          "usage": {
+            "in": 2335,
+            "out": 556,
+            "total": 2891,
+            "reasoning": 462
+          },
+          "reasoning": "The search results show the clinic’s main site at santralankara.com with contact phone 0312 346 00 46. This matches the allowed domain and phone."
+        }
+      }
+    },
+    {
+      "query": "Sunset Boutique Hotel, Antalya",
+      "expect": [
+        "sunsetboutiquehotel.com"
+      ],
+      "note": "http-only site (r3)",
+      "searchError": null,
+      "allowed": [
+        "vacationrenter.com",
+        "airbnb.com",
+        "agoda.com",
+        "sunsetboutiquehotel.com",
+        "hotels.com",
+        "booking.com",
+        "expedia.com",
+        "tripadvisor.com",
+        "instagram.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": "sunsetboutiquehotel.com",
+          "ok": true,
+          "ms": 2371,
+          "usage": {
+            "in": 2082,
+            "out": 745,
+            "total": 2827,
+            "reasoning": 620
+          },
+          "reasoning": "The business's official website is sunsetboutiquehotel.com, which lists phone numbers +90 242 825 72 56 and +90 537 927 40 29; the first matches allowed phone 2428257256."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": "sunsetboutiquehotel.com",
+          "ok": true,
+          "ms": 2293,
+          "usage": {
+            "in": 2082,
+            "out": 369,
+            "total": 2451,
+            "reasoning": 289
+          },
+          "reasoning": "The hotel's own website appears in results with domain sunsetboutiquehotel.com and lists phone numbers matching the allowed list."
+        }
+      }
+    },
+    {
+      "query": "Pelops Boutique Otel, Ankara",
+      "expect": [
+        null
+      ],
+      "note": "booking sites only (r3)",
+      "searchError": null,
+      "allowed": [
+        "etstur.com",
+        "obilet.com",
+        "trivago.com.tr",
+        "agoda.com",
+        "tripadvisor.com",
+        "tj.ubfly.com",
+        "enuygun.com",
+        "otelz.com",
+        "google.com.tr",
+        "instagram.com"
+      ],
+      "answers": {
+        "nvidia/Nemotron-3-Ultra-550b-a55b": {
+          "domain": null,
+          "ok": true,
+          "ms": 2369,
+          "usage": {
+            "in": 1821,
+            "out": 714,
+            "total": 2535,
+            "reasoning": 620
+          },
+          "reasoning": "No official website domain for the hotel appears in the allowed list; only booking platforms and social media are present. The phone number 5380856999 matches the contact shown on the hotel's Instagram profile."
+        },
+        "nvidia/nemotron-3-super-120b-a12b": {
+          "domain": null,
+          "ok": true,
+          "ms": 2731,
+          "usage": {
+            "in": 1821,
+            "out": 459,
+            "total": 2280,
+            "reasoning": 372
+          },
+          "reasoning": "The search results show only aggregator and listing sites; none appear to be the hotel's own website, so domain is null. The phone number appears in the Instagram result and matches the allowed list."
+        }
+      }
+    }
+  ]
+}

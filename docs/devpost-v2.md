@@ -30,7 +30,7 @@ Every step streams to the page as a live trace. Every claim has a **Re-run proof
 
 The public demo opens with four recorded, fictional examples (instant, free) and a capped live mode that calls Tavily and Nemotron for real. The examples replay **real Nemotron answers**, recorded once on Token Factory in English and Turkish with their model ids, tokens and latency; the panel labels them "recorded, no new tokens", and the gate and the other code checks run again on every replay. The whole report follows the visitor's language, **English or Turkish**: Nemotron writes the owner lines, summary and pitch in that language, and the page shows the fixed wording (checks, claim sentences, drop reasons) in it too. An optional four-step **"How it works" tour** explains the page to a first-time visitor.
 
-**Measured, not claimed:** five rounds on 36 real businesses, every kept claim checked by hand outside Proofline. On 12 local businesses it had never seen (round 3), **86% of the claims the gate kept were correct** (18 of 21). On a stress test of 12 online shops typed by bare name only, it started at 52% (round 4); after fixing what that round exposed, **90%** (round 5, 18 of 20 checkable). See Accuracy below.
+**Measured, not claimed:** seven rounds on 36 real businesses, every kept claim checked by hand outside Proofline. On 12 local businesses it had never seen (round 3), **86% of the claims the gate kept were correct** (18 of 21). On a stress test of 12 online shops typed by bare name only, it started at 52% (round 4); after fixing what each round exposed, and a better Tavily discovery search, **21 of 21** checkable kept claims were correct in round 7, with more true findings than before. See Accuracy below.
 
 ## How we built it
 
@@ -41,7 +41,7 @@ The public demo opens with four recorded, fictional examples (instant, free) and
   - **Nemotron 3 Nano** (`nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`, fast tier): plain-language rewrites, checked by `numbersGrounded` in `src/agent/pipeline.mjs`.
   - Token counts come from the API's `usage` field (`parseUsage`); a missing field is shown as unknown, never estimated.
 - **Tavily** (`src/tavily.mjs`, `POST /search` at runtime):
-  1. discovery: the only source the planner may take a domain or phone from;
+  1. discovery: the only source the planner may take a domain or phone from. The query is the plain name and city with 10 results: measured on 12 businesses, it surfaces the business's own site in 8 of 9 cases, against 5 of 9 for "name official website phone" with 5 results, at the same one credit (`scripts/search-variants.mjs`);
   2. own-site identity: the same results decide whether a domain is really the business's own website or whether it only has listings;
   3. closure check: `"<name>" <city> permanently closed`, counted only if the same result names the business.
   The gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
@@ -49,7 +49,8 @@ The public demo opens with four recorded, fictional examples (instant, free) and
 - **Failure handling:** a failed model call, a time limit or a request limit turns the affected checks into "not checked", never into a finding. Server errors become a plain sentence, never a stack trace.
 - **Interface:** single page, no framework; English and Turkish interface and report (`public/i18n.js`, `public/report-lang.js`), guided tour (`public/tour.js`), phone layout checked at 375 px.
 - **Recorded examples:** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (7 calls each, English and Turkish) and saves every answer with its model id, tokens, latency and output format; the demo replays them (`src/agent/recorded-brain.mjs`). A step with no recording falls back to a rule-based stand-in, named as such.
-- **Tests:** 220 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
+- **Nemotron 3 Ultra, measured before used:** on the planner's hardest decision (which website, if any, belongs to the business) we ran Ultra and Super side by side on the same 12 businesses (`scripts/ultra-compare.mjs`). With the improved search, Super chose right in 11 of 12 and Ultra in 10 of 12, so the planner stays on Super and the credit goes further.
+- **Tests:** 228 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
 
 ## Challenges we ran into
 
@@ -65,6 +66,8 @@ Then we measured instead of guessing. Each kept claim was checked by hand, and e
 
 Round 4 went looking for the limits on purpose: 12 online shops typed by bare name only, no city, no domain. It scored 52%. Typed as just "Shout" or "Loky", the agent took a US streaming service, an AI company, a place in Massachusetts and a village in Madagascar for Turkish shops (7 of its 11 wrong claims). The fix was again in the evidence, not the prompt: with a bare name, a site must name exactly the business or its address must be the whole name ("Shout! TV" and "Loky AI" are possible namesakes, so the report says "not settled"); a one-word name found on the map with no city is not tied to the business; "Ankara Pet" is not "Pet Ankara". Round 5, same list: 90%, no foreign namesakes left.
 
+Then we found the bigger lever was not the model but the search. For 6 of the 9 businesses with a known site, that site was simply not among Tavily's 5 results for "name official website phone" in our comparison run, so no model could have picked it. The plain name with 10 results found it in 8 of 9 cases, at the same cost. Finding more sites also brought more namesakes and "launching soon" pages (round 6 fell to 71%), so four more guards followed: with only a name typed, identity is checked against that name, not the planner's tidier one ("Lost Mind" had become "Lost Minds", a games company); one common word is never told "no website of its own"; Turkish placeholder pages ("Yakında Başlatılacak") are recognised; a template's 212 123 45 67 is not a phone. Round 7, same list: 21 of 21 checkable kept claims correct.
+
 Recording real Nemotron answers for the examples also caught a live bug: the Nano rewrite spent most of its 1,200-token budget thinking and returned nothing in 2 of 4 Turkish runs. The budgets are now set per call, with a test.
 
 Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS certificate API, so DNS uses DNS-over-HTTPS and certificate expiry comes from Certificate Transparency logs, behind a small adapter. Live search had to be rate-limited to protect a small trial credit. And the page had to make sense to someone who has never heard of a "proof gate", which led to the guided tour and plain error messages.
@@ -76,7 +79,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - Fixes for real failures went into the evidence and the gate, not into a longer prompt, and each one has a regression test.
 - Accuracy is measured on real businesses and published with every verdict, including the claims it got wrong.
 - Every Nemotron call is accounted for on screen: tokens, latency and what code did with the answer, also in the free examples, which replay real recorded Nemotron answers.
-- A stress test that went badly (52%) was published, fixed and re-measured (90%), not hidden.
+- A stress test that went badly (52%) was published, fixed and re-measured until no kept claim was wrong (round 7), not hidden; so was the round in between that got worse (71%).
 - It runs end to end with zero dependencies, locally or on a free Workers plan.
 
 ## What we learned
@@ -85,6 +88,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - Provenance matters as much as correctness: a value the model only invented should not reach a check at all.
 - Splitting work between a reasoning model (Super) and a small fast model (Nano) works well when the small model's output is checked by a simple rule.
 - The hardest input is the shortest one. A bare name is ambiguous, and the honest answer is sometimes "not settled" rather than a guess.
+- Measure the inputs before blaming the model: a better search query did more than a 550B model.
 
 ## Accuracy
 
@@ -97,15 +101,17 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 3 (11 Oct, after fixes) | 12 new local businesses: venues, hotels, clinics | 26 | 5 | 21 | 18 | 86% |
 | 4 (12 Oct, stress test) | 12 new online shops, bare name only | 27 | 1 | 26 | 12 of 23 checkable | 52% |
 | 5 (12 Oct, after fixes) | same 12, bare names | 25 | 3 | 22 | 18 of 20 checkable | 90% |
+| 6 (12 Oct, new search) | same 12, bare names | 34 | 4 | 30 | 17 of 24 checkable | 71% |
+| 7 (12 Oct, new search + guards) | same 12, bare names | 30 | 4 | 26 | 21 of 21 checkable | 100% |
 
-Round 3 is the honest number for normal input (name and city): businesses the earlier fixes were not made for. Rounds 4–5 are the stress test (bare names). A claim the check could not settle is left out of the percentage and listed. Of round 5's 2 wrong claims, one is a known limit (a shop whose website has a different name, which nothing in the name leads to) and one is fixed with a test. The method, every verdict and every error are in `docs/accuracy.md`.
+Round 3 is the honest number for normal input (name and city): businesses the earlier fixes were not made for. Rounds 4–7 are the stress test (bare names) on one list, so they show the effect of each change, not a fresh sample. A claim the check could not settle is left out of the percentage and listed. The method, every verdict and every error are in `docs/accuracy.md`.
 
 ## What's next
 
 - Recognise a business listed on the map under an older name, by comparing the map entry's phone or website with the site's (round 3's one unfixed error).
 - Find a shop whose website has another name, through the links on its Instagram or marketplace page (round 5's known limit).
 - More Tavily signals: relocation / "moved", and a dedicated identity-verification search.
-- Nemotron 3 Ultra for the hardest planning decisions, if credit allows.
+- A fresh accuracy round on businesses none of the fixes were made for, with mixed input (name and city, bare name, domain).
 - Batch mode for a seller's lead list.
 
 ## What was built during the hackathon

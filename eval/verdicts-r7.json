@@ -1,0 +1,28 @@
+{
+  "run": "eval/runs/2026-10-12-r7.json",
+  "list": "eval/businesses-3.json (same bare-name list as rounds 4-6), after the round-6 fixes: identity checked against the typed name with no guessed city, one common word never 'no website', Turkish 'launching soon' pages are placeholders, placeholder phone numbers prove nothing",
+  "checkedBy": "Independent re-check on 2026-10-12: curl and page text, openssl s_client, http redirect probes, phone numbers on the homepage, earlier rounds' checks and the prospect list's records.",
+  "summary": { "kept": 26, "right": 21, "wrong": 0, "unverifiable": 5, "dropped": 4 },
+  "verdicts": {
+    "hilalav": { "site_online": "right (hilalavmarket.com, now found by the plain-name search)", "https_healthy": "right (ends 31 Dec 2026 = 80 days; http to https)", "phone_unconfirmed": "right as stated (0534 708 42 54 from listings is not on the site; it shows 0507 246 18 36 and 0545 501 96 96)", "not_on_map": "right" },
+    "erenhobi": { "site_online": "right", "https_healthy": "right", "phone_unconfirmed": "right as stated", "not_on_map": "right" },
+    "petankara": { "site_online": "right", "https_healthy": "right (ends 23 Nov 2026)", "not_on_map": "right" },
+    "aktifim": { "not_on_map": "right" },
+    "markapia": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "lostmind": { "not_on_map": "right (about the typed name now, not 'Lost Minds')" },
+    "tokerbebe": { "not_on_map": "right" },
+    "tubabutik": { "site_online": "right (tubabutik.com, now found)", "https_healthy": "right (ends 29 Nov 2026)", "not_on_map": "unverifiable (OSM 'Tuba' clothes shop in Fatih not tied to it)" },
+    "osepet": {
+      "https_healthy": "unverifiable (osepet.net's owner unknown)", "domain_parked": "unverifiable as to owner; the page is indeed a 'Yakında Başlatılacak' placeholder", "no_contact_path": "unverifiable (placeholder page)", "not_on_map": "right",
+      "note": "After this round, a page whose only name is its own address no longer settles identity for names under 7 letters (tests/round6-identity.test.mjs), so these 3 claims are no longer made"
+    },
+    "modalila": { "no_own_website": "unverifiable (as in rounds 4-6)", "not_on_map": "right" }
+  },
+  "dropped": {
+    "hilalav": { "possibly_renamed": "rightly dropped (no rename)" },
+    "tokerbebe": { "site_online": "true claim lost: tokerkids.com is Toker Bebe's Çayyolu site, but its title only contains the name, so with a bare name it is 'may be a namesake' (the cautious outcome)" },
+    "shout": { "no_own_website": "rightly dropped (shout.com.tr exists)" },
+    "osepet": { "site_online": "rightly dropped (placeholder page)" }
+  },
+  "comparison": "Same 12 businesses: round 5 (old search) 18 of 20 checkable right, 20 kept; round 6 (new search, before fixes) 17 of 24; round 7 (new search + fixes) 21 of 21 checkable right, 26 kept. More true findings and no wrong kept claim."
+}
