@@ -1,0 +1,14 @@
+[
+  { "id": "nuuwears", "query": "NuuWears, nuuwears.com", "note": "modest-wear e-shop on ikas (Saker list, 8 Oct); name + domain; a healthy case" },
+  { "id": "cosmetica", "query": "Cosmetica, cosmetica.com.tr", "note": "cosmetics e-shop (Saker list, 8 Oct); generic word made safe by the typed domain" },
+  { "id": "antakia", "query": "Antakia Artisan, Antakya", "note": "natural soap maker (Saker list, 8 Oct); name + city; own site antakiaartisan.com (title says only 'Antakia')" },
+  { "id": "zens", "query": "Zens Butik, Bergama", "note": "clothing shop selling on Shopier (Saker list, 8 Oct); name + city; expected: no website of its own, a shop on Yandex Maps" },
+  { "id": "anafarta", "query": "Anafarta", "note": "tactical gear e-shop, anafarta.com.tr (Saker list, 8 Oct); name only; also a place name (namesake risk)" },
+  { "id": "ildirella", "query": "İldirella Butik", "note": "modest-wear shop (Saker list, 8 Oct); name only; own site ildirella.com and a Shopier store" },
+  { "id": "lahza", "query": "Lahza Butik", "note": "women's clothing (Saker list, 8 Oct); name only; own site spelled differently: lahzaabutik.com" },
+  { "id": "dp", "query": "D&P Perfumum", "note": "perfume e-shop (Saker list, archived 11 Oct); name only; '&' in the name" },
+  { "id": "krn", "query": "KRN Tesettür", "note": "Shopier seller (Saker list, 8 Oct); name only; expected: no website of its own" },
+  { "id": "munzur", "query": "Munzur Butik", "note": "Shopier seller (Saker list, 8 Oct); name only; Munzur is also a river and a university (namesake risk); expected: no website of its own" },
+  { "id": "ahit", "query": "Ahit Tesettür", "note": "Shopier seller (Saker list, 8 Oct); name only; expected: no website of its own" },
+  { "id": "cakil", "query": "Çakıl Butik", "note": "Shopier seller (Saker list, 8 Oct); name only; 'çakıl' is a common word; expected: no website of its own" }
+]

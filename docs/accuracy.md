@@ -1,6 +1,6 @@
 # Proofline accuracy
 
-**Status: round 7 measured (12 Oct 2026): on the hardest input, 12 online shops queried by bare name only, 21 of 21 checkable kept claims were correct (5 more could not be settled), with more true findings than before on this list (26 kept, vs 22 in round 5). Two changes got there: a better discovery search (the plain name with 10 Tavily results instead of "name official website phone" with 5: the business's own site appeared in 8 of 9 cases instead of 5 of 9), and four identity guards that round 6 showed the better search needed. Round 3, on businesses typed with their city: 86% (18 of 21).**
+**Status: round 8 measured (12 Oct 2026): on 12 businesses never seen before, with mixed input, 21 of 23 kept claims were correct (91%); see Round 8 below. Round 7 (12 Oct 2026): on the hardest input, 12 online shops queried by bare name only, 21 of 21 checkable kept claims were correct (5 more could not be settled), with more true findings than before on this list (26 kept, vs 22 in round 5). Two changes got there: a better discovery search (the plain name with 10 Tavily results instead of "name official website phone" with 5: the business's own site appeared in 8 of 9 cases instead of 5 of 9), and four identity guards that round 6 showed the better search needed. Round 3, on businesses typed with their city: 86% (18 of 21).**
 
 ## Method
 
@@ -20,6 +20,7 @@
 | 5 | 2026-10-12 (same list, after the round-4 fixes) | 12 | 25 | 3 | 22 | 18 of 20 checkable (2 unverifiable) | **90%** |
 | 6 | 2026-10-12 (same list, new discovery search, before guards) | 12 | 34 | 4 | 30 | 17 of 24 checkable (6 unverifiable) | 71% |
 | 7 | 2026-10-12 (same list, new search + round-6 guards) | 12 | 30 | 4 | 26 | 21 of 21 checkable (5 unverifiable) | **100%** |
+| 8 | 2026-10-12 (fresh list, mixed input, no fixes in between) | 12 | 24 | 1 | 23 | 21 of 23 | **91%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -32,6 +33,8 @@ Round 5 (same list, after the fixes): all 3 dropped claims deserved it (a "no we
 Round 6 (new discovery search): the plain-name search found more real own sites (Pet Ankara, Toker Bebe), but also more namesakes and placeholders, and accuracy fell to 71%: the planner turned "Lost Mind" into "Lost Minds" (a games company) and its address then matched; "Shout" was told it has no website; osepet.net ("Yakında Başlatılacak", launching soon) counted as a real site; a template's 212 123 45 67 counted as the business's phone.
 
 Round 7 (same list, with four guards for those): no wrong kept claim (21 of 21 checkable). New true findings: Hilal AV Market's and Tuba Butik's own sites with their certificates, and a listed phone missing from Hilal's site. One true claim was lost on the cautious side (tokerkids.com is Toker Bebe's second site, but with a bare name its title only contains the name). After the round, a page whose only name is its own address no longer settles identity for names under 7 letters, which removes the 3 unverifiable osepet.net claims.
+
+Round 8 (`eval/businesses-4.json`, 12 businesses never measured before, `eval/verdicts-r8.json`): rounds 4–7 re-ran one list, so its 100% could mean the fixes only fit those shops. On fresh businesses with mixed input (2 name + domain, 2 name + city, 8 bare names), 21 of 23 kept claims were right (91%), every one checkable; no foreign namesake was taken and all five Shopier-only sellers were correctly told they have no website of their own. The one dropped claim deserved it. 2 wrong: Lahza Butik was told it has no website, but its shop is lahzaabutik.com (the address doubles the a); D&P Perfumum was told it is missing from OpenStreetMap, but it is listed in Ümraniye: for a bare name the planner guessed the city "Köln" and the map search used it. Three own sites were missed without a claim (dpperfumum.com.tr, lahzaabutik.com, antakiaartisan.com).
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
@@ -97,3 +100,12 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | A template's sequential number (212 123 45 67) counted as the business's phone | 1 | Fixed (12 Oct): counting runs and repeated digits prove nothing either way | `tests/round6-identity.test.mjs` |
 | (found in round 7) A page whose only name is its address ("osepet.net") settled identity for a short name | 0 (3 unverifiable) | Fixed (12 Oct): such a title counts like the address itself, only for names of 7+ letters | `tests/round6-identity.test.mjs` |
 | Discovery search missed the business's own site in 4 of 9 cases ("name official website phone", 5 results) | (lost true findings) | Fixed (12 Oct): the plain name and city, 10 results; own site found in 8 of 9 (`scripts/search-variants.mjs`) | `tests/discovery-search.test.mjs` |
+
+### Round 8 (fresh list of 12, mixed input)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| For a bare name the planner guessed a city ("Köln" for D&P Perfumum, an Istanbul shop) and the map search used it, so "missing from OpenStreetMap" was kept | 1 (not_on_map) | Planned: a city the user did not type never narrows a map search that can end in "not on the map" | — |
+| "No website" while the shop's address spells the name with a doubled letter (lahzaabutik.com for Lahza Butik) | 1 (no_own_website) | Planned: before "no website", try the search again with "site" / the name + ".com" and accept an address whose page names the business exactly | — |
+| Own site missed: the name-built guess kept the "&" (dpperfumum.com.tr for D&P Perfumum) | 0 (true finding lost) | Planned: drop "&" and similar marks when building the address from the name | — |
+| Own site left unsettled: the typed city is Antakya, the brand on the page says "Antakia" | 0 (true finding lost) | Known limit for now | — |

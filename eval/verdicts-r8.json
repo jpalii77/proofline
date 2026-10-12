@@ -1,0 +1,28 @@
+{
+  "run": "eval/runs/2026-10-12-r8.json",
+  "list": "eval/businesses-4.json: 12 businesses never measured before (Saker list, 8 Oct), mixed input: 2 name + domain, 2 name + city, 8 bare names. First round on fresh businesses since the round-4 to round-7 fixes.",
+  "checkedBy": "Independent re-check on 2026-10-12: curl and page text, openssl s_client (certificate end dates), http-to-https probes, dig for name-built domains, Nominatim (OpenStreetMap) name search in Turkey, the prospect list's 8 Oct records.",
+  "summary": { "kept": 23, "right": 21, "wrong": 2, "unverifiable": 0, "dropped": 1 },
+  "verdicts": {
+    "nuuwears": { "site_online": "right", "https_healthy": "right (ends 9 Jan 2027; http to https)", "not_on_map": "right (no OSM match)" },
+    "cosmetica": { "site_online": "right (typed domain)", "https_healthy": "right (ends 21 Dec 2026; http to https)" },
+    "antakia": { "not_on_map": "right (no OSM match for 'Antakia Artisan')" },
+    "zens": { "no_own_website": "right (zensbutik.com/.com.tr, zensbutikgiyim.com have no DNS; Shopier and Yandex Maps only)", "not_on_map": "right (on Yandex Maps, not on OSM)" },
+    "anafarta": { "site_online": "right (anafarta.com.tr is the listed tactical-gear shop)", "https_healthy": "right (ends 14 Nov 2026 = 33 days; http to https)" },
+    "ildirella": { "site_online": "right", "https_healthy": "right (ends 18 Dec 2026)", "not_on_map": "right" },
+    "lahza": { "no_own_website": "WRONG: lahzaabutik.com (title 'Lahza', page text 'Lahza Butik', Instagram llahzaaofficial) is its own shop; the address doubles the a, so the name-built guess lahzabutik.com missed it and search did not surface it", "not_on_map": "right (only streets named Lahza)" },
+    "dp": { "not_on_map": "WRONG: OSM has 'D&P perfumum', Alemdag Caddesi, Umraniye, Istanbul. The planner guessed the city 'Köln' for a bare name and the map retry searched 'perfumum, Köln'" },
+    "krn": { "no_own_website": "right (krntesettur.com/.com.tr/.net no DNS; Instagram only)", "not_on_map": "right" },
+    "munzur": { "no_own_website": "right (munzurbutik.com/.com.tr no DNS)", "not_on_map": "right (the planner guessed 'Edremit'; no OSM match without a city either)" },
+    "ahit": { "not_on_map": "right" },
+    "cakil": { "no_own_website": "right (cakilbutik.com/.com.tr no DNS; Shopier store)", "not_on_map": "right (the planner guessed 'Osmaniye'; no OSM match without a city either)" }
+  },
+  "droppedVerdicts": {
+    "antakia": { "no_own_website": "deserved to be dropped: antakiaartisan.com is its own site. A true finding was lost: the site stayed 'not settled' because the typed city Antakya is not on the page (the brand says 'Antakia')" }
+  },
+  "missed": [
+    "dp: own site dpperfumum.com.tr (title 'D&P PERFUMUM') was not found; a name-built guess that drops the '&' would find it",
+    "lahza: own site lahzaabutik.com (see above)",
+    "antakia: own site antakiaartisan.com left unsettled"
+  ]
+}
