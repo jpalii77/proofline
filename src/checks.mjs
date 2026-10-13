@@ -373,7 +373,13 @@ export function foreignParent(host, name) {
 export function obviousDomains(name) {
   const slug = fold(name).replace(/[^a-z0-9]/g, '');
   if (slug.length < 7 || !nameTokens(name).length) return [];
-  return [`${slug}.com`, `${slug}.com.tr`];
+  // Shops often write a word's last letter twice (lahzaabutik.com for "Lahza Butik", round 8 and 11):
+  // one such spelling per word boundary, .com only. labelIsName accepts exactly this one doubling.
+  const words = fold(name).split(' ').map((w) => w.replace(/[^a-z0-9]/g, '')).filter(Boolean);
+  // (two-word names only: "Kamp ve Ötesi" would only add noise)
+  const doubled = words.length !== 2 ? [] : words.slice(0, -1).map((w, i) => [...words.slice(0, i), w + w.slice(-1), ...words.slice(i + 1)].join(''))
+    .filter((d) => d !== slug);
+  return [`${slug}.com`, `${slug}.com.tr`, ...doubled.map((d) => `${d}.com`)];
 }
 
 // Trade words in a name, and the OpenStreetMap kinds ("category=type") such a place can have.

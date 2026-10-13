@@ -22,6 +22,8 @@
 | 7 | 2026-10-12 (same list, new search + round-6 guards) | 12 | 30 | 4 | 26 | 21 of 21 checkable (5 unverifiable) | **100%** |
 | 8 | 2026-10-12 (fresh list, mixed input, no fixes in between) | 12 | 24 | 1 | 23 | 21 of 23 | **91%** |
 | 9 | 2026-10-14 (same list as round 8, after the round-8 fixes) | 12 | 27 | 3 | 24 | 22 of 24 | **92%** |
+| 10 | 2026-10-14 (same list, after the round-9 fixes) | 12 | 26 | 2 | 24 | 23 of 24 | **96%** |
+| 11 | 2026-10-14 (same list, after the round-10 fix) | 12 | 28 | 3 | 25 | 23 of 24 checkable (1 unverifiable) | **96%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -38,6 +40,10 @@ Round 7 (same list, with four guards for those): no wrong kept claim (21 of 21 c
 Round 8 (`eval/businesses-4.json`, 12 businesses never measured before, `eval/verdicts-r8.json`): rounds 4–7 re-ran one list, so its 100% could mean the fixes only fit those shops. On fresh businesses with mixed input (2 name + domain, 2 name + city, 8 bare names), 21 of 23 kept claims were right (91%), every one checkable; no foreign namesake was taken and all five Shopier-only sellers were correctly told they have no website of their own. The one dropped claim deserved it. 2 wrong: Lahza Butik was told it has no website, but its shop is lahzaabutik.com (the address doubles the a); D&P Perfumum was told it is missing from OpenStreetMap, but it is listed in Ümraniye: for a bare name the planner guessed the city "Köln" and the map search used it. Three own sites were missed without a claim (dpperfumum.com.tr, lahzaabutik.com, antakiaartisan.com).
 
 Round 9 (same list as round 8, `eval/verdicts-r9.json`): both round-8 errors are gone: Lahza Butik's own shop lahzaabutik.com is found (3 right claims instead of a false "no website"), and D&P Perfumum is no longer called missing from the map. 22 of 24 kept claims right (92%). One new error, counted twice: for the bare name "D&P Perfumum" the agent took dpperfumum.com.eg, an Egyptian shop of the same name (prices in EGP), as the business's site; the Istanbul shop's own site is dpperfumum.com.tr. Of the 3 dropped claims, 2 deserved it; 1 true finding was lost: an Instagram handle that looks like an address (ahit.tr, no DNS record) kept "no website" from being settled.
+
+Round 10 (same list, `eval/verdicts-r10.json`): the Egyptian namesake is gone and Ahit Tesettür is now rightly told it has no website of its own (ahit.tr, its Instagram handle, has no DNS record). 23 of 24 kept claims right (96%). One wrong: D&P Perfumum's name-built address dpperfumum.com only forwards (over http) to the shop's working site dpperfumum.com.tr, and refuses https; the agent took the forwarding address as the site and said it "does not load". Fixed after the round. Both dropped claims deserved it (antakiaartisan.com, a known limit; ozgecakil.com may be Çakıl Butik's site, which a bare name cannot settle).
+
+Round 11 (same list, `eval/verdicts-r11.json`): D&P Perfumum is now checked on its working site dpperfumum.com.tr (2 right claims instead of a false "does not load"). 23 of 24 checkable kept claims right (96%); Çakıl Butik's "no website" could not be settled (ozgecakil.com, "Özge Çakıl Butik", may or may not be the same shop). One wrong, and a lesson: Lahza Butik was again told it has no website, because the second search, which had found lahzaabutik.com in rounds 9 and 10, did not return it this time. Search results vary from run to run, so a fix that depends on them is not a fix. After the round the doubled-letter spelling became one of the name-built guesses, which do not depend on search. All 3 dropped claims deserved it.
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
@@ -119,3 +125,15 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | --- | --- | --- | --- |
 | A bare name accepted a foreign country address that spells the whole name (dpperfumum.com.eg, an Egyptian namesake; the shop is dpperfumum.com.tr) | 2 (site_online, https_healthy) | Fixed (14 Oct, not yet re-measured): with no city or website typed, an address under another country's ending (.eg, .de…, not .tr or generic ones such as .io) is a possible namesake, never "theirs"; the search then goes on to the address built from the name (dpperfumum.com.tr) | `tests/round9-identity.test.mjs` |
 | An Instagram handle read as a web address (ahit.tr, no DNS record) and a cut-off Shopier link (shopier.co) left "no website" unsettled | 0 (true finding lost) | Fixed (14 Oct, not yet re-measured): an address read from text with no DNS record is no website; a listed platform under another ending (shopier.co, tripadvisor.ie) is still that platform (names of 6+ letters only); Shopier added to the platform list | `tests/round9-identity.test.mjs` |
+
+### Round 10 (same list, after the round-9 fixes)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| A name-built address that only forwards to the shop's real site (dpperfumum.com → dpperfumum.com.tr, https refused) was taken as the site, so the owner was told "does not load" | 1 (site_unreachable) | Fixed (14 Oct, not yet re-measured): an address whose page ends on another site is not the site; that target is checked and used instead (not a listing platform, never a mere http-to-https or www move) | `tests/round10-identity.test.mjs` |
+
+### Round 11 (same list, after the round-10 fix)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| "No website" for Lahza Butik came back: the second search that had found lahzaabutik.com did not return it this run | 1 (no_own_website) | Fixed (14 Oct, not yet re-measured): for a two-word name the name-built guesses also try the one spelling with a word's last letter written twice (lahzaabutik.com), so it no longer depends on search | `tests/round10-identity.test.mjs` |

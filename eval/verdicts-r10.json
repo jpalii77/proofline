@@ -1,0 +1,27 @@
+{
+  "run": "eval/runs/2026-10-13-r10.json",
+  "list": "eval/businesses-4.json: the round-8 list a third time, after the round-9 fixes (another country's ending is a possible namesake for a bare name, an address with no DNS record is no website, a platform under another ending is still that platform).",
+  "checkedBy": "Independent re-check on 2026-10-14: curl over http and https (redirect targets, titles), dig, Nominatim (OpenStreetMap) name search limited to Turkey; the 20 claims repeated from round 9 were re-checked there the same day (verdicts-r9.json).",
+  "summary": { "kept": 24, "right": 23, "wrong": 1, "unverifiable": 0, "dropped": 2 },
+  "verdicts": {
+    "nuuwears": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "cosmetica": { "site_online": "right", "https_healthy": "right" },
+    "antakia": { "not_on_map": "right" },
+    "zens": { "no_own_website": "right (Yandex Maps and Instagram only; maptons.com pages correctly ruled out)", "not_on_map": "right" },
+    "anafarta": { "site_online": "right", "https_healthy": "right" },
+    "ildirella": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "lahza": { "site_online": "right (lahzaabutik.com)", "https_healthy": "right", "not_on_map": "right" },
+    "dp": { "site_unreachable": "WRONG (misleading): https://dpperfumum.com does refuse connections, but over http the address forwards to the shop's working site dpperfumum.com.tr; the owner was told their website does not load. The Egyptian .com.eg namesake from round 9 is gone" },
+    "krn": { "no_own_website": "right", "not_on_map": "right" },
+    "munzur": { "no_own_website": "right", "not_on_map": "right" },
+    "ahit": { "no_own_website": "right (ahit.tr, the Instagram handle, has no DNS record; Instagram and Shopier only): a true finding round 9 lost", "not_on_map": "right" },
+    "cakil": { "not_on_map": "right" }
+  },
+  "droppedVerdicts": {
+    "antakia": { "no_own_website": "deserved to be dropped (antakiaartisan.com is its own site; known limit)" },
+    "cakil": { "no_own_website": "deserved to be dropped: ozgecakil.com ('Özge Çakıl Butik') may well be this shop; with a bare name nothing settles it either way" }
+  },
+  "newErrors": [
+    "dp: the name-built guess dpperfumum.com answered (http only) by forwarding to dpperfumum.com.tr; the forwarding address was taken as the site. Fixed after the round: an address that forwards to another site is replaced by its target (tests/round10-identity.test.mjs)"
+  ]
+}

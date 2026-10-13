@@ -79,3 +79,21 @@ test('a forward to a listing platform is not taken as the site', async () => {
   const r = await runCheck(fakeIO({ pages, results: ig }), 'web.own_site_found', { name: 'Naramica' });
   assert.notEqual(r.observed.host, 'instagram.com');
 });
+
+// Round 11 (same list): the second search did not bring lahzaabutik.com back, and "no website" returned.
+// Search results vary run to run; the name-built guess does not. It now also tries the name with the last
+// letter of a word written twice (the one spelling labelIsName already accepts).
+test('name-built guesses include one doubled letter at a word end (lahzaabutik.com), nothing for one word', async () => {
+  const { obviousDomains } = await import('../src/checks.mjs');
+  const g = obviousDomains('Lahza Butik');
+  assert.ok(g.includes('lahzabutik.com') && g.includes('lahzaabutik.com'), g.join(', '));
+  assert.deepEqual(obviousDomains('Naramica'), ['naramica.com', 'naramica.com.tr']);
+});
+
+test('own-site search finds lahzaabutik.com with no search help at all', async () => {
+  const pages = { 'https://lahzaabutik.com/': html('Lahza - Kadın Modası', '<p>Lahza Butik</p>') };
+  const results = [{ url: 'https://www.facebook.com/p/LAHZA-BUTIK-1', title: 'LAHZA BUTİK', content: 'Lahza Butik' }];
+  const r = await runCheck(fakeIO({ pages, results }), 'web.own_site_found', { name: 'Lahza Butik' });
+  assert.equal(r.pass, true, r.summary);
+  assert.equal(r.observed.host, 'lahzaabutik.com');
+});

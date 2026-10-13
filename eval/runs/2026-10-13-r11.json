@@ -1,0 +1,3205 @@
+{
+  "day": "2026-10-13",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "nuuwears",
+      "query": "NuuWears, nuuwears.com",
+      "note": "modest-wear e-shop on ikas (Saker list, 8 Oct); name + domain; a healthy case",
+      "ms": 20631,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6358,
+        "rewritesRejected": 0,
+        "ms": 20630
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "nuuwears.com loads and shows real content.",
+          "rationale": "site.own_site passed (user‑provided domain) and http.reachable returned HTTP 200",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "nuuwears.com",
+                "name": "NuuWears",
+                "city": null,
+                "query": "NuuWears",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://nuuwears.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://nuuwears.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "nuuwears.com",
+                "name": "NuuWears",
+                "city": null,
+                "query": "NuuWears",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "nuuwears.com was given by the user as the business's website",
+              "observed": {
+                "host": "nuuwears.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-13T23:40:15.082Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://nuuwears.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://nuuwears.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://nuuwears.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 76,
+              "at": "2026-10-13T23:40:15.158Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://nuuwears.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Modern Kadının Tesettür Giyim Adresi - NuuWears”)",
+              "observed": {
+                "title": "Modern Kadının Tesettür Giyim Adresi - NuuWears",
+                "marker": null
+              },
+              "ms": 48,
+              "at": "2026-10-13T23:40:15.206Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:40:15.206Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "nuuwears.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid shows certificate valid for 87 days (≥30) and http.https_redirect confirms HTTP→HTTPS redirect",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "nuuwears.com",
+                "name": "NuuWears",
+                "city": null,
+                "query": "NuuWears",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "nuuwears.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "nuuwears.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "nuuwears.com",
+                "name": "NuuWears",
+                "city": null,
+                "query": "NuuWears",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "nuuwears.com was given by the user as the business's website",
+              "observed": {
+                "host": "nuuwears.com",
+                "userGiven": true
+              },
+              "ms": 1,
+              "at": "2026-10-13T23:40:15.207Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "nuuwears.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 87 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2027-01-09T05:45:02.000Z",
+                "daysLeft": 87,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 37,
+              "at": "2026-10-13T23:40:15.244Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "nuuwears.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://nuuwears.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://nuuwears.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://nuuwears.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://nuuwears.com/"
+              },
+              "ms": 67,
+              "at": "2026-10-13T23:40:15.311Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:40:15.311Z",
+          "ownerText": "Your site is secure and loads safely."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "NuuWears is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed – no matching place on OpenStreetMap for NuuWears",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "NuuWears",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "NuuWears",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 72,
+              "at": "2026-10-13T23:40:15.383Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:40:15.383Z",
+          "ownerText": "Your business isn’t listed on popular map services."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is healthy with a valid certificate for over 30 days.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "NuuWears is missing from OpenStreetMap, which many map apps rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2659,
+          "usage": {
+            "in": 2016,
+            "out": 390,
+            "total": 2406,
+            "reasoning": 315
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5662,
+          "usage": {
+            "in": 1067,
+            "out": 901,
+            "total": 1968,
+            "reasoning": 783
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3029,
+          "usage": {
+            "in": 341,
+            "out": 556,
+            "total": 897,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4530,
+          "usage": {
+            "in": 348,
+            "out": 739,
+            "total": 1087,
+            "reasoning": 487
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "cosmetica",
+      "query": "Cosmetica, cosmetica.com.tr",
+      "note": "cosmetics e-shop (Saker list, 8 Oct); generic word made safe by the typed domain",
+      "ms": 16990,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 16,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 5793,
+        "rewritesRejected": 0,
+        "ms": 16990
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "cosmetica.com.tr loads and shows real content.",
+          "rationale": "site.own_site passed true and http.reachable passed true indicating the site is online",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "cosmetica.com.tr",
+                "name": "Cosmetica",
+                "city": null,
+                "query": "Cosmetica",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://cosmetica.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://cosmetica.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "cosmetica.com.tr",
+                "name": "Cosmetica",
+                "city": null,
+                "query": "Cosmetica",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "cosmetica.com.tr was given by the user as the business's website",
+              "observed": {
+                "host": "cosmetica.com.tr",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-13T23:40:38.211Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://cosmetica.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.cosmetica.com.tr/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.cosmetica.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://cosmetica.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.cosmetica.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 171,
+              "at": "2026-10-13T23:40:38.382Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://cosmetica.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Cosmetica | Büyük İndirim Fırsatı”)",
+              "observed": {
+                "title": "Cosmetica | Büyük İndirim Fırsatı",
+                "marker": null
+              },
+              "ms": 108,
+              "at": "2026-10-13T23:40:38.490Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:40:38.490Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "cosmetica.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed true (cert valid 68 days) and http.https_redirect passed true indicating HTTPS is healthy",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "cosmetica.com.tr",
+                "name": "Cosmetica",
+                "city": null,
+                "query": "Cosmetica",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "cosmetica.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "cosmetica.com.tr"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "cosmetica.com.tr",
+                "name": "Cosmetica",
+                "city": null,
+                "query": "Cosmetica",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "cosmetica.com.tr was given by the user as the business's website",
+              "observed": {
+                "host": "cosmetica.com.tr",
+                "userGiven": true
+              },
+              "ms": 1,
+              "at": "2026-10-13T23:40:38.491Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "cosmetica.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 68 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-21T16:17:31.000Z",
+                "daysLeft": 68,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 32,
+              "at": "2026-10-13T23:40:38.523Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "cosmetica.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.cosmetica.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://cosmetica.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://cosmetica.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.cosmetica.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.cosmetica.com.tr/"
+              },
+              "ms": 130,
+              "at": "2026-10-13T23:40:38.653Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:40:38.653Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects securely."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads and shows real content, indicating it is accessible to customers.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate, protecting visitor data.",
+          "cites": [
+            "https_healthy"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2315,
+          "usage": {
+            "in": 2123,
+            "out": 343,
+            "total": 2466,
+            "reasoning": 279
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4782,
+          "usage": {
+            "in": 1111,
+            "out": 768,
+            "total": 1879,
+            "reasoning": 688
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 975,
+          "usage": {
+            "in": 297,
+            "out": 183,
+            "total": 480,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4305,
+          "usage": {
+            "in": 303,
+            "out": 665,
+            "total": 968,
+            "reasoning": 446
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "antakia",
+      "query": "Antakia Artisan, Antakya",
+      "note": "natural soap maker (Saker list, 8 Oct); name + city; own site antakiaartisan.com (title says only 'Antakia')",
+      "ms": 20227,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 5584,
+        "rewritesRejected": 0,
+        "ms": 20227
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Antakia Artisan is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: No matching place on OpenStreetMap for Antakia Artisan in Antakya",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Antakia Artisan",
+                "city": "Antakya",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Antakia Artisan",
+                "city": "Antakya",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 72,
+              "at": "2026-10-13T23:41:02.829Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:41:02.829Z",
+          "ownerText": "Your shop isn’t showing up on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Antakia Artisan; it shows up only on listings and platforms.",
+          "rationale": "business.ownSite is false and web.own_site_found did not confirm a site matching the name and city",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Antakia Artisan",
+                "city": "Antakya",
+                "query": "Antakia Artisan Antakya"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Antakia Artisan",
+                "city": "Antakya",
+                "query": "Antakia Artisan Antakya"
+              },
+              "pass": null,
+              "summary": "Not settled: antakiaartisan.com uses the name “Antakia Artisan” but nothing on it or in search ties it to Antakya; it may be a namesake",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "antakiaartisan.com",
+                    "pass": null,
+                    "summary": "antakiaartisan.com uses the name “Antakia Artisan” but nothing on it or in search ties it to Antakya; it may be a namesake",
+                    "guessed": true
+                  }
+                ],
+                "listings": []
+              },
+              "ms": 2656,
+              "at": "2026-10-13T23:41:02.757Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Not settled: antakiaartisan.com uses the name “Antakia Artisan” but nothing on it or in search ties it to Antakya; it may be a namesake)",
+          "checkedAt": "2026-10-13T23:41:02.757Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Antakia Artisan is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2522,
+          "usage": {
+            "in": 2359,
+            "out": 320,
+            "total": 2679,
+            "reasoning": 254
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4572,
+          "usage": {
+            "in": 770,
+            "out": 780,
+            "total": 1550,
+            "reasoning": 696
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1091,
+          "usage": {
+            "in": 161,
+            "out": 252,
+            "total": 413,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4242,
+          "usage": {
+            "in": 268,
+            "out": 674,
+            "total": 942,
+            "reasoning": 454
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "zens",
+      "query": "Zens Butik, Bergama",
+      "note": "clothing shop selling on Shopier (Saker list, 8 Oct); name + city; expected: no website of its own, a shop on Yandex Maps",
+      "ms": 28994,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 4,
+        "verified": 2,
+        "dropped": 2,
+        "checksRun": 12,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 7486,
+        "rewritesRejected": 0,
+        "ms": 28994
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Zens Butik; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: no website of its own among search results",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "query": "Zens Butik Bergama"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "query": "Zens Butik Bergama"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://yandex.ru/maps/org/zens_butik_giyim/26945011629, https://yandex.com.tr/maps/org/zens_butik_giyim/26945011629, https://www.instagram.com/reel/DDFDbn_ImED",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "ca.maptons.com",
+                    "pass": false,
+                    "summary": "ca.maptons.com is a page on maptons.com, a site that does not carry the business's name, so it is not its own website"
+                  }
+                ],
+                "listings": [
+                  "https://yandex.ru/maps/org/zens_butik_giyim/26945011629",
+                  "https://yandex.com.tr/maps/org/zens_butik_giyim/26945011629",
+                  "https://www.instagram.com/reel/DDFDbn_ImED"
+                ]
+              },
+              "ms": 1890,
+              "at": "2026-10-13T23:41:34.171Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:41:34.171Z",
+          "ownerText": "We couldn't find a website for Zens Butik—it shows up only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Zens Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: no matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 112,
+              "at": "2026-10-13T23:41:34.284Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:41:34.285Z",
+          "ownerText": "Zens Butik isn’t listed on OpenStreetMap, so it may not appear in some map apps."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "zenbutik.com loads and shows real content.",
+          "rationale": "site.own_site check shows zenbutik.com resolves (HTTP 200) though content does not match business",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "zenbutik.com",
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "query": "Zens Butik Bergama",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "zenbutik.com",
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "query": "Zens Butik Bergama",
+                "userGiven": false
+              },
+              "pass": false,
+              "summary": "zenbutik.com does not identify “Zens Butik” (page says “NOBITA138: Paten! Link Slot Gacor Minimal Depo 10rb Terbaru 2026”) and no search result ties it to the business",
+              "observed": {
+                "host": "zenbutik.com",
+                "identity": {
+                  "identified": false,
+                  "field": null,
+                  "value": "",
+                  "score": 0
+                },
+                "ties": []
+              },
+              "ms": 2959,
+              "at": "2026-10-13T23:41:32.254Z",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: zenbutik.com is not the business's own website",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: zenbutik.com is not the business's own website",
+              "expect": true,
+              "matched": false
+            }
+          ],
+          "dropReason": "The domain is the business's own website: expected pass, got fail — zenbutik.com does not identify “Zens Butik” (page says “NOBITA138: Paten! Link Slot Gacor Minimal Depo 10rb Terbaru 2026”) and no search result ties it to the business",
+          "checkedAt": "2026-10-13T23:41:32.254Z"
+        },
+        {
+          "id": "domain_parked",
+          "type": "domain_parked",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "zenbutik.com shows a parked, for-sale or placeholder page instead of the business.",
+          "rationale": "site.own_site check shows page contains unrelated gambling/promotional content indicative of a parked domain",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "zenbutik.com",
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "query": "Zens Butik Bergama",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "zenbutik.com",
+                "name": "Zens Butik",
+                "city": "Bergama",
+                "query": "Zens Butik Bergama",
+                "userGiven": false
+              },
+              "pass": false,
+              "summary": "zenbutik.com does not identify “Zens Butik” (page says “NOBITA138: Paten! Link Slot Gacor Minimal Depo 10rb Terbaru 2026”) and no search result ties it to the business",
+              "observed": {
+                "host": "zenbutik.com",
+                "identity": {
+                  "identified": false,
+                  "field": null,
+                  "value": "",
+                  "score": 0
+                },
+                "ties": []
+              },
+              "ms": 27,
+              "at": "2026-10-13T23:41:32.281Z",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: zenbutik.com is not the business's own website",
+              "expect": true,
+              "matched": false
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://zenbutik.com/"
+              },
+              "pass": null,
+              "skipped": true,
+              "summary": "skipped: zenbutik.com is not the business's own website",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "The domain is the business's own website: expected pass, got fail — zenbutik.com does not identify “Zens Butik” (page says “NOBITA138: Paten! Link Slot Gacor Minimal Depo 10rb Terbaru 2026”) and no search result ties it to the business",
+          "checkedAt": "2026-10-13T23:41:32.281Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The business currently has no dedicated website, appearing only on third‑party listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "It is absent from OpenStreetMap, reducing visibility in map‑based searches.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4702,
+          "usage": {
+            "in": 3122,
+            "out": 642,
+            "total": 3764,
+            "reasoning": 541
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5655,
+          "usage": {
+            "in": 945,
+            "out": 924,
+            "total": 1869,
+            "reasoning": 784
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2937,
+          "usage": {
+            "in": 306,
+            "out": 571,
+            "total": 877,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3933,
+          "usage": {
+            "in": 331,
+            "out": 645,
+            "total": 976,
+            "reasoning": 371
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "anafarta",
+      "query": "Anafarta",
+      "note": "tactical gear e-shop, anafarta.com.tr (Saker list, 8 Oct); name only; also a place name (namesake risk)",
+      "ms": 23396,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 16,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 6169,
+        "rewritesRejected": 0,
+        "ms": 23396
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "anafarta.com.tr loads and shows real content.",
+          "rationale": "site.own_site true (domain names business), dns.resolves true, http.reachable true (HTTP 200), http.https_redirect true (http→https), tls.cert_valid true (cert valid ≥30 days), page.not_parked true (real content), page.contact_path true (WhatsApp link found), page.name_match true (site name matches)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "anafarta.com.tr",
+                "name": "Anafarta",
+                "city": null,
+                "query": "Anafarta",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://anafarta.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://anafarta.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "anafarta.com.tr",
+                "name": "Anafarta",
+                "city": null,
+                "query": "Anafarta",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "anafarta.com.tr names the business (address: “anafarta.com.tr”)",
+              "observed": {
+                "host": "anafarta.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "anafarta.com.tr",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2396,
+              "at": "2026-10-13T23:42:03.432Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://anafarta.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://anafarta.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://anafarta.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 49,
+              "at": "2026-10-13T23:42:03.481Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://anafarta.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “ANAFARTA Taktik Özel Görev Gereçleri”)",
+              "observed": {
+                "title": "ANAFARTA Taktik Özel Görev Gereçleri",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-13T23:42:03.482Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:42:03.482Z",
+          "ownerText": "The website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "anafarta.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid true (certificate expires in 31 days ≥30) and http.https_redirect true (HTTP redirects to HTTPS)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "anafarta.com.tr",
+                "name": "Anafarta",
+                "city": null,
+                "query": "Anafarta",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "anafarta.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "anafarta.com.tr"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "anafarta.com.tr",
+                "name": "Anafarta",
+                "city": null,
+                "query": "Anafarta",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "anafarta.com.tr names the business (address: “anafarta.com.tr”)",
+              "observed": {
+                "host": "anafarta.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "anafarta.com.tr",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 3,
+              "at": "2026-10-13T23:42:03.485Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "anafarta.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 31 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-14T21:45:22.000Z",
+                "daysLeft": 31,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 40,
+              "at": "2026-10-13T23:42:03.525Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "anafarta.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://anafarta.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://anafarta.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://anafarta.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://anafarta.com.tr/"
+              },
+              "ms": 97,
+              "at": "2026-10-13T23:42:03.622Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:42:03.622Z",
+          "ownerText": "The site uses a secure HTTPS connection."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads and shows real content, confirming it is online and accessible.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The domain has a valid HTTPS certificate with more than 30 days remaining and redirects visitors to HTTPS, providing a secure browsing experience.",
+          "cites": [
+            "https_healthy"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4106,
+          "usage": {
+            "in": 2147,
+            "out": 583,
+            "total": 2730,
+            "reasoning": 512
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 6888,
+          "usage": {
+            "in": 1074,
+            "out": 999,
+            "total": 2073,
+            "reasoning": 850
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1277,
+          "usage": {
+            "in": 285,
+            "out": 250,
+            "total": 535,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3683,
+          "usage": {
+            "in": 301,
+            "out": 530,
+            "total": 831,
+            "reasoning": 293
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "ildirella",
+      "query": "İldirella Butik",
+      "note": "modest-wear shop (Saker list, 8 Oct); name only; own site ildirella.com and a Shopier store",
+      "ms": 25446,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 7882,
+        "rewritesRejected": 0,
+        "ms": 25446
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "ildirella.com loads and shows real content.",
+          "rationale": "site.own_site passed (ildirella.com names the business), dns.resolved passed, and http.reachable passed (loaded with HTTP 200)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "ildirella.com",
+                "name": "İldirella Butik",
+                "city": null,
+                "query": "İldirella Butik",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://ildirella.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://ildirella.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "ildirella.com",
+                "name": "İldirella Butik",
+                "city": null,
+                "query": "İldirella Butik",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "ildirella.com names the business (og:site_name: “İldirella Butik | Tesettür Giyim, Elbise ve Takım Modelleri”)",
+              "observed": {
+                "host": "ildirella.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "İldirella Butik | Tesettür Giyim, Elbise ve Takım Modelleri",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://ildirella.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 2362,
+              "at": "2026-10-13T23:42:29.065Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://ildirella.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://ildirella.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://ildirella.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 153,
+              "at": "2026-10-13T23:42:29.218Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://ildirella.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “İldirella Butik | Tesettür Giyim, Elbise ve Takım Modelleri”)",
+              "observed": {
+                "title": "İldirella Butik | Tesettür Giyim, Elbise ve Takım Modelleri",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-13T23:42:29.220Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:42:29.220Z",
+          "ownerText": "İldirella Butik’s website is live and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "ildirella.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "http.https_redirect passed (http redirects to https), tls.cert_valid passed (certificate expires in 66 days ≥30), and page.not_parked passed (real content found)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "ildirella.com",
+                "name": "İldirella Butik",
+                "city": null,
+                "query": "İldirella Butik",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "ildirella.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "ildirella.com"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "ildirella.com",
+                "name": "İldirella Butik",
+                "city": null,
+                "query": "İldirella Butik",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "ildirella.com names the business (og:site_name: “İldirella Butik | Tesettür Giyim, Elbise ve Takım Modelleri”)",
+              "observed": {
+                "host": "ildirella.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "İldirella Butik | Tesettür Giyim, Elbise ve Takım Modelleri",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://ildirella.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 12,
+              "at": "2026-10-13T23:42:29.232Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "ildirella.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 66 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-18T23:50:10.000Z",
+                "daysLeft": 66,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 59,
+              "at": "2026-10-13T23:42:29.291Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "ildirella.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://ildirella.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://ildirella.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://ildirella.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://ildirella.com/"
+              },
+              "ms": 144,
+              "at": "2026-10-13T23:42:29.435Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:42:29.435Z",
+          "ownerText": "İldirella Butik’s site uses a secure connection that’s good for visitors."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "İldirella Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false (no matching place on OpenStreetMap for İldirella Butik)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "İldirella Butik",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "İldirella Butik",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 108,
+              "at": "2026-10-13T23:42:29.543Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:42:29.543Z",
+          "ownerText": "İldirella Butik isn’t listed on map apps yet."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and presents real content, confirming a healthy online presence.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The domain uses a valid HTTPS certificate that redirects visitors securely.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "İldirella Butik is missing from OpenStreetMap, which many map apps rely on for local discovery.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4479,
+          "usage": {
+            "in": 3107,
+            "out": 722,
+            "total": 3829,
+            "reasoning": 647
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5286,
+          "usage": {
+            "in": 1112,
+            "out": 718,
+            "total": 1830,
+            "reasoning": 569
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 4782,
+          "usage": {
+            "in": 394,
+            "out": 868,
+            "total": 1262,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3701,
+          "usage": {
+            "in": 353,
+            "out": 608,
+            "total": 961,
+            "reasoning": 326
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "lahza",
+      "query": "Lahza Butik",
+      "note": "women's clothing (Saker list, 8 Oct); name only; own site spelled differently: lahzaabutik.com",
+      "ms": 27432,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 7248,
+        "rewritesRejected": 0,
+        "ms": 27431
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Lahza Butik; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 10 search result(s); listings only: https://www.facebook.com/p/LAHZA-BUT%C4%B0K-100094464079044, https://www.sikayetvar.com/lahza-butik/iptal-edilen-siparisin-1300-tl-iadesi-15-gun-gecikmeli-ve-yaniltici-bilgiyle-oyalandi, https://www.sikayetvar.com/lahza-butik",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Lahza Butik",
+                "city": null,
+                "query": "Lahza Butik"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Lahza Butik",
+                "city": null,
+                "query": "Lahza Butik"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://www.facebook.com/p/LAHZA-BUT%C4%B0K-100094464079044, https://www.sikayetvar.com/lahza-butik/iptal-edilen-siparisin-1300-tl-iadesi-15-gun-gecikmeli-ve-yaniltici-bilgiyle-oyalandi, https://www.sikayetvar.com/lahza-butik",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://www.facebook.com/p/LAHZA-BUT%C4%B0K-100094464079044",
+                  "https://www.sikayetvar.com/lahza-butik/iptal-edilen-siparisin-1300-tl-iadesi-15-gun-gecikmeli-ve-yaniltici-bilgiyle-oyalandi",
+                  "https://www.sikayetvar.com/lahza-butik"
+                ]
+              },
+              "ms": 3972,
+              "at": "2026-10-13T23:43:04.014Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:43:04.014Z",
+          "ownerText": "We couldn't find a website for Lahza Butik; you appear only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Lahza Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Lahza Butik",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Lahza Butik",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 76,
+              "at": "2026-10-13T23:43:04.090Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:43:04.091Z",
+          "ownerText": "Lahza Butik isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The boutique has no dedicated website and relies only on external listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "It is missing from OpenStreetMap, so many map apps do not display its location.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 9250,
+          "usage": {
+            "in": 2812,
+            "out": 1434,
+            "total": 4246,
+            "reasoning": 1352
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3931,
+          "usage": {
+            "in": 855,
+            "out": 599,
+            "total": 1454,
+            "reasoning": 417
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1550,
+          "usage": {
+            "in": 338,
+            "out": 295,
+            "total": 633,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3826,
+          "usage": {
+            "in": 326,
+            "out": 589,
+            "total": 915,
+            "reasoning": 357
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "dp",
+      "query": "D&P Perfumum",
+      "note": "perfume e-shop (Saker list, archived 11 Oct); name only; '&' in the name",
+      "ms": 31236,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 7521,
+        "rewritesRejected": 0,
+        "ms": 31236
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "dpperfumum.com.tr loads and shows real content.",
+          "rationale": "Own website found (web.own_site_found passed true) and domain resolves (dns.resolves passed true) with HTTP 200 (http.reachable passed true)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "dpperfumum.com.tr",
+                "name": "D&P Perfumum",
+                "city": null,
+                "query": "D&P Perfumum",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://dpperfumum.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://dpperfumum.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "dpperfumum.com.tr",
+                "name": "D&P Perfumum",
+                "city": null,
+                "query": "D&P Perfumum",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "dpperfumum.com.tr names the business (address: “dpperfumum.com.tr”)",
+              "observed": {
+                "host": "dpperfumum.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "dpperfumum.com.tr",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2909,
+              "at": "2026-10-13T23:43:39.559Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://dpperfumum.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://dpperfumum.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://dpperfumum.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 42,
+              "at": "2026-10-13T23:43:39.601Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://dpperfumum.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “D&P PERFUMUM”)",
+              "observed": {
+                "title": "D&P PERFUMUM",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-13T23:43:39.603Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:43:39.603Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "dpperfumum.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "HTTP redirects to HTTPS (http.https_redirect passed true) and TLS certificate is valid for 57 days (≥30) (tls.cert_valid passed true)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "dpperfumum.com.tr",
+                "name": "D&P Perfumum",
+                "city": null,
+                "query": "D&P Perfumum",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "dpperfumum.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "dpperfumum.com.tr"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "dpperfumum.com.tr",
+                "name": "D&P Perfumum",
+                "city": null,
+                "query": "D&P Perfumum",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "dpperfumum.com.tr names the business (address: “dpperfumum.com.tr”)",
+              "observed": {
+                "host": "dpperfumum.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "dpperfumum.com.tr",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 4,
+              "at": "2026-10-13T23:43:39.607Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "dpperfumum.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 57 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-10T10:59:55.000Z",
+                "daysLeft": 57,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 39,
+              "at": "2026-10-13T23:43:39.646Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "dpperfumum.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://dpperfumum.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://dpperfumum.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://dpperfumum.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://dpperfumum.com.tr/"
+              },
+              "ms": 83,
+              "at": "2026-10-13T23:43:39.729Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:43:39.729Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects securely."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads and shows real content, confirming it is reachable and functional.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The domain has a valid HTTPS certificate for over 30 days and automatically redirects visitors to a secure connection.",
+          "cites": [
+            "https_healthy"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 10269,
+          "usage": {
+            "in": 2595,
+            "out": 1626,
+            "total": 4221,
+            "reasoning": 1549
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4588,
+          "usage": {
+            "in": 1271,
+            "out": 733,
+            "total": 2004,
+            "reasoning": 625
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1462,
+          "usage": {
+            "in": 301,
+            "out": 253,
+            "total": 554,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3513,
+          "usage": {
+            "in": 318,
+            "out": 424,
+            "total": 742,
+            "reasoning": 242
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "krn",
+      "query": "KRN Tesettür",
+      "note": "Shopier seller (Saker list, 8 Oct); name only; expected: no website of its own",
+      "ms": 24074,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6515,
+        "rewritesRejected": 0,
+        "ms": 24074
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for KRN Tesettür; it shows up only on listings and platforms.",
+          "rationale": "No website of its own among 10 search result(s); listings only: https://www.instagram.com/krntesettur, https://www.instagram.com/popular/krn-tesett%C3%BCr, https://www.shopier.com/krntesettur, https://www.instagram.com/reel/DQrEiXCCM5L",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "KRN Tesettür",
+                "city": null,
+                "query": "KRN Tesettür"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "KRN Tesettür",
+                "city": null,
+                "query": "KRN Tesettür"
+              },
+              "pass": false,
+              "summary": "No website of its own among 9 search result(s); listings only: https://www.instagram.com/krntesettur, https://www.instagram.com/popular/krn-tesett%C3%BCr, https://www.shopier.com/krntesettur, https://www.instagram.com/reel/DQrEiXCCM5L",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://www.instagram.com/krntesettur",
+                  "https://www.instagram.com/popular/krn-tesett%C3%BCr",
+                  "https://www.shopier.com/krntesettur",
+                  "https://www.instagram.com/reel/DQrEiXCCM5L",
+                  "https://www.instagram.com/reel/DUHAaYviLPt",
+                  "https://www.sikayetvar.com/krn-tesettur"
+                ]
+              },
+              "ms": 3177,
+              "at": "2026-10-13T23:44:06.365Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:44:06.365Z",
+          "ownerText": "We couldn't find a website for KRN Tesettür; it appears only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "KRN Tesettür is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "KRN Tesettür",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "KRN Tesettür",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 70,
+              "at": "2026-10-13T23:44:06.435Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:44:06.435Z",
+          "ownerText": "KRN Tesettür isn’t listed on OpenStreetMap, so it may not show up in some map apps."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have a dedicated website; your brand shows up only on external listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business is missing from OpenStreetMap, so many map apps and navigation services cannot display your location.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4980,
+          "usage": {
+            "in": 2640,
+            "out": 725,
+            "total": 3365,
+            "reasoning": 661
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3955,
+          "usage": {
+            "in": 805,
+            "out": 558,
+            "total": 1363,
+            "reasoning": 432
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2369,
+          "usage": {
+            "in": 297,
+            "out": 497,
+            "total": 794,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3987,
+          "usage": {
+            "in": 318,
+            "out": 675,
+            "total": 993,
+            "reasoning": 430
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "munzur",
+      "query": "Munzur Butik",
+      "note": "Shopier seller (Saker list, 8 Oct); name only; Munzur is also a river and a university (namesake risk); expected: no website of its own",
+      "ms": 26928,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6289,
+        "rewritesRejected": 0,
+        "ms": 26927
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Munzur Butik; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned false: no website of its own among search results.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Munzur Butik",
+                "city": null,
+                "query": "Munzur Butik"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Munzur Butik",
+                "city": null,
+                "query": "Munzur Butik"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://www.tripadvisor.ie/Hotel_Review-g1156332-d33440799-Reviews-Munzur_Butik_Otel-Edremit_Turkish_Aegean_Coast.html, https://www.shopier.com/munzurbutik, https://www.sikayetvar.com/munzur-butik, https://www.instagram.com/munzur.butik",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "obilet.com",
+                    "pass": false,
+                    "summary": "obilet.com does not identify “Munzur Butik” (page says “Find and Book Cheap Bus Tickets - obilet.com”) and no search result ties it to the business"
+                  },
+                  {
+                    "host": "vesentur.com",
+                    "pass": false,
+                    "summary": "vesentur.com does not identify “Munzur Butik” (page says “Vesentur | Türkiye'nin Seyahat Acentesi - Bilet, Tur ve Otel Rezervasyonu”) and no search result ties it to the business"
+                  }
+                ],
+                "listings": [
+                  "https://www.tripadvisor.ie/Hotel_Review-g1156332-d33440799-Reviews-Munzur_Butik_Otel-Edremit_Turkish_Aegean_Coast.html",
+                  "https://www.shopier.com/munzurbutik",
+                  "https://www.sikayetvar.com/munzur-butik",
+                  "https://www.instagram.com/munzur.butik",
+                  "https://www.agoda.com/munzur-butik-otel-h65541976/hotel/edremit-tr.html",
+                  "https://www.facebook.com/seydisehirhaber/videos/munzur-butik-yeni-yerinde-siz-de%C4%9Ferli-m%C3%BC%C5%9Fterilerimize-art%C4%B1k-yeni-adresimizde-hiz/28227079190235849"
+                ]
+              },
+              "ms": 4723,
+              "at": "2026-10-13T23:44:37.611Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:44:37.612Z",
+          "ownerText": "We couldn't find a website for your shop; it appears only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Munzur Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: no matching place on OpenStreetMap for Munzur Butik in Seydisehir.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Munzur Butik",
+                "city": "Seydisehir",
+                "cityGuessed": true
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Munzur Butik",
+                "city": "Seydisehir",
+                "cityGuessed": true
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 1126,
+              "at": "2026-10-13T23:44:38.738Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:44:38.738Z",
+          "ownerText": "Your shop isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The shop does not have its own website and is only visible on generic listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Munzur Butik is missing from OpenStreetMap, which many navigation apps rely on to display locations.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 7401,
+          "usage": {
+            "in": 2275,
+            "out": 1247,
+            "total": 3522,
+            "reasoning": 1173
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2985,
+          "usage": {
+            "in": 914,
+            "out": 378,
+            "total": 1292,
+            "reasoning": 296
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1591,
+          "usage": {
+            "in": 328,
+            "out": 292,
+            "total": 620,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3394,
+          "usage": {
+            "in": 320,
+            "out": 535,
+            "total": 855,
+            "reasoning": 272
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "ahit",
+      "query": "Ahit Tesettür",
+      "note": "Shopier seller (Saker list, 8 Oct); name only; expected: no website of its own",
+      "ms": 23583,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5420,
+        "rewritesRejected": 0,
+        "ms": 23583
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Ahit Tesettür; it shows up only on listings and platforms.",
+          "rationale": "No website of its own among 8 search result(s); listings only: Instagram and Shopier links.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Ahit Tesettür",
+                "city": null,
+                "query": "Ahit Tesettür"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Ahit Tesettür",
+                "city": null,
+                "query": "Ahit Tesettür"
+              },
+              "pass": false,
+              "summary": "No website of its own among 8 search result(s); listings only: https://www.instagram.com/ahit.tr, https://www.instagram.com/reel/DUwYjm2jFl5, https://www.instagram.com/p/DRJ03jUDGiR, https://www.shopier.com/ahittesettur",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "ahit.tr",
+                    "pass": false,
+                    "summary": "ahit.tr has no DNS record, so there is no website at that address",
+                    "noDns": true
+                  }
+                ],
+                "listings": [
+                  "https://www.instagram.com/ahit.tr",
+                  "https://www.instagram.com/reel/DUwYjm2jFl5",
+                  "https://www.instagram.com/p/DRJ03jUDGiR",
+                  "https://www.shopier.com/ahittesettur",
+                  "https://www.instagram.com/reel/DZf3BNssjVt"
+                ]
+              },
+              "ms": 3988,
+              "at": "2026-10-13T23:45:05.948Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:45:05.948Z",
+          "ownerText": "We couldn't find a website for Ahit Tesettür; you only see it on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Ahit Tesettür is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place on OpenStreetMap for Ahit Tesettür.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Ahit Tesettür",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Ahit Tesettür",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 76,
+              "at": "2026-10-13T23:45:06.024Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:45:06.024Z",
+          "ownerText": "Ahit Tesettür isn’t listed on OpenStreetMap, so some map apps might not show it."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have an owned website; you appear only on external listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your location is missing from OpenStreetMap, which many navigation apps rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 6169,
+          "usage": {
+            "in": 1710,
+            "out": 969,
+            "total": 2679,
+            "reasoning": 895
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2486,
+          "usage": {
+            "in": 781,
+            "out": 345,
+            "total": 1126,
+            "reasoning": 272
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1823,
+          "usage": {
+            "in": 291,
+            "out": 363,
+            "total": 654,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3464,
+          "usage": {
+            "in": 318,
+            "out": 643,
+            "total": 961,
+            "reasoning": 413
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "cakil",
+      "query": "Çakıl Butik",
+      "note": "Shopier seller (Saker list, 8 Oct); name only; 'çakıl' is a common word; expected: no website of its own",
+      "ms": 24741,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 6,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 6368,
+        "rewritesRejected": 0,
+        "ms": 24741
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Çakıl Butik; it shows up only on listings and platforms.",
+          "rationale": "business.ownSite=false and site.own_site check for ozgecakil.com only loosely matches the name, indicating no confirmed own website",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Çakıl Butik",
+                "city": null,
+                "query": "Çakıl Butik"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Çakıl Butik",
+                "city": null,
+                "query": "Çakıl Butik"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://www.facebook.com/cakillbutik?locale=tr_TR, https://www.instagram.com/explore/locations/104748824849988/cakl-butik, https://www.instagram.com/cakilboutique?hl=en, https://www.instagram.com/reel/DOp9AzfDKeN",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "yerel.infobel.com.tr",
+                    "pass": false,
+                    "summary": "yerel.infobel.com.tr is a page on infobel.com.tr, a site that does not carry the business's name, so it is not its own website"
+                  }
+                ],
+                "listings": [
+                  "https://www.facebook.com/cakillbutik?locale=tr_TR",
+                  "https://www.instagram.com/explore/locations/104748824849988/cakl-butik",
+                  "https://www.instagram.com/cakilboutique?hl=en",
+                  "https://www.instagram.com/reel/DOp9AzfDKeN",
+                  "https://www.facebook.com/cakillbutik/videos/1758594448719567"
+                ]
+              },
+              "ms": 2450,
+              "at": "2026-10-13T23:45:35.478Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:45:35.478Z",
+          "ownerText": "We couldn't find a website for Çakıl Butik; they only appear on social media and listings."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Çakıl Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false, indicating no matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Çakıl Butik",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Çakıl Butik",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 70,
+              "at": "2026-10-13T23:45:35.548Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-13T23:45:35.548Z",
+          "ownerText": "Çakıl Butik isn’t listed on OpenStreetMap, which some map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You don’t have a dedicated website, relying only on external listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business isn’t listed on OpenStreetMap, which many navigation apps use.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 6627,
+          "usage": {
+            "in": 2547,
+            "out": 990,
+            "total": 3537,
+            "reasoning": 910
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3681,
+          "usage": {
+            "in": 872,
+            "out": 540,
+            "total": 1412,
+            "reasoning": 458
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1268,
+          "usage": {
+            "in": 314,
+            "out": 321,
+            "total": 635,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3239,
+          "usage": {
+            "in": 322,
+            "out": 462,
+            "total": 784,
+            "reasoning": 225
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

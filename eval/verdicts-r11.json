@@ -1,0 +1,33 @@
+{
+  "run": "eval/runs/2026-10-13-r11.json",
+  "list": "eval/businesses-4.json: the round-8 list a fourth time, after the round-10 fix (an address that forwards to another site is replaced by its target).",
+  "checkedBy": "Independent re-check on 2026-10-14: curl (pages, redirects), openssl, dig on the handle-built domains, page links; claims repeated from rounds 9-10 were re-checked there the same day.",
+  "summary": { "kept": 25, "right": 23, "wrong": 1, "unverifiable": 1, "dropped": 3 },
+  "verdicts": {
+    "nuuwears": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "cosmetica": { "site_online": "right", "https_healthy": "right" },
+    "antakia": { "not_on_map": "right" },
+    "zens": { "no_own_website": "right", "not_on_map": "right" },
+    "anafarta": { "site_online": "right", "https_healthy": "right" },
+    "ildirella": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "lahza": {
+      "no_own_website": "WRONG: lahzaabutik.com is its own shop (loads, 200). The second search did not return it this time; search results vary run to run",
+      "not_on_map": "right"
+    },
+    "dp": { "site_online": "right (dpperfumum.com.tr, the round-10 error is fixed)", "https_healthy": "right (ends 10 Dec 2026; http to https)" },
+    "krn": { "no_own_website": "right", "not_on_map": "right" },
+    "munzur": { "no_own_website": "right", "not_on_map": "right" },
+    "ahit": { "no_own_website": "right (ahit.tr has no DNS record)", "not_on_map": "right" },
+    "cakil": {
+      "no_own_website": "unverifiable: no site under its handles (cakilboutique.com, cakillbutik.com, cakilbutik.com have no DNS), but ozgecakil.com ('Özge Çakıl Butik') exists and nothing on it says whether it is this shop",
+      "not_on_map": "right"
+    }
+  },
+  "droppedVerdicts": {
+    "antakia": { "no_own_website": "deserved to be dropped (known limit)" },
+    "zens": { "site_online": "deserved to be dropped (zenbutik.com is an unrelated gambling page)", "domain_parked": "deserved to be dropped (same page; not the shop's domain)" }
+  },
+  "newErrors": [
+    "lahza: 'no website' came back because the second search is not repeatable. Fixed after the round: the name-built guesses now include the one doubled-letter spelling (lahzaabutik.com) for two-word names, so finding it no longer depends on search (tests/round10-identity.test.mjs)"
+  ]
+}

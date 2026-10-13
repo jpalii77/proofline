@@ -71,14 +71,15 @@ test('the name-built address drops "&" and is used even though search never show
   assert.ok(!report.verified.some((c) => c.type === 'no_own_website'), 'no false "no website"');
 });
 
-test('before "no website", a second search may find an address spelled differently (lahzaabutik.com)', async () => {
+test('before "no website", a second search may find an address the name-built guesses cannot', async () => {
+  // (lahzaabutik.com itself is now among the name-built guesses, round 11; this one is not)
   const results = [{ url: 'https://www.shopier.com/lahza', title: 'Lahza Butik - Shopier', content: 'Lahza Butik' }];
-  const again = [{ url: 'https://lahzaabutik.com/', title: 'Lahza', content: 'Lahza Butik kadın giyim' }];
-  const pages = { 'https://lahzaabutik.com/': html('Lahza', '<p>Lahza Butik kadın giyim</p>') };
+  const again = [{ url: 'https://lahzamoda.com/', title: 'Lahza Butik', content: 'Lahza Butik kadın giyim' }];
+  const pages = { 'https://lahzamoda.com/': html('Lahza Butik', '<p>Lahza Butik kadın giyim</p>') };
   const io = fakeIO({ pages, results, again });
   const r = await runCheck(io, 'web.own_site_found', { name: 'Lahza Butik' });
   assert.equal(r.pass, true, r.summary);
-  assert.equal(r.observed.host, 'lahzaabutik.com');
+  assert.equal(r.observed.host, 'lahzamoda.com');
   assert.ok(io.searches.some((s) => s.purpose === 'discover-again'));
 });
 
