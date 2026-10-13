@@ -157,7 +157,11 @@ function compactSame(value, name) {
  */
 export function labelIsName(host, name) {
   const label = fold(registrable(normalizeHost(host) || host).split('.')[0]).replace(/ /g, '');
-  return label.length >= 7 && compactNames(name).includes(label);
+  if (label.length < 7) return false;
+  // (one letter written twice also counts: lahzaabutik.com for "Lahza Butik", round 8)
+  const doubledOnce = (c) => label.length === c.length + 1
+    && [...label].some((ch, i) => i > 0 && ch === label[i - 1] && label.slice(0, i) + label.slice(i + 1) === c);
+  return compactNames(name).some((c) => c === label || doubledOnce(c));
 }
 
 /** The parts of a title: "Loky AI - The Unified …" -> ["Loky AI - The Unified …", "Loky AI", "The Unified …"]. */
@@ -409,13 +413,25 @@ export const CHECKS = {
         const v = await ownSiteVerdict(io, { host, name, city, results });
         if (guessed && v.pass !== true && !v.observed?.notChecked && !v.observed?.placeUnproven) continue; // a guess that is not theirs is no evidence either way
         tried.push({ host, pass: v.pass, summary: v.summary, ...(guessed ? { guessed: true } : {}) });
-        if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}${guessed ? ' (found by trying the address built from the name)' : ''}`, observed: { host, tried, listings } };
+        if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}${guessed ? ' (found by trying the address built from the name)' : ''}`, observed: { host, tried, listings, ...(guessed ? { via: 'name-built address' } : {}) } };
         // A candidate our host could not check leaves the question open: never "no website".
         if (v.observed?.notChecked) return { pass: null, summary: `Not checked: ${v.summary}`, observed: { tried, listings } };
       }
       // A site that names the business but not its city may still be theirs: say so, never "no website".
       const namesake = tried.find((t) => t.pass === null && /namesake/.test(t.summary));
       if (namesake) return { pass: null, summary: `Not settled: ${namesake.summary}`, observed: { tried, listings } };
+      // Before "no website", one more search (round 8: lahzaabutik.com, the address doubles the a, was in
+      // neither the first results nor the name-built guess). Its finds face the same identity test.
+      {
+        const again = await io.search(`${name} .com`, { purpose: 'discover-again' });
+        for (const r of again.error ? [] : again.results || []) {
+          if (!namesBusiness(`${r.title || ''} ${r.content || ''}`, name)) continue;
+          const host = normalizeHost(r.url);
+          if (!host || !isValidHostname(host) || classifyHost(host).kind === 'platform' || candidates.includes(host) || tried.some((t) => t.host === host)) continue;
+          const v = await ownSiteVerdict(io, { host, name, city, results: [...results, r] });
+          if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary} (found by a second search)`, observed: { host, tried, listings, via: 'second search' } };
+        }
+      }
       const unloaded = tried.filter((t) => t.pass === null).map((t) => t.host);
       // A one-word name with nothing else ("Shout") belongs to many businesses: not finding a site in its
       // results says nothing about the one the user means (round 6: the Turkish shop has shout.com.tr).
@@ -594,20 +610,35 @@ export const CHECKS = {
 
   'osm.listed': {
     title: 'Listed on OpenStreetMap under this name',
-    async run(io, { name, city }) {
+    async run(io, { name, city, cityGuessed = false }) {
       // A domain in the city slot would make the lookup find nothing and read as "not on the map".
-      const place = city && !looksLikeDomain(city) ? city : null;
-      const at = place ? `, ${place}` : '';
+      let place = city && !looksLikeDomain(city) ? city : null;
+      let at = place ? `, ${place}` : '';
       let r = await io.nominatim(`${name}${at}`);
       if (r.error) return { pass: null, summary: `Map lookup failed: ${r.error}`, observed: {} };
       // Map names often drop words like "Kafe": "Sakal Kafe Pub, Ankara" finds nothing, "Sakal Pub, Ankara" does.
       const core = nameTokens(name).join(' ');
       let retried = false;
-      if (!(r.results || []).length && core && core !== fold(name)) {
-        const again = await io.nominatim(`${core}${at}`);
-        if (again.error) return { pass: null, summary: `Map lookup failed: ${again.error}`, observed: {} };
-        r = again;
-        retried = true;
+      const lookUp = async () => {
+        if (!(r.results || []).length && core && core !== fold(name)) {
+          const again = await io.nominatim(`${core}${at}`);
+          if (again.error) return `Map lookup failed: ${again.error}`;
+          r = again;
+          retried = true;
+        }
+        return null;
+      };
+      let failed = await lookUp();
+      if (failed) return { pass: null, summary: failed, observed: {} };
+      // A city the user did not type is the planner's guess (round 8: "Köln" for D&P Perfumum, an Istanbul
+      // shop). It may narrow the search, but finding nothing there is not "not on the map": search again without it.
+      if (!(r.results || []).length && place && cityGuessed) {
+        place = null;
+        at = '';
+        r = await io.nominatim(name);
+        if (r.error) return { pass: null, summary: `Map lookup failed: ${r.error}`, observed: {} };
+        failed = await lookUp();
+        if (failed) return { pass: null, summary: failed, observed: {} };
       }
       const best = (r.results || [])
         .map((x) => ({ ...x, score: nameSimilarity(name, x.name || String(x.display_name || '').split(',')[0]) }))

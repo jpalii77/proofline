@@ -21,6 +21,7 @@
 | 6 | 2026-10-12 (same list, new discovery search, before guards) | 12 | 34 | 4 | 30 | 17 of 24 checkable (6 unverifiable) | 71% |
 | 7 | 2026-10-12 (same list, new search + round-6 guards) | 12 | 30 | 4 | 26 | 21 of 21 checkable (5 unverifiable) | **100%** |
 | 8 | 2026-10-12 (fresh list, mixed input, no fixes in between) | 12 | 24 | 1 | 23 | 21 of 23 | **91%** |
+| 9 | 2026-10-14 (same list as round 8, after the round-8 fixes) | 12 | 27 | 3 | 24 | 22 of 24 | **92%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -35,6 +36,8 @@ Round 6 (new discovery search): the plain-name search found more real own sites 
 Round 7 (same list, with four guards for those): no wrong kept claim (21 of 21 checkable). New true findings: Hilal AV Market's and Tuba Butik's own sites with their certificates, and a listed phone missing from Hilal's site. One true claim was lost on the cautious side (tokerkids.com is Toker Bebe's second site, but with a bare name its title only contains the name). After the round, a page whose only name is its own address no longer settles identity for names under 7 letters, which removes the 3 unverifiable osepet.net claims.
 
 Round 8 (`eval/businesses-4.json`, 12 businesses never measured before, `eval/verdicts-r8.json`): rounds 4–7 re-ran one list, so its 100% could mean the fixes only fit those shops. On fresh businesses with mixed input (2 name + domain, 2 name + city, 8 bare names), 21 of 23 kept claims were right (91%), every one checkable; no foreign namesake was taken and all five Shopier-only sellers were correctly told they have no website of their own. The one dropped claim deserved it. 2 wrong: Lahza Butik was told it has no website, but its shop is lahzaabutik.com (the address doubles the a); D&P Perfumum was told it is missing from OpenStreetMap, but it is listed in Ümraniye: for a bare name the planner guessed the city "Köln" and the map search used it. Three own sites were missed without a claim (dpperfumum.com.tr, lahzaabutik.com, antakiaartisan.com).
+
+Round 9 (same list as round 8, `eval/verdicts-r9.json`): both round-8 errors are gone: Lahza Butik's own shop lahzaabutik.com is found (3 right claims instead of a false "no website"), and D&P Perfumum is no longer called missing from the map. 22 of 24 kept claims right (92%). One new error, counted twice: for the bare name "D&P Perfumum" the agent took dpperfumum.com.eg, an Egyptian shop of the same name (prices in EGP), as the business's site; the Istanbul shop's own site is dpperfumum.com.tr. Of the 3 dropped claims, 2 deserved it; 1 true finding was lost: an Instagram handle that looks like an address (ahit.tr, no DNS record) kept "no website" from being settled.
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
@@ -105,7 +108,14 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 
 | Error | Wrong claims | Fix | Regression test |
 | --- | --- | --- | --- |
-| For a bare name the planner guessed a city ("Köln" for D&P Perfumum, an Istanbul shop) and the map search used it, so "missing from OpenStreetMap" was kept | 1 (not_on_map) | Planned: a city the user did not type never narrows a map search that can end in "not on the map" | — |
-| "No website" while the shop's address spells the name with a doubled letter (lahzaabutik.com for Lahza Butik) | 1 (no_own_website) | Planned: before "no website", try the search again with "site" / the name + ".com" and accept an address whose page names the business exactly | — |
-| Own site missed: the name-built guess kept the "&" (dpperfumum.com.tr for D&P Perfumum) | 0 (true finding lost) | Planned: drop "&" and similar marks when building the address from the name | — |
+| For a bare name the planner guessed a city ("Köln" for D&P Perfumum, an Istanbul shop) and the map search used it, so "missing from OpenStreetMap" was kept | 1 (not_on_map) | Fixed (14 Oct, not yet re-measured): when a city the user did not type finds nothing, the map is searched again without it; only then can "not on the map" stand | `tests/round8-identity.test.mjs` |
+| "No website" while the shop's address spells the name with a doubled letter (lahzaabutik.com for Lahza Butik) | 1 (no_own_website) | Fixed (14 Oct, not yet re-measured): before "no website", one more search (the name + ".com"); what it finds faces the same identity test, and an address that is the whole name with one letter written twice (lahzaabutik) counts as the name | `tests/round8-identity.test.mjs` |
+| Own site missed: the name-built guess kept the "&" (dpperfumum.com.tr for D&P Perfumum) | 0 (true finding lost) | Fixed (14 Oct): the name-built guess already dropped the "&" (dpperfumum.com.tr) and found the site, but the agent then discarded it because search had never shown that address. An address the check reached itself and confirmed is now used | `tests/round8-identity.test.mjs` |
 | Own site left unsettled: the typed city is Antakya, the brand on the page says "Antakia" | 0 (true finding lost) | Known limit for now | — |
+
+### Round 9 (same list, after the round-8 fixes)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| A bare name accepted a foreign country address that spells the whole name (dpperfumum.com.eg, an Egyptian namesake; the shop is dpperfumum.com.tr) | 2 (site_online, https_healthy) | Planned: for a bare name, another country's ending is a possible namesake; the .com.tr / .com address built from the name is tried first | — |
+| An Instagram handle read as a web address (ahit.tr, no DNS record) left "no website" unsettled | 0 (true finding lost) | Planned: an address with no DNS record is no candidate | — |

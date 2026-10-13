@@ -1,0 +1,36 @@
+{
+  "run": "eval/runs/2026-10-13-r9.json",
+  "list": "eval/businesses-4.json: the round-8 list again (12 businesses, mixed input), after the three round-8 fixes (guessed city never ends in 'not on the map', second search before 'no website', a confirmed name-built address is used).",
+  "checkedBy": "Independent re-check on 2026-10-14: openssl s_client (certificate end dates), curl (page titles, http-to-https, page currency and phone), dig, Nominatim (OpenStreetMap) name search limited to Turkey.",
+  "summary": { "kept": 24, "right": 22, "wrong": 2, "unverifiable": 0, "dropped": 3 },
+  "verdicts": {
+    "nuuwears": { "site_online": "right", "https_healthy": "right (ends 9 Jan 2027; http to https)", "not_on_map": "right (no OSM match)" },
+    "cosmetica": { "site_online": "right (typed domain)", "https_healthy": "right (apex ends 21 Dec 2026, www 11 Jan 2027; http to https)" },
+    "antakia": { "not_on_map": "right (no OSM match)" },
+    "zens": { "no_own_website": "right (as round 8; Yandex Maps and Instagram only)", "not_on_map": "right" },
+    "anafarta": { "site_online": "right", "https_healthy": "right (ends 14 Nov 2026 = 31 days; http to https)" },
+    "ildirella": { "site_online": "right", "https_healthy": "right (ends 18 Dec 2026)", "not_on_map": "right" },
+    "lahza": { "site_online": "right (lahzaabutik.com, its own shop; round-8 error fixed)", "https_healthy": "right (ends 20 Dec 2026; http to https)", "not_on_map": "right (no OSM match in Turkey; the guessed city Istanbul was dropped and the search repeated without it)" },
+    "dp": {
+      "site_online": "WRONG: dpperfumum.com.eg is an Egyptian namesake (prices in EGP/LE, currency EGP), not the Istanbul shop; the shop's own site is dpperfumum.com.tr (title 'D&P PERFUMUM', prices in TL, +90 phone). The planner picked the .com.eg address from search and the bare-name rule 'address = the whole name' accepted it",
+      "https_healthy": "WRONG: same namesake (the .com.eg certificate and redirect are real, but it is not this business's site)"
+    },
+    "krn": { "no_own_website": "right (as round 8)", "not_on_map": "right" },
+    "munzur": { "no_own_website": "right (as round 8; the 'Munzur Butik Otel' in the listings is a namesake hotel, not a site of this shop)", "not_on_map": "right" },
+    "ahit": { "not_on_map": "right (no OSM match; guessed city Istanbul dropped and repeated without it)" },
+    "cakil": { "not_on_map": "right (no OSM match; guessed city Tarsus dropped and repeated without it)" }
+  },
+  "droppedVerdicts": {
+    "antakia": { "no_own_website": "deserved to be dropped (antakiaartisan.com is its own site, left 'not settled': known limit, typed city Antakya vs brand 'Antakia')" },
+    "zens": { "domain_parked": "deserved to be dropped (zenbutik.com is an unrelated gambling page, not the shop's domain)" },
+    "ahit": { "no_own_website": "a true finding lost: 'ahit.tr' is the Instagram handle read as a web address (no DNS record), and 'shopier.co' a mangled Shopier link; neither is a site, but they left the question 'not settled'" }
+  },
+  "fixedSinceRound8": [
+    "lahza: lahzaabutik.com found (was 'no website')",
+    "dp: no longer told it is missing from OpenStreetMap (it is listed in Istanbul)"
+  ],
+  "newErrors": [
+    "dp: a bare name accepted a foreign country address (.com.eg) that spells the whole name; the Turkish .com.tr was never tried",
+    "ahit: an Instagram handle that looks like an address (ahit.tr) blocks 'no website'"
+  ]
+}

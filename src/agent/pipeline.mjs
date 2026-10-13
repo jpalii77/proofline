@@ -10,7 +10,7 @@ import { displayName } from '../display-name.mjs';
 import { invalidHostSentence, isValidHostname } from '../hostname.mjs';
 import { observed } from '../io/observed.mjs';
 import { withDeadline } from '../limits.mjs';
-import { coreTokens, domainsIn, extractPhones, looksLikeDomain, nameSimilarity, nameTokens, normalizeHost, phoneKey } from '../text.mjs';
+import { coreTokens, domainsIn, extractPhones, fold, looksLikeDomain, nameSimilarity, nameTokens, normalizeHost, phoneKey } from '../text.mjs';
 import { gradeCard } from './card.mjs';
 
 const isDomain = (s) => looksLikeDomain(s) && isValidHostname(s);
@@ -77,7 +77,7 @@ function observationPlan(ctx) {
     if (ctx.phone) plan.push(['page.phone_listed', { url, phone: ctx.phone }]);
   }
   if (ctx.name) {
-    plan.push(['osm.listed', { name: ctx.name, city: ctx.city }]);
+    plan.push(['osm.listed', { name: ctx.name, city: ctx.city, cityGuessed: !!ctx.cityGuessed }]);
     plan.push(['web.no_closure_signal', { name: ctx.name, city: ctx.city }]);
   }
   return plan;
@@ -241,6 +241,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
     searchQuery,
   };
   ctx.identityCity = bareQuery ? null : ctx.city;
+  ctx.cityGuessed = !!ctx.city && fold(ctx.city) !== fold(parsed.city || '');
   if (ctx.phone && !grounding.phones.includes(phoneKey(ctx.phone))) { guard.push(`phone ${ctx.phone} not seen in search results`); ctx.phone = null; }
   const modelRemoved = guard.length;
   ctx.userGivenDomain = !!(parsed.domain && ctx.domain === parsed.domain);
@@ -288,7 +289,9 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
     const found = await runCheck(gatherIO, 'web.own_site_found', { name: ctx.name, city: ctx.identityCity, query: searchQuery });
     observations.push(found);
     const alt = found.pass === true ? found.observed.host : null;
-    if (alt && alt !== ctx.domain && grounding.domains.includes(alt)) {
+    // (an address the check reached itself, by the name-built guess or a second search, passed the same
+    // identity test; it is not the model's pick, so it need not have been in the planner's results: round 8)
+    if (alt && alt !== ctx.domain && (grounding.domains.includes(alt) || found.observed.via)) {
       guard.push(`using ${alt} instead: ${found.summary}`);
       ctx.domain = alt;
       ctx.ownSite = true;

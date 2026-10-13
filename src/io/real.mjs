@@ -142,7 +142,7 @@ export function createRealIO({ net, tavily, nominatimContact = '', fetchImpl = g
       if (!tavily) return { error: 'Tavily is not configured' };
       // Discovery reads 10 results (the own site is often not in the top 5); the closure check keeps 5.
       const { purpose, ...rest } = opts;
-      return tavily.search(query, purpose === 'discover' ? { maxResults: DISCOVERY_RESULTS, ...rest } : rest);
+      return tavily.search(query, (purpose === 'discover' || purpose === 'discover-again') ? { maxResults: DISCOVERY_RESULTS, ...rest } : rest);
     },
   };
 }

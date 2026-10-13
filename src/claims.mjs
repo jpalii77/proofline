@@ -122,14 +122,14 @@ export const CLAIM_TYPES = {
   on_map: {
     area: 'presence', tone: 'good', needs: ['name'],
     proof: (c) => [
-      { check: 'osm.listed', params: { name: c.name, city: c.city }, expect: true },
+      { check: 'osm.listed', params: { name: c.name, city: c.city, cityGuessed: !!c.cityGuessed }, expect: true },
     ],
     statement: (c) => `${c.name} is listed on OpenStreetMap.`,
   },
   not_on_map: {
     area: 'presence', tone: 'issue', needs: ['name'],
     proof: (c) => [
-      { check: 'osm.listed', params: { name: c.name, city: c.city }, expect: false },
+      { check: 'osm.listed', params: { name: c.name, city: c.city, cityGuessed: !!c.cityGuessed }, expect: false },
     ],
     statement: (c) => `${c.name} is missing from OpenStreetMap, which many map apps reuse.`,
   },
