@@ -282,7 +282,14 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   if (ctx.domain) {
     const own = await runCheck(gatherIO, 'site.own_site', { host: ctx.domain, name: ctx.name, city: ctx.identityCity, query: searchQuery, userGiven: ctx.userGivenDomain });
     observations.push(own);
-    if (own.pass === true) ctx.ownSite = true;
+    // the chosen address forwards to another site: that site is the one to check (round 10)
+    if (own.pass === true && own.observed?.movedTo) {
+      const moved = await runCheck(gatherIO, 'site.own_site', { host: own.observed.movedTo, name: ctx.name, city: ctx.identityCity, query: searchQuery });
+      observations.push(moved);
+      guard.push(`${ctx.domain} forwards to ${own.observed.movedTo}${moved.pass === true ? ', which is checked instead' : ', which is not settled as the business’s site — website checks skipped'}`);
+      ctx.domain = own.observed.movedTo;
+      if (moved.pass === true) ctx.ownSite = true;
+    } else if (own.pass === true) ctx.ownSite = true;
     else guard.push(`${own.summary} — website checks skipped`);
   }
   if (!ctx.ownSite && ctx.name) {

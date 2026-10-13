@@ -27,7 +27,7 @@ export const PLATFORM_HOSTS = {
   ],
   'marketplace / services': [
     'sahibinden.com', 'armut.com', 'bionluk.com', 'hepsiburada.com', 'n11.com', 'amazon.com', 'amazon.com.tr',
-    'etsy.com', 'letgo.com', 'dolap.com',
+    'etsy.com', 'letgo.com', 'dolap.com', 'shopier.com',
   ],
   'social network / link hub': [
     'instagram.com', 'facebook.com', 'fb.com', 'm.facebook.com', 'tiktok.com', 'x.com', 'twitter.com',
@@ -50,6 +50,14 @@ export const SITE_BUILDER_HOSTS = [
 
 const GOOGLE = /(^|\.)google\.[a-z.]{2,6}$/; // google.com, google.com.tr, maps.google.de ...
 
+/** The name part of a host: "www.shopier.co" -> "shopier", "x.tripadvisor.com.tr" -> "tripadvisor". */
+function hostLabel(host) {
+  const parts = host.split('.').filter(Boolean);
+  if (parts.length < 2) return '';
+  const second = parts.length >= 3 && ['com', 'net', 'org', 'co', 'gen', 'web', 'biz'].includes(parts[parts.length - 2]) && parts[parts.length - 1].length === 2;
+  return parts[parts.length - (second ? 3 : 2)];
+}
+
 function suffixMatch(host, list) {
   return list.find((d) => host === d || host.endsWith(`.${d}`)) || null;
 }
@@ -67,6 +75,15 @@ export function classifyHost(rawHost) {
   for (const [label, list] of Object.entries(PLATFORM_HOSTS)) {
     const m = suffixMatch(host, list);
     if (m) return { kind: 'platform', label, matched: m };
+  }
+  // The same platform under another ending (round 9: "shopier.co" from a cut-off link, tripadvisor.ie).
+  // Only names of 6+ letters: a short one ("armut", "getir") is a common word others use too.
+  const label = hostLabel(host);
+  if (label.length >= 6) {
+    for (const [plabel, list] of Object.entries(PLATFORM_HOSTS)) {
+      const m = list.find((d) => d.split('.')[0] === label);
+      if (m) return { kind: 'platform', label: plabel, matched: m };
+    }
   }
   const b = suffixMatch(host, SITE_BUILDER_HOSTS);
   if (b) {

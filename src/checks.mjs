@@ -248,6 +248,11 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
   }
   if (userGiven) return { pass: true, summary: `${host} was given by the user as the business's website`, observed: { host, userGiven: true } };
   if (!name) return { pass: null, summary: 'No business name to check the site against', observed: { host } };
+  // A bare name has no place to tie a site to, and a whole-name address under another country's ending is
+  // often a namesake there (round 9: dpperfumum.com.eg, an Egyptian shop, for the Istanbul D&P Perfumum).
+  if ((!city || looksLikeDomain(city)) && foreignCountryEnding(host)) {
+    return { pass: null, summary: `${host} ends in another country's code (.${host.split('.').pop()}); with no city or website given, it may be a namesake there`, observed: { host, foreignEnding: true, placeUnproven: true } };
+  }
   // (a site builder's subdomain that names the business was already let through above)
   const parent = cls.kind === 'builder' ? null : foreignParent(host, name);
   if (parent) {
@@ -304,7 +309,11 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
       return { pass: null, summary: `${host} uses the name “${name}” but nothing on it or in search ties it to ${city}; it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
     }
     const why = id.identified ? `names the business (${id.field}: “${id.value}”)` : `is tied to “${name}”: ${ties[0].how} (${ties[0].url})`;
-    return { pass: true, summary: `${host} ${why}`, observed: { host, identity: id, ties, ...(city ? { place } : {}) } };
+    // An address that forwards to another site is not the site (round 10: dpperfumum.com forwards to
+    // dpperfumum.com.tr over http and refuses https): the caller checks the target instead.
+    const to = loaded ? normalizeHost(p.finalUrl || '') : null;
+    const movedTo = to && registrable(to) !== registrable(host) && classifyHost(to).kind !== 'platform' ? to : null;
+    return { pass: true, summary: `${host} ${why}`, observed: { host, identity: id, ties, ...(city ? { place } : {}), ...(movedTo ? { movedTo } : {}) } };
   }
   if (!loaded && isHostLimit(p.error)) {
     // Our host ran out of requests or time: that says nothing about the business's site.
@@ -328,6 +337,15 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
 const SECOND_LEVEL = new Set(['com', 'net', 'org', 'gen', 'web', 'biz', 'info', 'av', 'bel', 'pol', 'k12', 'edu', 'gov', 'co', 'ac', 'tv']);
 
 /** The registrable domain a host belongs to: "a.b.example.com.tr" -> "example.com.tr". */
+// Two-letter endings used worldwide as generic ones, not as a country's.
+const GENERIC_CC = new Set(['io', 'co', 'ai', 'me', 'tv', 'cc', 'ly', 'to', 'gg', 'fm', 'so', 'sh', 'app']);
+
+/** "dpperfumum.com.eg" -> true; ".com", ".com.tr", ".io" -> false. Proofline checks Turkish businesses. */
+export function foreignCountryEnding(host) {
+  const last = String(host || '').toLowerCase().split('.').filter(Boolean).pop() || '';
+  return last.length === 2 && last !== 'tr' && !GENERIC_CC.has(last);
+}
+
 export function registrable(host) {
   const parts = String(host || '').toLowerCase().split('.').filter(Boolean);
   if (parts.length <= 2) return parts.join('.');
@@ -412,7 +430,23 @@ export const CHECKS = {
         const guessed = guesses.includes(host);
         const v = await ownSiteVerdict(io, { host, name, city, results });
         if (guessed && v.pass !== true && !v.observed?.notChecked && !v.observed?.placeUnproven) continue; // a guess that is not theirs is no evidence either way
+        // A web address read from text that has no DNS record is no website at all (round 9: the Instagram
+        // handle "ahit.tr"); it must not keep "no website" from being settled.
+        if (!guessed && v.pass === null && !v.observed?.notChecked) {
+          const d = await io.dnsLookup(host);
+          if (!d.a?.length && !d.aaaa?.length && (!d.error || /ENOTFOUND|ENODATA|NXDOMAIN/i.test(d.error))) {
+            tried.push({ host, pass: false, summary: `${host} has no DNS record, so there is no website at that address`, noDns: true });
+            continue;
+          }
+        }
         tried.push({ host, pass: v.pass, summary: v.summary, ...(guessed ? { guessed: true } : {}) });
+        if (v.pass === true && v.observed.movedTo) {
+          const target = v.observed.movedTo;
+          const t = await ownSiteVerdict(io, { host: target, name, city, results });
+          if (t.pass === true) return { pass: true, summary: `Own website found: ${host} forwards to ${target}; ${t.summary}`, observed: { host: target, tried, listings, via: 'forwarding address' } };
+          tried.push({ host, pass: null, summary: `${host} forwards to ${target}, which is not settled as the business's site` });
+          continue;
+        }
         if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary}${guessed ? ' (found by trying the address built from the name)' : ''}`, observed: { host, tried, listings, ...(guessed ? { via: 'name-built address' } : {}) } };
         // A candidate our host could not check leaves the question open: never "no website".
         if (v.observed?.notChecked) return { pass: null, summary: `Not checked: ${v.summary}`, observed: { tried, listings } };
