@@ -1,0 +1,29 @@
+{
+  "run": "eval/runs/2026-10-14-r17.json",
+  "list": "eval/businesses-7.json again (round 16's fourth fresh list), after the round-16 fixes: phone in WhatsApp link / structured data (Alesta) and a cut-off homepage read further for the typed city (PatiBurda).",
+  "checkedBy": "Independent re-check on 2026-10-15: openssl s_client (patiburda.com certificate end date), curl of patiburda.com and its /pages/contact-us (title, http→https redirect, phone in visible text); web search for PatiBurda in Ankara (no separate listing found). The other 32 kept claims repeat round 16 word for word, already checked there; their certificate day counts are one day lower and land on the same end dates.",
+  "summary": { "kept": 35, "right": 35, "wrong": 0, "unverifiable": 0, "dropped": 0 },
+  "verdicts": {
+    "vetta": { "site_online": "right", "ssl_expiring_soon": "right (ends 12 Nov 2026 = 28 days)", "not_on_map": "right" },
+    "akgul": { "site_online": "right", "https_healthy": "right (ends 31 Dec 2026)", "phone_confirmed": "right (0222 232 24 49 is on the site)", "not_on_map": "right" },
+    "alesta": { "site_online": "right (alestacoffee.com, Çanakkale on the homepage)", "https_healthy": "right (ends 15 Nov 2026 = 31 days)", "not_on_map": "right" },
+    "patiburda": {
+      "site_online": "right (patiburda.com, “PatiBurda Online Petshop”; the homepage's own text names its stores in Istanbul and Ankara, at about 1.2 MB)",
+      "https_healthy": "right (ends 21 Dec 2026 = 67 days; http:// answers 301 to https://patiburda.com/)",
+      "phone_confirmed": "right (0850 308 00 87 is shown on the homepage and the contact page)",
+      "not_on_map": "right"
+    },
+    "naturalspor": { "site_online": "right", "https_healthy": "right (ends 30 Nov 2026)", "not_on_map": "right" },
+    "mosso": { "site_online": "right", "https_healthy": "right (ends 23 Dec 2026)", "not_on_map": "right" },
+    "anatolia": { "site_online": "right", "https_healthy": "right (ends 23 Dec 2026)", "not_on_map": "right" },
+    "paye": { "site_online": "right", "https_healthy": "right (ends 18 Dec 2026)", "not_on_map": "right" },
+    "aksel": { "site_online": "right (akselsilver.com, forwards to www)", "https_healthy": "right (ends 19 Nov 2026 = 35 days)", "not_on_map": "right" },
+    "meys": { "no_own_website": "right (Etsy, Facebook, Instagram only)", "not_on_map": "right" },
+    "crochet": { "no_own_website": "right (Etsy only)", "not_on_map": "right" },
+    "dodo": { "no_own_website": "right (Etsy, Facebook, Instagram only)", "not_on_map": "right" }
+  },
+  "lost": [
+    "alesta: the wrong 'phone not on the site' is gone, but no phone claim was proposed at all; its number (in the WhatsApp button and structured data) is a true finding left out"
+  ],
+  "fixedAfterRound": []
+}
