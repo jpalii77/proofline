@@ -164,3 +164,10 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | --- | --- | --- | --- |
 | A bare, common name ("MK Collection"): the name-built guess mkcollection.com.tr belongs to another Turkish business | 2 (site_online, no_https_redirect) | Fixed (14 Oct, not yet re-measured): for a bare name made only of initials and common shop words ("MK Collection", "Style Me Shop"), an address no search result ties to the business must link to the business's own listing from search (its Instagram, Shopier, Facebook or TikTok page); a distinctive name (Lahza, Perfumum, Naramica) is unchanged | `tests/round13-identity.test.mjs` |
 | ty.gl (Trendyol's short links) tried as an own site, so Parla Kozmetik's "no website" was not settled | 0 (true finding lost) | Fixed: ty.gl is on the platform list | `tests/round12-identity.test.mjs` |
+
+### Round 14 (third fresh list): true findings lost
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| Thesezar, typed with İzmir: its 5 MB homepage names İzmir only past the part we read, so its own site stayed "not settled" | 0 (true finding lost) | Fixed (14 Oct, not yet re-measured): when the homepage does not name the typed city, the contact or about page it links to on the same site (/pages/iletisim) is read for it | `tests/round14-identity.test.mjs` |
+| Morfose, a bare name: the report was about themorfose.com, the brand's US store, not the Turkish business's site morfose.eu/tr | 2 unverifiable | Fixed: with a bare name, a chosen site that shows nothing tied to Turkey gives way to the Turkish site the name-built address leads to (morfose.com.tr forwards to morfose.eu/tr); another country's ending is accepted when the page itself is Turkish | `tests/round14-identity.test.mjs` |

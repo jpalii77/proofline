@@ -266,6 +266,18 @@ function pageIdentity(p, name, min = NAME_MIN) {
 }
 
 /** Does the place ("Kadıköy, Istanbul": either part) appear on the page, or in a search result that shows this host? */
+/** The first link on the page to its own contact or about page ("/pages/iletisim"), as a full URL; else null. */
+function contactLink(p, host) {
+  const re = /href=["']([^"'#?]*(?:iletisim|iletişim|contact|bize-ulasin|hakkimizda|hakkımızda|about)[^"'#?]*)["']/gi;
+  for (const m of String(p?.html || '').matchAll(re)) {
+    let u;
+    try { u = new URL(m[1], `https://${host}/`); } catch { continue; }
+    if (registrable(normalizeHost(u.href)) !== registrable(host)) continue;
+    return u.href;
+  }
+  return null;
+}
+
 function placeTie(p, results, host, city) {
   const wants = String(city).split(',').map((x) => fold(x).trim()).filter((x) => x.length >= 3);
   if (!wants.length) return 'no usable city given';
@@ -307,7 +319,8 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
   if (!name) return { pass: null, summary: 'No business name to check the site against', observed: { host } };
   // A bare name has no place to tie a site to, and a whole-name address under another country's ending is
   // often a namesake there (round 9: dpperfumum.com.eg, an Egyptian shop, for the Istanbul D&P Perfumum).
-  if ((!city || looksLikeDomain(city)) && foreignCountryEnding(host)) {
+  if ((!city || looksLikeDomain(city)) && foreignCountryEnding(host) && !turkeyTie(await page(io, `https://${host}/`), host)) {
+    // (a Turkish page under another ending is fine: morfose.eu/tr, round 14)
     return { pass: null, summary: `${host} ends in another country's code (.${host.split('.').pop()}); with no city or website given, it may be a namesake there`, observed: { host, foreignEnding: true, placeUnproven: true } };
   }
   // (a site builder's subdomain that names the business was already let through above)
@@ -368,7 +381,17 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
   if (id.identified || ties.length) {
     // A name alone can belong to a namesake elsewhere (petpal.com is a US network, not the Bursa shop):
     // with a city given, the page or a search result showing this site must name that city too.
-    const place = city && !looksLikeDomain(city) ? placeTie(loaded ? p : null, results, host, city) : 'no city given';
+    let place = city && !looksLikeDomain(city) ? placeTie(loaded ? p : null, results, host, city) : 'no city given';
+    // A long homepage may name the city only past the part we read (round 14: thesezar.com, 5 MB, İzmir at
+    // 569 KB). The contact or about page it links to usually names it early.
+    if (!place && loaded) {
+      const link = contactLink(p, host);
+      if (link) {
+        const c = await page(io, link);
+        const hit = okStatus(c.status) && placeTie(c, [], host, city);
+        if (hit) place = `its contact page (${link}) names ${city}`;
+      }
+    }
     if (!place) {
       return { pass: null, summary: `${host} uses the name “${name}” but nothing on it or in search ties it to ${city}; it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
     }
@@ -377,7 +400,7 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
     // dpperfumum.com.tr over http and refuses https): the caller checks the target instead.
     const to = loaded ? normalizeHost(p.finalUrl || '') : null;
     const movedTo = to && registrable(to) !== registrable(host) && classifyHost(to).kind !== 'platform' ? to : null;
-    return { pass: true, summary: `${host} ${why}`, observed: { host, identity: id, ties, ...(city ? { place } : {}), ...(movedTo ? { movedTo } : {}) } };
+    return { pass: true, summary: `${host} ${why}${/contact page/.test(place || '') ? `; ${place}` : ''}`, observed: { host, identity: id, ties, ...(city ? { place } : {}), ...(movedTo ? { movedTo } : {}) } };
   }
   if (!loaded && isHostLimit(p.error)) {
     // Our host ran out of requests or time: that says nothing about the business's site.
@@ -470,6 +493,30 @@ export const CHECKS = {
       if (!isValidHostname(host) || cls.kind === 'platform' || userGiven || !name) return ownSiteVerdict(io, { host, name, userGiven, needSearchTie });
       const s = await io.search(query || discoveryQuery({ name, city }), { purpose: 'discover' });
       return ownSiteVerdict(io, { host, name, city, results: s.results || [], searchError: s.error || null, needSearchTie });
+    },
+  },
+
+  'site.turkish_alternative': {
+    title: 'With a bare name, a Turkish site is preferred over one that shows nothing Turkish',
+    // Round 14: for "Morfose" the planner chose themorfose.com, the brand's US store; the Turkish business's
+    // site is morfose.eu/tr, which morfose.com.tr forwards to. Proofline checks Turkish businesses.
+    async run(io, { host, name }) {
+      const own = await page(io, `https://${host}/`);
+      if (turkeyTie(own, host)) return { pass: null, summary: `${host} is tied to Turkey; nothing to replace`, observed: { host } };
+      for (const guess of obviousDomains(name).filter((g) => g !== host)) {
+        let v = await ownSiteVerdict(io, { host: guess, name, results: [] });
+        let target = guess;
+        if (v.pass === true && v.observed.movedTo) {
+          target = v.observed.movedTo;
+          v = await ownSiteVerdict(io, { host: target, name, results: [] });
+        }
+        if (v.pass !== true || target === host) continue;
+        const t = await page(io, `https://${target}/`);
+        if (turkeyTie(t, target)) {
+          return { pass: true, summary: `${host} shows nothing tied to Turkey; ${target}${target !== guess ? ` (reached from ${guess})` : ''} is the business's Turkish site: ${v.summary}`, observed: { host: target, from: host } };
+        }
+      }
+      return { pass: false, summary: `${host} shows nothing tied to Turkey, and no Turkish site was found at the address built from the name`, observed: { host } };
     },
   },
 

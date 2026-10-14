@@ -304,6 +304,15 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
       ctx.ownSite = true;
     }
   }
+  // With only a name typed, a site that shows nothing Turkish gives way to the business's Turkish site (round 14)
+  if (bareQuery && ctx.ownSite && ctx.domain) {
+    const tr = await runCheck(gatherIO, 'site.turkish_alternative', { host: ctx.domain, name: ctx.name });
+    observations.push(tr);
+    if (tr.pass === true && tr.observed.host !== ctx.domain) {
+      guard.push(`using ${tr.observed.host} instead: ${tr.summary}`);
+      ctx.domain = tr.observed.host;
+    }
+  }
   settlePlan();
   step('plan', { model: planCall.model, ms: planCall.ms, reasoning: plan.reasoning || '', ctx, guard });
   modelEvent(planCall);

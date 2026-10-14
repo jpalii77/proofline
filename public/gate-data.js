@@ -7,7 +7,7 @@ import { claimStatement, dropReasonText } from './report-lang.js';
 
 // Three gate lines, in the order a claim meets them. Every check belongs to exactly one.
 export const GATES = [
-  { key: 'identity', label: 'Identity', short: 'Identity', checks: ['site.own_site', 'web.own_site_found', 'page.name_match'] },
+  { key: 'identity', label: 'Identity', short: 'Identity', checks: ['site.own_site', 'web.own_site_found', 'site.turkish_alternative', 'page.name_match'] },
   { key: 'web', label: 'Web · TLS', short: 'Web·TLS', checks: ['dns.resolves', 'http.reachable', 'http.https_redirect', 'tls.cert_valid', 'page.not_parked'] },
   { key: 'reach', label: 'Contact · Map', short: 'Contact', checks: ['page.contact_path', 'page.phone_listed', 'osm.listed', 'web.no_closure_signal'] },
 ];

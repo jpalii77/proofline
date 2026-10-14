@@ -120,7 +120,7 @@ The honest numbers are the rounds on businesses the earlier fixes were not made 
 - Recognise a business listed on the map under an older name, by comparing the map entry's phone or website with the site's (round 3's one unfixed error).
 - Find a shop whose website has another name, through the links on its Instagram or marketplace page (round 5's known limit).
 - More Tavily signals: relocation / "moved", and a dedicated identity-verification search.
-- A fresh accuracy round on businesses none of the fixes were made for, with mixed input (name and city, bare name, domain).
+- Keep measuring every new fix on a fresh list of businesses it was not made for, as in rounds 12–14, and win back the true findings the new caution leaves out (a site that names its city only deep in the page; a brand's Turkish site behind its US store).
 - Batch mode for a seller's lead list.
 
 ## What was built during the hackathon

@@ -34,6 +34,7 @@ const STATEMENT_USES = {
 const CHECK_TR = {
   'site.own_site': 'Alan adı işletmenin kendi web sitesi',
   'web.own_site_found': 'Arama sonuçları kendi web sitesine çıkıyor',
+  'site.turkish_alternative': 'Yalnız ad yazıldığında Türkçe site, Türkçe olmayan siteye tercih ediliyor',
   'dns.resolves': "Alan adı DNS'te çözülüyor",
   'http.reachable': 'Web sitesi HTTPS üzerinden yanıt veriyor',
   'http.https_redirect': "Düz HTTP, HTTPS'e yönleniyor",
