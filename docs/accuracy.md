@@ -30,6 +30,7 @@
 | 13 | 2026-10-14 (same fresh list, after the round-12 fixes) | 12 | 28 | 6 | 22 | 20 of 22 | **91%** |
 | 14 | 2026-10-14 (third fresh list `businesses-6.json`, after the round-13 fix) | 12 | 25 | 5 | 20 | 18 of 18 checkable (2 unverifiable) | **100%** |
 | 15 | 2026-10-14 (same list, after the lost-finding fixes) | 12 | 26 | 3 | 23 | 23 of 23 | **100%** |
+| 16 | 2026-10-14 (fourth fresh list `businesses-7.json`) | 12 | 33 | 0 | 33 | 32 of 33 | **97%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -58,6 +59,8 @@ Round 13 (same fresh list, `eval/verdicts-r13.json`): 20 of 22 kept claims right
 Round 14 (`eval/businesses-6.json`, a third list of 12 businesses never measured before, `eval/verdicts-r14.json`): no wrong kept claim, 18 of 18 checkable right. The traps held: the Chinese sites at t-brush.com and ysly.com, a Lebanese "T-Brush LB" and a UK T-Brush were not taken; the apostrophe in "Fatma Ana'dan" did not break the name-built address. Two claims could not be settled: for the bare name "Morfose" the agent reported on themorfose.com, the brand's official US store, while the Turkish business's site is morfose.eu/tr. The price of the caution added in rounds 12–13 shows too: 3 true site findings were lost (Thesezar's own site left unsettled, Jurassink's not checked, Zersay's "no website" not settled).
 
 Round 15 (same list, `eval/verdicts-r15.json`): after the lost-finding fixes, 23 of 23 kept claims right and more of them (23 kept, against 20): Thesezar's own site is back, and Morfose is now reported on morfose.eu/tr, the Turkish business's site, instead of the brand's US store. A re-run of the list the fixes were made for, so the next fresh list is the real test.
+
+Round 16 (`eval/businesses-7.json`, a fourth list of 12 businesses never measured before, `eval/verdicts-r16.json`): 32 of 33 kept claims right (97%), with the most findings of any round (33, including a certificate 29 days from expiry and a phone number confirmed on a site). The one wrong claim: Alesta Coffee was told its number "is not on the site", but the site shows it in its WhatsApp button and its structured business data, which the phone check did not read; fixed after the round. One true finding was lost: PatiBurda's own site, whose 1.4 MB homepage names Ankara once.
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
@@ -174,3 +177,10 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | --- | --- | --- | --- |
 | Thesezar, typed with İzmir: its 5 MB homepage names İzmir only past the part we read, so its own site stayed "not settled" | 0 (true finding lost) | Fixed (14 Oct, not yet re-measured): when the homepage does not name the typed city, the contact or about page it links to on the same site (/pages/iletisim) is read for it | `tests/round14-identity.test.mjs` |
 | Morfose, a bare name: the report was about themorfose.com, the brand's US store, not the Turkish business's site morfose.eu/tr | 2 unverifiable | Fixed: with a bare name, a chosen site that shows nothing tied to Turkey gives way to the Turkish site the name-built address leads to (morfose.com.tr forwards to morfose.eu/tr); another country's ending is accepted when the page itself is Turkish | `tests/round14-identity.test.mjs` |
+
+### Round 16 (fourth fresh list)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| Alesta Coffee's number was called "not on the site", but the site shows it in a WhatsApp button and in its structured business data | 1 (phone_unconfirmed) | Fixed (15 Oct, not yet re-measured): numbers in wa.me / api.whatsapp.com links and in "telephone" structured data count as listed | `tests/round14-identity.test.mjs` |
+| PatiBurda's own site not reported (Ankara named once, deep in a 1.4 MB page) | 0 (true finding lost) | Open | — |

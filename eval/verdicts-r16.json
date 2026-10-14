@@ -1,0 +1,31 @@
+{
+  "run": "eval/runs/2026-10-14-r16.json",
+  "list": "eval/businesses-7.json: a fourth fresh list (12 businesses never measured before, mixed input), after all fixes through round 15.",
+  "checkedBy": "Independent re-check on 2026-10-14/15: openssl s_client (certificate end dates), curl of each homepage (titles, redirects, phone numbers in text, tel:, wa.me and structured data), dig on name-built domains, Nominatim (OpenStreetMap) limited to Turkey; sites probed before the run while the list was built.",
+  "summary": { "kept": 33, "right": 32, "wrong": 1, "unverifiable": 0, "dropped": 0 },
+  "verdicts": {
+    "vetta": { "site_online": "right", "ssl_expiring_soon": "right (ends 12 Nov 2026 = 29 days)", "not_on_map": "right" },
+    "akgul": { "site_online": "right", "https_healthy": "right (ends 31 Dec 2026)", "phone_confirmed": "right (0222 232 24 49 is on the site)", "not_on_map": "right" },
+    "alesta": {
+      "site_online": "right (alestacoffee.com, Çanakkale on the homepage)",
+      "https_healthy": "right (ends 15 Nov 2026 = 32 days)",
+      "phone_unconfirmed": "WRONG: 0538 440 17 65 is on the site, in its WhatsApp button (wa.me/905384401765) and its structured business data (\"telephone\":\"+905384401765\"); the phone check read only visible text and tel: links",
+      "not_on_map": "right"
+    },
+    "patiburda": { "not_on_map": "right" },
+    "naturalspor": { "site_online": "right", "https_healthy": "right (ends 30 Nov 2026)", "not_on_map": "right" },
+    "mosso": { "site_online": "right", "https_healthy": "right (ends 23 Dec 2026)", "not_on_map": "right (the guessed city Denizli was set aside; no OSM match in Turkey)" },
+    "anatolia": { "site_online": "right", "https_healthy": "right (ends 23 Dec 2026)", "not_on_map": "right" },
+    "paye": { "site_online": "right (payejewelry.com, a Turkish page whose site name is its address)", "https_healthy": "right (ends 18 Dec 2026)", "not_on_map": "right" },
+    "aksel": { "site_online": "right (akselsilver.com, forwards to www)", "https_healthy": "right (ends 19 Nov 2026 = 36 days)", "not_on_map": "right" },
+    "meys": { "no_own_website": "right (Etsy, Facebook, Instagram only; name-built addresses have no DNS)", "not_on_map": "right" },
+    "crochet": { "no_own_website": "right (Etsy and Pinterest only)", "not_on_map": "right" },
+    "dodo": { "no_own_website": "right (Etsy and Pinterest only)", "not_on_map": "right" }
+  },
+  "lost": [
+    "patiburda: its own site patiburda.com was not reported (no site claim proposed); the homepage names Ankara once, deep in a 1.4 MB page"
+  ],
+  "fixedAfterRound": [
+    "alesta: a phone in a wa.me / api.whatsapp.com link or in the page's structured data (\"telephone\") now counts as listed (tests/round14-identity.test.mjs)"
+  ]
+}

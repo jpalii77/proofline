@@ -1,0 +1,14 @@
+[
+  { "id": "vetta", "query": "Vettamoda, vettamoda.com", "note": "women's clothing e-shop (Saker list, 7 Oct); name + domain; a healthy case" },
+  { "id": "akgul", "query": "Akgül Kolonya, akgulkolonya.com", "note": "cologne e-shop (Saker list, 7 Oct); name + domain; Turkish letter in the name, not in the address" },
+  { "id": "alesta", "query": "Alesta Coffee, Çanakkale", "note": "coffee roaster (Saker list, 7 Oct); name + city; own site alestacoffee.com names Çanakkale; alesta.com.tr is another site" },
+  { "id": "patiburda", "query": "PatiBurda, Ankara", "note": "online pet shop (Saker list, 7 Oct); name + city; own site patiburda.com, a 1.4 MB homepage that names Ankara once" },
+  { "id": "naturalspor", "query": "Naturalspor", "note": "sports-supplement e-shop (Saker list, 7 Oct); name only; own site naturalspor.com" },
+  { "id": "mosso", "query": "Mosso Çikolata", "note": "chocolate e-shop (Saker list, 7 Oct); name only; own site mossocikolata.com (3 MB homepage)" },
+  { "id": "anatolia", "query": "Anatolia Soap", "note": "soap e-shop (Saker list, 7 Oct); name only, two common English words; own site anatoliasoap.com" },
+  { "id": "paye", "query": "Paye Jewelry", "note": "jewellery e-shop (Saker list, 7 Oct); name only; own site payejewelry.com (Turkish page, its site name is just its address)" },
+  { "id": "aksel", "query": "Aksel Silver", "note": "silver jewellery maker (Saker list, 7 Oct); name only; own site akselsilver.com (forwards to www), site name 'Aksel Gümüş Aksel Silver'" },
+  { "id": "meys", "query": "MeysDesignStore", "note": "handmade seller without a website (Saker no-website sample, 7 Oct); name only, one word; expected: no website of its own" },
+  { "id": "crochet", "query": "crochetgunay", "note": "crochet seller without a website (Saker no-website sample, 7 Oct); name only, a handle; expected: no website of its own" },
+  { "id": "dodo", "query": "DodoCraftCo", "note": "craft seller without a website (Saker no-website sample, 7 Oct); name only, one word; expected: no website of its own" }
+]

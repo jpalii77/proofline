@@ -80,3 +80,15 @@ test('bare name: a chosen Turkish site is kept as it is (no extra lookups needed
   const { report } = await runAgent({ query: 'Begon Kahve', io: fakeIO({ pages, results }), brain });
   assert.equal(report.ctx.domain, 'begonkahve.com');
 });
+
+// Round 16 (fresh list): Alesta Coffee was told 5384401765 "is not on the site", but the site shows it in
+// a WhatsApp button (wa.me/905384401765) and in its structured business data ("telephone":"+905384401765").
+test('a phone in a WhatsApp link or in the page\'s structured business data counts as listed (Alesta Coffee)', async () => {
+  const body = '<script type="application/ld+json">{"@type":"LocalBusiness","telephone":"+905384401765"}</script><a href="https://wa.me/905384401765?text=Merhaba">WhatsApp</a>';
+  for (const page of [body, body.replace(/<script.*?<\/script>/, ''), body.replace(/<a .*?<\/a>/, '')]) {
+    const r = await runCheck(fakeIO({ pages: { 'https://alestacoffee.com/': html('Alesta Coffee', page, 'tr') } }), 'page.phone_listed', { url: 'https://alestacoffee.com/', phone: '5384401765' });
+    assert.equal(r.pass, true, r.summary);
+  }
+  const other = await runCheck(fakeIO({ pages: { 'https://alestacoffee.com/': html('Alesta Coffee', body, 'tr') } }), 'page.phone_listed', { url: 'https://alestacoffee.com/', phone: '5427381956' });
+  assert.equal(other.pass, false, 'another number is still "not on the site"');
+});

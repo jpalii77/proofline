@@ -1,0 +1,4142 @@
+{
+  "day": "2026-10-14",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "vetta",
+      "query": "Vettamoda, vettamoda.com",
+      "note": "women's clothing e-shop (Saker list, 7 Oct); name + domain; a healthy case",
+      "ms": 21770,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 6854,
+        "rewritesRejected": 0,
+        "ms": 21768
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "vettamoda.com loads and shows real content.",
+          "rationale": "site.own_site passed (vettamoda.com given as business's website), dns.resolves passed (has address record), http.reachable passed (loaded with HTTP 200).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "vettamoda.com",
+                "name": "Vettamoda",
+                "city": null,
+                "query": "Vettamoda",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://vettamoda.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://vettamoda.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "vettamoda.com",
+                "name": "Vettamoda",
+                "city": null,
+                "query": "Vettamoda",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "vettamoda.com was given by the user as the business's website",
+              "observed": {
+                "host": "vettamoda.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-14T01:58:57.054Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://vettamoda.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://vettamoda.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://vettamoda.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 268,
+              "at": "2026-10-14T01:58:57.323Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://vettamoda.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Vettamoda Online Mağaza | la & vetta Yeni Sezon Kadın Giyim”)",
+              "observed": {
+                "title": "Vettamoda Online Mağaza | la & vetta Yeni Sezon Kadın Giyim",
+                "marker": null
+              },
+              "ms": 129,
+              "at": "2026-10-14T01:58:57.452Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:58:57.452Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "ssl_expiring_soon",
+          "type": "ssl_expiring_soon",
+          "area": "security",
+          "tone": "issue",
+          "statement": "The security certificate of vettamoda.com expires within 30 days.",
+          "rationale": "tls.cert_valid failed (certificate expires in 29 day(s), needs ≥30).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "vettamoda.com",
+                "name": "Vettamoda",
+                "city": null,
+                "query": "Vettamoda",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "vettamoda.com",
+                "minDays": 0
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "vettamoda.com",
+                "minDays": 30
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "vettamoda.com",
+                "name": "Vettamoda",
+                "city": null,
+                "query": "Vettamoda",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "vettamoda.com was given by the user as the business's website",
+              "observed": {
+                "host": "vettamoda.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-14T01:58:57.453Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "vettamoda.com",
+                "minDays": 0
+              },
+              "pass": true,
+              "summary": "Certificate expires in 29 day(s)",
+              "observed": {
+                "validTo": "2026-11-12T05:11:20.000Z",
+                "daysLeft": 29,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 122,
+              "at": "2026-10-14T01:58:57.575Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "vettamoda.com",
+                "minDays": 30
+              },
+              "pass": false,
+              "summary": "Certificate expires in 29 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-12T05:11:20.000Z",
+                "daysLeft": 29,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 0,
+              "at": "2026-10-14T01:58:57.575Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:58:57.575Z",
+          "ownerText": "Your security certificate is about to expire."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Vettamoda is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed (No matching place on OpenStreetMap).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Vettamoda",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Vettamoda",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 80,
+              "at": "2026-10-14T01:58:57.655Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:58:57.655Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The SSL certificate for vettamoda.com will expire in less than 30 days, which could trigger browser warnings and affect trust.",
+          "cites": [
+            "ssl_expiring_soon"
+          ]
+        },
+        {
+          "text": "Vettamoda is currently missing from OpenStreetMap, a data source used by many map apps, reducing local visibility.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2598,
+          "usage": {
+            "in": 2960,
+            "out": 288,
+            "total": 3248,
+            "reasoning": 214
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4970,
+          "usage": {
+            "in": 1091,
+            "out": 848,
+            "total": 1939,
+            "reasoning": 719
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3402,
+          "usage": {
+            "in": 341,
+            "out": 430,
+            "total": 771,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3307,
+          "usage": {
+            "in": 348,
+            "out": 548,
+            "total": 896,
+            "reasoning": 271
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "akgul",
+      "query": "Akgül Kolonya, akgulkolonya.com",
+      "note": "cologne e-shop (Saker list, 7 Oct); name + domain; Turkish letter in the name, not in the address",
+      "ms": 23105,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 21,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6493,
+        "rewritesRejected": 0,
+        "ms": 23105
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "akgulkolonya.com loads and shows real content.",
+          "rationale": "dns.resolves passed (akgulkolonya.com has 2 address record(s)) and http.reachable passed (Loaded with HTTP 200)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "akgulkolonya.com",
+                "name": "Akgül Kolonya",
+                "city": null,
+                "query": "Akgül Kolonya",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://akgulkolonya.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://akgulkolonya.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "akgulkolonya.com",
+                "name": "Akgül Kolonya",
+                "city": null,
+                "query": "Akgül Kolonya",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "akgulkolonya.com was given by the user as the business's website",
+              "observed": {
+                "host": "akgulkolonya.com",
+                "userGiven": true
+              },
+              "ms": 1,
+              "at": "2026-10-14T01:59:21.315Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://akgulkolonya.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.akgulkolonya.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.akgulkolonya.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://akgulkolonya.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.akgulkolonya.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 554,
+              "at": "2026-10-14T01:59:21.871Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://akgulkolonya.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Akgül Kolonya - Online Mağaza”)",
+              "observed": {
+                "title": "Akgül Kolonya - Online Mağaza",
+                "marker": null
+              },
+              "ms": 334,
+              "at": "2026-10-14T01:59:22.205Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:59:22.205Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "akgulkolonya.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed (Certificate expires in 78 day(s) (needs ≥ 30)) and site reachable via HTTPS",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "akgulkolonya.com",
+                "name": "Akgül Kolonya",
+                "city": null,
+                "query": "Akgül Kolonya",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "akgulkolonya.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "akgulkolonya.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://akgulkolonya.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "akgulkolonya.com",
+                "name": "Akgül Kolonya",
+                "city": null,
+                "query": "Akgül Kolonya",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "akgulkolonya.com was given by the user as the business's website",
+              "observed": {
+                "host": "akgulkolonya.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-14T01:59:22.205Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "akgulkolonya.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 78 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-31T23:13:51.000Z",
+                "daysLeft": 78,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 34,
+              "at": "2026-10-14T01:59:22.239Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "akgulkolonya.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.akgulkolonya.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://akgulkolonya.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://akgulkolonya.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.akgulkolonya.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.akgulkolonya.com/"
+              },
+              "ms": 345,
+              "at": "2026-10-14T01:59:22.584Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://akgulkolonya.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.akgulkolonya.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.akgulkolonya.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://akgulkolonya.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.akgulkolonya.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T01:59:22.584Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:59:22.584Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects to the secure version."
+        },
+        {
+          "id": "phone_confirmed",
+          "type": "phone_confirmed",
+          "area": "contact",
+          "tone": "good",
+          "statement": "2222322449 is the business's own number: it is listed on its website.",
+          "rationale": "page.phone_listed passed (2222322449 is listed on the site)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "akgulkolonya.com",
+                "name": "Akgül Kolonya",
+                "city": null,
+                "query": "Akgül Kolonya",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://akgulkolonya.com/",
+                "phone": "2222322449"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "akgulkolonya.com",
+                "name": "Akgül Kolonya",
+                "city": null,
+                "query": "Akgül Kolonya",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "akgulkolonya.com was given by the user as the business's website",
+              "observed": {
+                "host": "akgulkolonya.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-14T01:59:22.584Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://akgulkolonya.com/",
+                "phone": "2222322449"
+              },
+              "pass": true,
+              "summary": "2222322449 is listed on the site",
+              "observed": {
+                "looked_for": "2222322449",
+                "on_page": [
+                  "2222322449"
+                ]
+              },
+              "ms": 4,
+              "at": "2026-10-14T01:59:22.588Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:59:22.589Z",
+          "ownerText": "Your phone number is listed on your site."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Akgül Kolonya is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed (No matching place on OpenStreetMap)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Akgül Kolonya",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Akgül Kolonya",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 75,
+              "at": "2026-10-14T01:59:22.664Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T01:59:22.664Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your website loads and shows real content, confirming the core online channel is functional.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate valid for more than 30 days, keeping visitor connections secure.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The phone number 2222322449 displayed on the site matches the business’s own registered line.",
+          "cites": [
+            "phone_confirmed"
+          ]
+        },
+        {
+          "text": "Akgül Kolonya is currently absent from OpenStreetMap, which many map applications rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2731,
+          "usage": {
+            "in": 1276,
+            "out": 447,
+            "total": 1723,
+            "reasoning": 367
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5090,
+          "usage": {
+            "in": 1168,
+            "out": 995,
+            "total": 2163,
+            "reasoning": 832
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 4040,
+          "usage": {
+            "in": 462,
+            "out": 671,
+            "total": 1133,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4839,
+          "usage": {
+            "in": 413,
+            "out": 1061,
+            "total": 1474,
+            "reasoning": 741
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "alesta",
+      "query": "Alesta Coffee, Çanakkale",
+      "note": "coffee roaster (Saker list, 7 Oct); name + city; own site alestacoffee.com names Çanakkale; alesta.com.tr is another site",
+      "ms": 35579,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 22,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6489,
+        "rewritesRejected": 0,
+        "ms": 35579
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "alestacoffee.com loads and shows real content.",
+          "rationale": "site.own_site passed (og:site_name: “Alesta Coffee”), dns.resolves passed, http.reachable passed (HTTP 200), page.not_parked passed (real content)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "alestacoffee.com",
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "query": "Alesta Coffee Çanakkale",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "alestacoffee.com",
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "query": "Alesta Coffee Çanakkale",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "alestacoffee.com names the business (og:site_name: “Alesta Coffee”)",
+              "observed": {
+                "host": "alestacoffee.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Alesta Coffee",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://alestacoffee.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names canakkale"
+              },
+              "ms": 1997,
+              "at": "2026-10-14T02:00:01.980Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://alestacoffee.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://alestacoffee.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 40,
+              "at": "2026-10-14T02:00:02.022Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Alesta Coffee | Çanakkale'de Kahve Kavurma ve Toptan Kahve”)",
+              "observed": {
+                "title": "Alesta Coffee | Çanakkale'de Kahve Kavurma ve Toptan Kahve",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-14T02:00:02.024Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:02.024Z",
+          "ownerText": "Your website loads and shows real content about Alesta Coffee."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "alestacoffee.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed (certificate expires in 32 days ≥30) and http.https_redirect passed (HTTP redirects to HTTPS)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "alestacoffee.com",
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "query": "Alesta Coffee Çanakkale",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "alestacoffee.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "alestacoffee.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "alestacoffee.com",
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "query": "Alesta Coffee Çanakkale",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "alestacoffee.com names the business (og:site_name: “Alesta Coffee”)",
+              "observed": {
+                "host": "alestacoffee.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Alesta Coffee",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://alestacoffee.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names canakkale"
+              },
+              "ms": 8,
+              "at": "2026-10-14T02:00:02.032Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "alestacoffee.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 32 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-15T18:35:55.000Z",
+                "daysLeft": 32,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 58,
+              "at": "2026-10-14T02:00:02.090Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "alestacoffee.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://alestacoffee.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://alestacoffee.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://alestacoffee.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://alestacoffee.com/"
+              },
+              "ms": 108,
+              "at": "2026-10-14T02:00:02.198Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://alestacoffee.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://alestacoffee.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:00:02.199Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:02.199Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and always shows the secure address."
+        },
+        {
+          "id": "phone_unconfirmed",
+          "type": "phone_unconfirmed",
+          "area": "contact",
+          "tone": "risk",
+          "statement": "5384401765 (from listings) is not on the business's own site; it may be outdated.",
+          "rationale": "page.phone_listed failed: phone 5384401765 not found on the site",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "alestacoffee.com",
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "query": "Alesta Coffee Çanakkale",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://alestacoffee.com/",
+                "phone": "5384401765"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "alestacoffee.com",
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "query": "Alesta Coffee Çanakkale",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "alestacoffee.com names the business (og:site_name: “Alesta Coffee”)",
+              "observed": {
+                "host": "alestacoffee.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Alesta Coffee",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://alestacoffee.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names canakkale"
+              },
+              "ms": 21,
+              "at": "2026-10-14T02:00:02.220Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://alestacoffee.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://alestacoffee.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://alestacoffee.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:00:02.220Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://alestacoffee.com/",
+                "phone": "5384401765"
+              },
+              "pass": false,
+              "summary": "5384401765 is not on the site (site lists: none)",
+              "observed": {
+                "looked_for": "5384401765",
+                "on_page": []
+              },
+              "ms": 1,
+              "at": "2026-10-14T02:00:02.221Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:02.221Z",
+          "ownerText": "The phone number listed elsewhere isn’t on your site, so it might be outdated."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Alesta Coffee is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed: no matching place on OpenStreetMap for Alesta Coffee in Çanakkale",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Alesta Coffee",
+                "city": "Çanakkale",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {
+                "query": "alesta, Çanakkale"
+              },
+              "ms": 1126,
+              "at": "2026-10-14T02:00:03.347Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:03.347Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which some map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your website alestacoffee.com loads correctly and serves content over a valid HTTPS connection.",
+          "cites": [
+            "site_online",
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The phone number listed in directories (5384401765) does not appear on your own site, which may confuse customers and could be outdated.",
+          "cites": [
+            "phone_unconfirmed"
+          ]
+        },
+        {
+          "text": "Alesta Coffee is missing from OpenStreetMap, limiting visibility in map applications that rely on OSM data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5200,
+          "usage": {
+            "in": 1304,
+            "out": 518,
+            "total": 1822,
+            "reasoning": 423
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 6034,
+          "usage": {
+            "in": 1162,
+            "out": 1112,
+            "total": 2274,
+            "reasoning": 927
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2697,
+          "usage": {
+            "in": 470,
+            "out": 455,
+            "total": 925,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5105,
+          "usage": {
+            "in": 421,
+            "out": 1047,
+            "total": 1468,
+            "reasoning": 746
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "patiburda",
+      "query": "PatiBurda, Ankara",
+      "note": "online pet shop (Saker list, 7 Oct); name + city; own site patiburda.com, a 1.4 MB homepage that names Ankara once",
+      "ms": 23272,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 5154,
+        "rewritesRejected": 0,
+        "ms": 23272
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "PatiBurda is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check passed false: No matching place on OpenStreetMap for PatiBurda in Ankara",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "PatiBurda",
+                "city": "Ankara",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "PatiBurda",
+                "city": "Ankara",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 84,
+              "at": "2026-10-14T02:00:32.232Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:32.232Z",
+          "ownerText": "Your business isn’t showing up on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business is missing from OpenStreetMap, which many map applications reuse for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3277,
+          "usage": {
+            "in": 1530,
+            "out": 466,
+            "total": 1996,
+            "reasoning": 374
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5125,
+          "usage": {
+            "in": 857,
+            "out": 916,
+            "total": 1773,
+            "reasoning": 872
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2558,
+          "usage": {
+            "in": 161,
+            "out": 338,
+            "total": 499,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3732,
+          "usage": {
+            "in": 278,
+            "out": 608,
+            "total": 886,
+            "reasoning": 420
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "naturalspor",
+      "query": "Naturalspor",
+      "note": "sports-supplement e-shop (Saker list, 7 Oct); name only; own site naturalspor.com",
+      "ms": 24877,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 6613,
+        "rewritesRejected": 0,
+        "ms": 24877
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "naturalspor.com loads and shows real content.",
+          "rationale": "site.own_site passed (naturalspor.com names the business) and http.reachable passed (loaded with HTTP 200)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "naturalspor.com",
+                "name": "Naturalspor",
+                "city": null,
+                "query": "Naturalspor",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://naturalspor.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://naturalspor.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "naturalspor.com",
+                "name": "Naturalspor",
+                "city": null,
+                "query": "Naturalspor",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "naturalspor.com names the business (address: “naturalspor.com”)",
+              "observed": {
+                "host": "naturalspor.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "naturalspor.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/naturalspor",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://naturalspor.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 1617,
+              "at": "2026-10-14T02:00:59.618Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://naturalspor.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://naturalspor.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://naturalspor.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 65,
+              "at": "2026-10-14T02:00:59.685Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://naturalspor.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Naturalspor Sporcu Gıdaları / Supplement”)",
+              "observed": {
+                "title": "Naturalspor Sporcu Gıdaları / Supplement",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-14T02:00:59.687Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:59.688Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "naturalspor.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed (certificate expires in 47 days, ≥30) and http.https_redirect passed (http redirects to https)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "naturalspor.com",
+                "name": "Naturalspor",
+                "city": null,
+                "query": "Naturalspor",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "naturalspor.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "naturalspor.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://naturalspor.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "naturalspor.com",
+                "name": "Naturalspor",
+                "city": null,
+                "query": "Naturalspor",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "naturalspor.com names the business (address: “naturalspor.com”)",
+              "observed": {
+                "host": "naturalspor.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "naturalspor.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/naturalspor",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://naturalspor.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 3,
+              "at": "2026-10-14T02:00:59.691Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "naturalspor.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 47 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-30T07:34:15.000Z",
+                "daysLeft": 47,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 127,
+              "at": "2026-10-14T02:00:59.818Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "naturalspor.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://naturalspor.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://naturalspor.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://naturalspor.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://naturalspor.com/"
+              },
+              "ms": 180,
+              "at": "2026-10-14T02:00:59.998Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://naturalspor.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://naturalspor.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://naturalspor.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:00:59.998Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:00:59.998Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects to a secure connection."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Naturalspor is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false (no matching place on OpenStreetMap)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Naturalspor",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Naturalspor",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 77,
+              "at": "2026-10-14T02:01:00.075Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:00.075Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your website loads and serves content over HTTPS, confirming a solid technical foundation.",
+          "cites": [
+            "site_online",
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The business is absent from OpenStreetMap, which many map apps rely on for local discovery.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3201,
+          "usage": {
+            "in": 2503,
+            "out": 454,
+            "total": 2957,
+            "reasoning": 384
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4795,
+          "usage": {
+            "in": 1069,
+            "out": 785,
+            "total": 1854,
+            "reasoning": 660
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3855,
+          "usage": {
+            "in": 330,
+            "out": 483,
+            "total": 813,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3465,
+          "usage": {
+            "in": 334,
+            "out": 655,
+            "total": 989,
+            "reasoning": 425
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "mosso",
+      "query": "Mosso Çikolata",
+      "note": "chocolate e-shop (Saker list, 7 Oct); name only; own site mossocikolata.com (3 MB homepage)",
+      "ms": 23295,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 20,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 5664,
+        "rewritesRejected": 0,
+        "ms": 23295
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "mossocikolata.com loads and shows real content.",
+          "rationale": "site.own_site passed, dns.resolved, http.reachable, and page.name_match confirm the site is online and names the business",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "mossocikolata.com",
+                "name": "Mosso Çikolata",
+                "city": null,
+                "query": "Mosso Çikolata",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://mossocikolata.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://mossocikolata.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "mossocikolata.com",
+                "name": "Mosso Çikolata",
+                "city": null,
+                "query": "Mosso Çikolata",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "mossocikolata.com names the business (address: “mossocikolata.com”)",
+              "observed": {
+                "host": "mossocikolata.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "mossocikolata.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://yandex.com.tr/maps/org/mosso_cikolata/136412588866",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://mossocikolata.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 2139,
+              "at": "2026-10-14T02:01:26.321Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://mossocikolata.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://mossocikolata.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://mossocikolata.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 83,
+              "at": "2026-10-14T02:01:26.405Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://mossocikolata.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Mosso Çikolata”)",
+              "observed": {
+                "title": "Mosso Çikolata",
+                "marker": null
+              },
+              "ms": 2,
+              "at": "2026-10-14T02:01:26.407Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:26.407Z",
+          "ownerText": "Your website loads and shows your business info."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "mossocikolata.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "http.https_redirect passed and tls.cert_valid shows certificate valid for 70 days (≥30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "mossocikolata.com",
+                "name": "Mosso Çikolata",
+                "city": null,
+                "query": "Mosso Çikolata",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "mossocikolata.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "mossocikolata.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://mossocikolata.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "mossocikolata.com",
+                "name": "Mosso Çikolata",
+                "city": null,
+                "query": "Mosso Çikolata",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "mossocikolata.com names the business (address: “mossocikolata.com”)",
+              "observed": {
+                "host": "mossocikolata.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "mossocikolata.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://yandex.com.tr/maps/org/mosso_cikolata/136412588866",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://mossocikolata.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 2,
+              "at": "2026-10-14T02:01:26.409Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "mossocikolata.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 70 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-23T08:15:33.000Z",
+                "daysLeft": 70,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 96,
+              "at": "2026-10-14T02:01:26.505Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "mossocikolata.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://mossocikolata.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://mossocikolata.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://mossocikolata.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://mossocikolata.com/"
+              },
+              "ms": 146,
+              "at": "2026-10-14T02:01:26.651Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://mossocikolata.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://mossocikolata.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://mossocikolata.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-14T02:01:26.652Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:26.652Z",
+          "ownerText": "Your site uses a secure connection that stays valid for over a month."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Mosso Çikolata is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed failed, indicating no matching place on OpenStreetMap for Mosso Çikolata in Denizli",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Mosso Çikolata",
+                "city": "Denizli",
+                "cityGuessed": true
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Mosso Çikolata",
+                "city": "Denizli",
+                "cityGuessed": true
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 1159,
+              "at": "2026-10-14T02:01:27.811Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:27.811Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, so some map apps might not show you."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your website loads correctly and serves content over a valid HTTPS connection (site_online, https_healthy).",
+          "cites": [
+            "site_online",
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "However, Mosso Çikolata is not listed on OpenStreetMap, which many map apps rely on for local discovery (not_on_map).",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3526,
+          "usage": {
+            "in": 977,
+            "out": 599,
+            "total": 1576,
+            "reasoning": 487
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4227,
+          "usage": {
+            "in": 1244,
+            "out": 731,
+            "total": 1975,
+            "reasoning": 604
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2217,
+          "usage": {
+            "in": 362,
+            "out": 473,
+            "total": 835,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4668,
+          "usage": {
+            "in": 373,
+            "out": 905,
+            "total": 1278,
+            "reasoning": 634
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "anatolia",
+      "query": "Anatolia Soap",
+      "note": "soap e-shop (Saker list, 7 Oct); name only, two common English words; own site anatoliasoap.com",
+      "ms": 25111,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 6740,
+        "rewritesRejected": 0,
+        "ms": 25111
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "anatoliasoap.com loads and shows real content.",
+          "rationale": "DNS resolves (dns.resolves), site loads with HTTP 200 (http.reachable), HTTP redirects to HTTPS (http.https_redirect), TLS certificate valid for 70 days (tls.cert_valid), page contains real content (page.not_parked), contact information found (page.contact_path), and page name matches business (page.name_match).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "anatoliasoap.com",
+                "name": "Anatolia Soap",
+                "city": null,
+                "query": "Anatolia Soap",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://anatoliasoap.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://anatoliasoap.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "anatoliasoap.com",
+                "name": "Anatolia Soap",
+                "city": null,
+                "query": "Anatolia Soap",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "anatoliasoap.com names the business (address: “anatoliasoap.com”)",
+              "observed": {
+                "host": "anatoliasoap.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "anatoliasoap.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://anatoliasoap.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 2212,
+              "at": "2026-10-14T02:01:56.341Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://anatoliasoap.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://anatoliasoap.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://anatoliasoap.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 74,
+              "at": "2026-10-14T02:01:56.418Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://anatoliasoap.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Anatolia Soap - Aradığınız Sabun Burada”)",
+              "observed": {
+                "title": "Anatolia Soap - Aradığınız Sabun Burada",
+                "marker": null
+              },
+              "ms": 5,
+              "at": "2026-10-14T02:01:56.423Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:56.423Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "anatoliasoap.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate is valid with 70 days remaining (>30 days threshold) (tls.cert_valid) and the site is reachable via HTTPS after redirect (http.https_redirect, http.reachable).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "anatoliasoap.com",
+                "name": "Anatolia Soap",
+                "city": null,
+                "query": "Anatolia Soap",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "anatoliasoap.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "anatoliasoap.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://anatoliasoap.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "anatoliasoap.com",
+                "name": "Anatolia Soap",
+                "city": null,
+                "query": "Anatolia Soap",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "anatoliasoap.com names the business (address: “anatoliasoap.com”)",
+              "observed": {
+                "host": "anatoliasoap.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "anatoliasoap.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://anatoliasoap.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 5,
+              "at": "2026-10-14T02:01:56.428Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "anatoliasoap.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 70 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-23T12:00:40.000Z",
+                "daysLeft": 70,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 118,
+              "at": "2026-10-14T02:01:56.546Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "anatoliasoap.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://anatoliasoap.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://anatoliasoap.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://anatoliasoap.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://anatoliasoap.com/"
+              },
+              "ms": 172,
+              "at": "2026-10-14T02:01:56.718Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://anatoliasoap.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://anatoliasoap.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://anatoliasoap.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:01:56.718Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:56.718Z",
+          "ownerText": "Your site uses a safe HTTPS connection and redirects securely."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Anatolia Soap is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place found on OpenStreetMap for the business name (osm.listed passed false).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Anatolia Soap",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Anatolia Soap",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 83,
+              "at": "2026-10-14T02:01:56.802Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:01:56.802Z",
+          "ownerText": "Your business isn’t on maps that many apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site anatoliasoap.com loads correctly and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The site uses a valid HTTPS certificate, keeping visitor connections secure.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Anatolia Soap is currently missing from OpenStreetMap, which many map apps rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5308,
+          "usage": {
+            "in": 1650,
+            "out": 912,
+            "total": 2562,
+            "reasoning": 837
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4997,
+          "usage": {
+            "in": 1156,
+            "out": 967,
+            "total": 2123,
+            "reasoning": 776
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3500,
+          "usage": {
+            "in": 361,
+            "out": 631,
+            "total": 992,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3543,
+          "usage": {
+            "in": 355,
+            "out": 708,
+            "total": 1063,
+            "reasoning": 478
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "paye",
+      "query": "Paye Jewelry",
+      "note": "jewellery e-shop (Saker list, 7 Oct); name only; own site payejewelry.com (Turkish page, its site name is just its address)",
+      "ms": 24309,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 6779,
+        "rewritesRejected": 0,
+        "ms": 24309
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "payejewelry.com loads and shows real content.",
+          "rationale": "Own website found: payejewelry.com names the business (address: \"payejewelry.com\") (found by trying the address built from the name)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "payejewelry.com",
+                "name": "Paye Jewelry",
+                "city": null,
+                "query": "Paye Jewelry",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://payejewelry.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://payejewelry.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "payejewelry.com",
+                "name": "Paye Jewelry",
+                "city": null,
+                "query": "Paye Jewelry",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "payejewelry.com names the business (address: “payejewelry.com”)",
+              "observed": {
+                "host": "payejewelry.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "payejewelry.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://payejewelry.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 2295,
+              "at": "2026-10-14T02:02:25.089Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://payejewelry.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://payejewelry.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://payejewelry.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 64,
+              "at": "2026-10-14T02:02:25.155Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://payejewelry.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “none”)",
+              "observed": {
+                "title": "",
+                "marker": null
+              },
+              "ms": 1,
+              "at": "2026-10-14T02:02:25.156Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:02:25.156Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "payejewelry.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "Certificate expires in 65 day(s) (needs ≥ 30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "payejewelry.com",
+                "name": "Paye Jewelry",
+                "city": null,
+                "query": "Paye Jewelry",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "payejewelry.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "payejewelry.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://payejewelry.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "payejewelry.com",
+                "name": "Paye Jewelry",
+                "city": null,
+                "query": "Paye Jewelry",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "payejewelry.com names the business (address: “payejewelry.com”)",
+              "observed": {
+                "host": "payejewelry.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "payejewelry.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://payejewelry.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 4,
+              "at": "2026-10-14T02:02:25.160Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "payejewelry.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 65 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-18T19:36:39.000Z",
+                "daysLeft": 65,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 114,
+              "at": "2026-10-14T02:02:25.274Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "payejewelry.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://payejewelry.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://payejewelry.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://payejewelry.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://payejewelry.com/"
+              },
+              "ms": 168,
+              "at": "2026-10-14T02:02:25.442Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://payejewelry.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://payejewelry.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://payejewelry.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:02:25.442Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:02:25.442Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects visitors to a secure page."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Paye Jewelry is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Paye Jewelry",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Paye Jewelry",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 71,
+              "at": "2026-10-14T02:02:25.513Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:02:25.513Z",
+          "ownerText": "Paye Jewelry is missing from OpenStreetMap, which many map apps reuse."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads successfully and shows real content, confirming a solid foundation for online sales.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The HTTPS certificate is valid for over 30 days, ensuring secure browsing for your customers.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Paye Jewelry is currently absent from OpenStreetMap, which many navigation apps rely on for local discovery.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3213,
+          "usage": {
+            "in": 2259,
+            "out": 495,
+            "total": 2754,
+            "reasoning": 431
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4984,
+          "usage": {
+            "in": 1103,
+            "out": 916,
+            "total": 2019,
+            "reasoning": 808
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2712,
+          "usage": {
+            "in": 341,
+            "out": 586,
+            "total": 927,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3934,
+          "usage": {
+            "in": 352,
+            "out": 727,
+            "total": 1079,
+            "reasoning": 489
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "aksel",
+      "query": "Aksel Silver",
+      "note": "silver jewellery maker (Saker list, 7 Oct); name only; own site akselsilver.com (forwards to www), site name 'Aksel Gümüş Aksel Silver'",
+      "ms": 24159,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 5243,
+        "rewritesRejected": 0,
+        "ms": 24157
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "akselsilver.com loads and shows real content.",
+          "rationale": "site.own_site passed: akselsilver.com names the business (address: “akselsilver.com”)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "akselsilver.com",
+                "name": "Aksel Silver",
+                "city": null,
+                "query": "Aksel Silver",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://akselsilver.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://akselsilver.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "akselsilver.com",
+                "name": "Aksel Silver",
+                "city": null,
+                "query": "Aksel Silver",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "akselsilver.com names the business (address: “akselsilver.com”)",
+              "observed": {
+                "host": "akselsilver.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "akselsilver.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2213,
+              "at": "2026-10-14T02:02:53.258Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://akselsilver.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.akselsilver.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.akselsilver.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://akselsilver.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.akselsilver.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 689,
+              "at": "2026-10-14T02:02:53.948Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://akselsilver.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Aksel Gümüş Aksel Silver Takı Toptan Takı Mücevherat Üretici Firma Atölye Toptancı 925 Ayar Gümüş Toptan yüzük Toptan Küpe Toptan Kolye Toptan Şahmeran Topan Halhal Wholesale Silver Retail silver”)",
+              "observed": {
+                "title": "Aksel Gümüş Aksel Silver Takı Toptan Takı Mücevherat Üretici Firma Atölye Toptancı 925 Ayar Gümüş Toptan yüzük Toptan Küpe Toptan Kolye Toptan Şahmeran Topan Halhal Wholesale Silver Retail silver",
+                "marker": null
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:02:53.948Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:02:53.948Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "akselsilver.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "http.https_redirect passed (http→https redirect) and tls.cert_valid passed (certificate expires in 36 day(s) ≥ 30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "akselsilver.com",
+                "name": "Aksel Silver",
+                "city": null,
+                "query": "Aksel Silver",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "akselsilver.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "akselsilver.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://akselsilver.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "akselsilver.com",
+                "name": "Aksel Silver",
+                "city": null,
+                "query": "Aksel Silver",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "akselsilver.com names the business (address: “akselsilver.com”)",
+              "observed": {
+                "host": "akselsilver.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "akselsilver.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 2,
+              "at": "2026-10-14T02:02:53.950Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "akselsilver.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 36 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-19T22:15:58.000Z",
+                "daysLeft": 36,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 36,
+              "at": "2026-10-14T02:02:53.986Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "akselsilver.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.akselsilver.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://akselsilver.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://akselsilver.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.akselsilver.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.akselsilver.com/"
+              },
+              "ms": 607,
+              "at": "2026-10-14T02:02:54.593Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://akselsilver.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.akselsilver.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.akselsilver.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://akselsilver.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.akselsilver.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-14T02:02:54.593Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:02:54.593Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects to a secure page."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Aksel Silver is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Aksel Silver",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Aksel Silver",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 80,
+              "at": "2026-10-14T02:02:54.673Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:02:54.673Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate lasting over 30 days.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The business is missing from OpenStreetMap, which many map apps rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2887,
+          "usage": {
+            "in": 1150,
+            "out": 396,
+            "total": 1546,
+            "reasoning": 309
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4416,
+          "usage": {
+            "in": 1248,
+            "out": 690,
+            "total": 1938,
+            "reasoning": 568
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1776,
+          "usage": {
+            "in": 428,
+            "out": 280,
+            "total": 708,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3887,
+          "usage": {
+            "in": 345,
+            "out": 706,
+            "total": 1051,
+            "reasoning": 441
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "meys",
+      "query": "MeysDesignStore",
+      "note": "handmade seller without a website (Saker no-website sample, 7 Oct); name only, one word; expected: no website of its own",
+      "ms": 25353,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5088,
+        "rewritesRejected": 0,
+        "ms": 25353
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for MeysDesignStore; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 9 search result(s); listings only: https://www.etsy.com/shop/MeysDesignStore, https://www.facebook.com/MeysDesignStore, https://www.instagram.com/meysdesignstore",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "MeysDesignStore",
+                "city": null,
+                "query": "MeysDesignStore"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "MeysDesignStore",
+                "city": null,
+                "query": "MeysDesignStore"
+              },
+              "pass": false,
+              "summary": "No website of its own among 9 search result(s); listings only: https://www.etsy.com/shop/MeysDesignStore, https://www.facebook.com/MeysDesignStore, https://www.instagram.com/meysdesignstore",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://www.etsy.com/shop/MeysDesignStore",
+                  "https://www.facebook.com/MeysDesignStore",
+                  "https://www.instagram.com/meysdesignstore"
+                ]
+              },
+              "ms": 3106,
+              "at": "2026-10-14T02:03:22.849Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:03:22.852Z",
+          "ownerText": "We couldn't find a website for MeysDesignStore; it only appears on listings and social platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "MeysDesignStore is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "MeysDesignStore",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "MeysDesignStore",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 92,
+              "at": "2026-10-14T02:03:22.944Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:03:22.944Z",
+          "ownerText": "MeysDesignStore isn’t listed on OpenStreetMap, so it may not show up in some map apps."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "No website of its own was found for MeysDesignStore; it shows up only on listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "MeysDesignStore is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4206,
+          "usage": {
+            "in": 1138,
+            "out": 664,
+            "total": 1802,
+            "reasoning": 598
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4266,
+          "usage": {
+            "in": 768,
+            "out": 730,
+            "total": 1498,
+            "reasoning": 619
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2574,
+          "usage": {
+            "in": 265,
+            "out": 418,
+            "total": 683,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4190,
+          "usage": {
+            "in": 313,
+            "out": 792,
+            "total": 1105,
+            "reasoning": 529
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "crochet",
+      "query": "crochetgunay",
+      "note": "crochet seller without a website (Saker no-website sample, 7 Oct); name only, a handle; expected: no website of its own",
+      "ms": 19603,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4419,
+        "rewritesRejected": 0,
+        "ms": 19602
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for crochetgunay; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 10 search result(s); listings only: https://se.pinterest.com/pin/crochetgunay--553802085437888719, https://www.facebook.com/bohoandgypsystyle/posts/crochet-gunayig-crochetgunay/5275218999159647, https://www.etsy.com/shop/crochetgunay",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "crochetgunay",
+                "city": null,
+                "query": "crochetgunay"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "crochetgunay",
+                "city": null,
+                "query": "crochetgunay"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://se.pinterest.com/pin/crochetgunay--553802085437888719, https://www.facebook.com/bohoandgypsystyle/posts/crochet-gunayig-crochetgunay/5275218999159647, https://www.etsy.com/shop/crochetgunay",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://se.pinterest.com/pin/crochetgunay--553802085437888719",
+                  "https://www.facebook.com/bohoandgypsystyle/posts/crochet-gunayig-crochetgunay/5275218999159647",
+                  "https://www.etsy.com/shop/crochetgunay"
+                ]
+              },
+              "ms": 3396,
+              "at": "2026-10-14T02:03:47.618Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:03:47.619Z",
+          "ownerText": "We couldn't find a website for Crochetgunay; you appear only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "crochetgunay is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "crochetgunay",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "crochetgunay",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 91,
+              "at": "2026-10-14T02:03:47.710Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:03:47.710Z",
+          "ownerText": "Crochetgunay isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You currently have no own website, which means you rely entirely on external platforms for visibility and miss out on direct customer engagement.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business is absent from OpenStreetMap, reducing the chances of appearing in map‑based searches that many potential customers use.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2402,
+          "usage": {
+            "in": 1109,
+            "out": 371,
+            "total": 1480,
+            "reasoning": 305
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3474,
+          "usage": {
+            "in": 823,
+            "out": 628,
+            "total": 1451,
+            "reasoning": 462
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2030,
+          "usage": {
+            "in": 320,
+            "out": 268,
+            "total": 588,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3595,
+          "usage": {
+            "in": 313,
+            "out": 587,
+            "total": 900,
+            "reasoning": 281
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "dodo",
+      "query": "DodoCraftCo",
+      "note": "craft seller without a website (Saker no-website sample, 7 Oct); name only, one word; expected: no website of its own",
+      "ms": 22726,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5530,
+        "rewritesRejected": 0,
+        "ms": 22726
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for DodoCraftCo; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check passed false: No website of its own among 9 search result(s); listings only: https://www.etsy.com/shop/DodoCraftCo, https://www.pinterest.com/pin/dodocraftco-etsy--290834088454135030",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "DodoCraftCo",
+                "city": null,
+                "query": "DodoCraftCo"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "DodoCraftCo",
+                "city": null,
+                "query": "DodoCraftCo"
+              },
+              "pass": false,
+              "summary": "No website of its own among 9 search result(s); listings only: https://www.etsy.com/shop/DodoCraftCo, https://www.pinterest.com/pin/dodocraftco-etsy--290834088454135030",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://www.etsy.com/shop/DodoCraftCo",
+                  "https://www.pinterest.com/pin/dodocraftco-etsy--290834088454135030"
+                ]
+              },
+              "ms": 3106,
+              "at": "2026-10-14T02:04:12.694Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:04:12.694Z",
+          "ownerText": "We couldn't find your own website; you appear only on marketplaces like Etsy and Pinterest."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "DodoCraftCo is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check passed false: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "DodoCraftCo",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "DodoCraftCo",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 84,
+              "at": "2026-10-14T02:04:12.778Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-14T02:04:12.778Z",
+          "ownerText": "You don’t show up on OpenStreetMap, so some map apps might not find you."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have a dedicated website; all current references come from external listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business is missing from OpenStreetMap, a source used by many map apps to display locations.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3798,
+          "usage": {
+            "in": 1492,
+            "out": 621,
+            "total": 2113,
+            "reasoning": 546
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3116,
+          "usage": {
+            "in": 789,
+            "out": 563,
+            "total": 1352,
+            "reasoning": 436
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3216,
+          "usage": {
+            "in": 282,
+            "out": 657,
+            "total": 939,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4077,
+          "usage": {
+            "in": 318,
+            "out": 808,
+            "total": 1126,
+            "reasoning": 549
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

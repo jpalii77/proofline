@@ -75,3 +75,16 @@ test('round-14 list: 12 businesses, none seen in an earlier list, mixed input', 
   assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
   assert.equal(parsed.find((p) => p.id === 'fatma').name, "Fatma Ana'dan", 'the apostrophe stays part of the name');
 });
+
+// Round 16 (14 Oct): the lost-finding fixes (contact page for the city, Turkish site for a bare name) were
+// re-measured on the list they were made for (round 15); a fourth fresh list is the real test before release.
+test('round-16 list: 12 businesses, none seen in an earlier list, mixed input', () => {
+  const fresh = load('businesses-7.json');
+  assert.equal(fresh.length, 12);
+  const seen = new Set(lists.filter((f) => f !== 'businesses-7.json').flatMap((f) => load(f).map((it) => key(it.query))));
+  for (const it of fresh) assert.ok(!seen.has(key(it.query)), `${it.query} was already measured`);
+  const parsed = fresh.map((it) => ({ id: it.id, ...intake(it.query) }));
+  assert.deepEqual(parsed.filter((p) => p.domain).map((p) => p.domain), ['vettamoda.com', 'akgulkolonya.com']);
+  assert.deepEqual(parsed.filter((p) => p.city && !p.domain).map((p) => p.city), ['Çanakkale', 'Ankara']);
+  assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
+});

@@ -730,6 +730,9 @@ export const CHECKS = {
       const p = await page(io, url);
       if (!okStatus(p.status)) return { pass: null, summary: 'Page did not load', observed: { status: p.status ?? null } };
       const telLinks = [...p.html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1]);
+      // (round 16: alestacoffee.com shows its number only in a WhatsApp button and in its structured data)
+      for (const m of p.html.matchAll(/(?:wa\.me\/|api\.whatsapp\.com\/send\?phone=)(\+?\d{10,15})/gi)) telLinks.push(m[1]);
+      for (const m of p.html.matchAll(/"telephone"\s*:\s*"([^"]{7,30})"/gi)) telLinks.push(m[1]);
       const onPage = new Set([...extractPhones(p.text), ...telLinks.map(phoneKey).filter(Boolean)]);
       const pass = onPage.has(key);
       if (!pass && p.truncated) return notWholePage({ looked_for: key, on_page: [...onPage] });
