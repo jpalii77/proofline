@@ -157,5 +157,5 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 
 | Error | Wrong claims | Fix | Regression test |
 | --- | --- | --- | --- |
-| A bare, common name ("MK Collection"): the name-built guess mkcollection.com.tr belongs to another Turkish business | 2 (site_online, no_https_redirect) | Planned: for a bare name, a name-built address that no search result shows needs a link to the business's own listings from search (its Instagram or Shopier page) | — |
+| A bare, common name ("MK Collection"): the name-built guess mkcollection.com.tr belongs to another Turkish business | 2 (site_online, no_https_redirect) | Fixed (14 Oct, not yet re-measured): for a bare name made only of initials and common shop words ("MK Collection", "Style Me Shop"), an address no search result ties to the business must link to the business's own listing from search (its Instagram, Shopier, Facebook or TikTok page); a distinctive name (Lahza, Perfumum, Naramica) is unchanged | `tests/round13-identity.test.mjs` |
 | ty.gl (Trendyol's short links) tried as an own site, so Parla Kozmetik's "no website" was not settled | 0 (true finding lost) | Fixed: ty.gl is on the platform list | `tests/round12-identity.test.mjs` |

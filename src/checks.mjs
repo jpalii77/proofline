@@ -69,6 +69,41 @@ function emptyPage(p) {
   return !(p.title || '').trim() && !metaContent(p.html || '', 'og:site_name') && (p.text || '').trim().length < 40;
 }
 
+// Words shop names share across many businesses: alone (with initials or short words) they name nobody.
+const COMMON_NAME_WORDS = new Set([
+  'collection', 'koleksiyon', 'style', 'stil', 'fashion', 'moda', 'home', 'store', 'shop', 'magaza', 'market',
+  'design', 'tasarim', 'concept', 'life', 'world', 'dunya', 'line', 'studio', 'group', 'grup', 'center',
+  'merkez', 'plus', 'gold', 'altin', 'luxury', 'lux', 'premium', 'outlet', 'trend', 'butik', 'boutique', 'giyim',
+]);
+
+/**
+ * A name with at least one word of 4+ letters that is not a common shop word: "Lahza Butik", "D&P Perfumum",
+ * "Ebru Elbise". "MK Collection" or "Style Me Shop" are initials and common words only (round 13).
+ */
+export function distinctiveName(name) {
+  return coreTokens(name).some((t) => t.length >= 4 && !COMMON_NAME_WORDS.has(t));
+}
+
+/**
+ * The page links to one of the business's own listings that search turned up (its Instagram account or
+ * Shopier store), so the site and the listing belong together.
+ */
+function linksToListing(p, results, name) {
+  const html = String(p?.html || '').toLowerCase();
+  if (!html) return false;
+  for (const r of results || []) {
+    if (!namesBusiness(`${r.title || ''} ${r.content || ''}`, name)) continue;
+    let u;
+    try { u = new URL(r.url); } catch { continue; }
+    const host = u.hostname.replace(/^www\./, '').toLowerCase();
+    if (!/^(instagram\.com|shopier\.com|facebook\.com|tiktok\.com)$/.test(host)) continue;
+    const handle = u.pathname.split('/').filter(Boolean)[0];
+    if (!handle || ['p', 'reel', 'reels', 'explore', 'popular', 'stories'].includes(handle.toLowerCase())) continue;
+    if (html.includes(`${host}/${handle.toLowerCase()}`)) return true;
+  }
+  return false;
+}
+
 /**
  * Something on the page or the address ties it to Turkey, where Proofline's businesses are: a .tr address,
  * lang="tr", Turkish-only letters, a lira price or a +90 number. With a bare name, a site that spells the name
@@ -320,6 +355,10 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
     if (!exact) {
       const loose = id.identified ? `${id.field}: “${id.value}”` : ties[0].how;
       return { pass: null, summary: `${host} only loosely matches “${name}” (${loose}); with no city or website given, it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
+    }
+    // (round 13: a common name such as "MK Collection" finds whoever owns the address, in Turkey too)
+    if (!ties.length && !distinctiveName(name) && !linksToListing(loaded ? p : null, results, name)) {
+      return { pass: null, summary: `${host} spells “${name}”, a name made of common words, but no search result ties it to the business and it does not link to the business's own listing; it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true, commonName: true } };
     }
     if (!ties.length && !turkeyTie(loaded ? p : null, host)) {
       return { pass: null, summary: `${host} spells “${name}”, but no search result ties it to the business and nothing on it ties it to Turkey; with no city or website given, it may be a namesake abroad`, observed: { host, identity: id, ties, placeUnproven: true, noTurkeyTie: true } };
