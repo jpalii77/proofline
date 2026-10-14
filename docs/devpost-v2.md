@@ -30,7 +30,7 @@ Every step streams to the page as a live trace. Every claim has a **Re-run proof
 
 The public demo opens with four recorded, fictional examples (instant, free) and a capped live mode that calls Tavily and Nemotron for real. The examples replay **real Nemotron answers**, recorded once on Token Factory in English and Turkish with their model ids, tokens and latency; the panel labels them "recorded, no new tokens", and the gate and the other code checks run again on every replay. The whole report follows the visitor's language, **English or Turkish**: Nemotron writes the owner lines, summary and pitch in that language, and the page shows the fixed wording (checks, claim sentences, drop reasons) in it too. An optional four-step **"How it works" tour** explains the page to a first-time visitor.
 
-**Measured, not claimed:** fourteen rounds on 72 real Turkish businesses, every kept claim checked by hand outside Proofline. The number that matters is on businesses the fixes were never made for: on the latest fresh list of 12 (round 14), **no kept claim was wrong (18 of 18 checkable)**. Getting there included a published fall: fixes that reached 96% on one list scored 61% on a new one (round 12), and that is what made the agent trustworthy. See Accuracy below.
+**Measured, not claimed:** sixteen rounds on 84 real Turkish businesses, every kept claim checked by hand outside Proofline. The number that matters is on businesses the fixes were never made for: on the last two fresh lists of 12, **one checkable kept claim in 51 was wrong** (round 14: 18 of 18 checkable; round 16: 32 of 33). Getting there included a published fall: fixes that reached 96% on one list scored 61% on a new one (round 12), and that is what made the agent trustworthy. See Accuracy below.
 
 ## How we built it
 
@@ -50,7 +50,7 @@ The public demo opens with four recorded, fictional examples (instant, free) and
 - **Interface:** single page, no framework; English and Turkish interface and report (`public/i18n.js`, `public/report-lang.js`), guided tour (`public/tour.js`), phone layout checked at 375 px.
 - **Recorded examples:** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (7 calls each, English and Turkish) and saves every answer with its model id, tokens, latency and output format; the demo replays them (`src/agent/recorded-brain.mjs`). A step with no recording falls back to a rule-based stand-in, named as such.
 - **Nemotron 3 Ultra, measured before used:** on the planner's hardest decision (which website, if any, belongs to the business) we ran Ultra and Super side by side on the same 12 businesses (`scripts/ultra-compare.mjs`). With the improved search, Super chose right in 11 of 12 and Ultra in 10 of 12, so the planner stays on Super and the credit goes further.
-- **Tests:** 265 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
+- **Tests:** 272 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
 
 ## Challenges we ran into
 
@@ -112,15 +112,17 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 12 (14 Oct, fixes tested on new businesses) | 12 new shops, mixed input | 35 | 1 | 34 | 20 of 33 checkable | 61% |
 | 13 (14 Oct, after fixes) | same 12 | 28 | 6 | 22 | 20 of 22 | 91% |
 | 14 (14 Oct, after one more guard) | 12 new shops, mixed input | 25 | 5 | 20 | 18 of 18 checkable | 100% |
+| 15 (14 Oct, lost findings won back) | same 12 | 26 | 3 | 23 | 23 of 23 | 100% |
+| 16 (14 Oct, no fixes in between) | 12 new shops and makers, mixed input | 33 | 0 | 33 | 32 of 33 | 97% |
 
-The honest numbers are the rounds on businesses the earlier fixes were not made for: 3 (86%), 8 (91%), 12 (61%) and 14 (100%). Rounds re-run on the same list (2, 5–7, 9–11, 13) show the effect of each change, not a fresh sample. A claim the check could not settle is left out of the percentage and listed. The method, every verdict and every error are in `docs/accuracy.md`.
+The honest numbers are the rounds on businesses the earlier fixes were not made for: 3 (86%), 8 (91%), 12 (61%), 14 (100%) and 16 (97%, with the most findings of any round). Rounds re-run on the same list (2, 5–7, 9–11, 13, 15) show the effect of each change, not a fresh sample. A claim the check could not settle is left out of the percentage and listed. The method, every verdict and every error are in `docs/accuracy.md`.
 
 ## What's next
 
 - Recognise a business listed on the map under an older name, by comparing the map entry's phone or website with the site's (round 3's one unfixed error).
 - Find a shop whose website has another name, through the links on its Instagram or marketplace page (round 5's known limit).
 - More Tavily signals: relocation / "moved", and a dedicated identity-verification search.
-- Keep measuring every new fix on a fresh list of businesses it was not made for, as in rounds 12–14, and win back the true findings the new caution leaves out (a site that names its city only deep in the page; a brand's Turkish site behind its US store).
+- Keep measuring every new fix on a fresh list of businesses it was not made for, as in rounds 12–16, and keep winning back the true findings the caution leaves out (round 15 recovered two: a city named only on the contact page, a brand's Turkish site behind its US store; round 16 left one, a site that names its city once deep in a 1.4 MB page).
 - Batch mode for a seller's lead list.
 
 ## What was built during the hackathon
