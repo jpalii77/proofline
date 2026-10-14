@@ -25,6 +25,7 @@
 | 10 | 2026-10-14 (same list, after the round-9 fixes) | 12 | 26 | 2 | 24 | 23 of 24 | **96%** |
 | 11 | 2026-10-14 (same list, after the round-10 fix) | 12 | 28 | 3 | 25 | 23 of 24 checkable (1 unverifiable) | **96%** |
 | 12 | 2026-10-14 (fresh list `businesses-5.json`, mixed input) | 12 | 35 | 1 | 34 | 20 of 33 checkable (1 unverifiable) | 61% |
+| 13 | 2026-10-14 (same fresh list, after the round-12 fixes) | 12 | 28 | 6 | 22 | 20 of 22 | **91%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -47,6 +48,8 @@ Round 10 (same list, `eval/verdicts-r10.json`): the Egyptian namesake is gone an
 Round 11 (same list, `eval/verdicts-r11.json`): D&P Perfumum is now checked on its working site dpperfumum.com.tr (2 right claims instead of a false "does not load"). 23 of 24 checkable kept claims right (96%); Çakıl Butik's "no website" could not be settled (ozgecakil.com, "Özge Çakıl Butik", may or may not be the same shop). One wrong, and a lesson: Lahza Butik was again told it has no website, because the second search, which had found lahzaabutik.com in rounds 9 and 10, did not return it this time. Search results vary from run to run, so a fix that depends on them is not a fix. After the round the doubled-letter spelling became one of the name-built guesses, which do not depend on search. All 3 dropped claims deserved it.
 
 Round 12 (`eval/businesses-5.json`, 12 businesses never measured before, `eval/verdicts-r12.json`): rounds 8–11 had re-run one list up to 96%, and a fresh list shows how much of that fitted those shops: 20 of 33 checkable kept claims right (61%). The wrong ones come from three businesses and four causes: Style Me Shop (6 wrong) was given stylemeshop.com, a script that jumps to a parking page, and a "Style Me Boutique" in South Carolina found under a city the planner guessed; MK Collection (4 wrong) was given mkcollection.com, a US fabrics company the name-built guess turned up, and a shop in Ukraine on the map; Bebetto (2 wrong) was checked on bebetto.com.tr, an empty page, instead of its site bebetto.com; and Kıvırcık Kızlar Gelsin's unconnected Wix domain (404) was called "secure and working over HTTPS". The six Shopier-only sellers and the four healthy sites were all reported right. All four causes were fixed after the round (below).
+
+Round 13 (same fresh list, `eval/verdicts-r13.json`): 20 of 22 kept claims right (91%). The parked page, the US and Ukrainian namesakes and the empty page are gone; Bebetto is checked on its real site. The gate dropped 6 claims, 5 rightly; Parla Kozmetik's true "no website" was lost to ty.gl, Trendyol's short-link address, now on the platform list. The 2 wrong claims show what is still open: for the bare, common name "MK Collection" the name-built guess found mkcollection.com.tr, a Turkish protocol-gift business that happens to own that address. Reports are now shorter where the agent is unsure, which is the intended trade.
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
@@ -149,3 +152,10 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | With a bare name, an address that spells the whole name was taken with nothing tying it to the business or to Turkey (mkcollection.com, a US company) | 3 (site_online, https_healthy, no_contact_path) | Fixed: with no city or website typed, such an address also needs a search result that ties it to the business, or something on it that ties it to Turkey (a .tr address, lang="tr", Turkish letters, a lira price, a +90 number); otherwise it may be a namesake abroad | `tests/round12-identity.test.mjs` |
 | A map match under a city the planner guessed ("North Myrtle Beach"), or abroad for a name typed without a city (Dnipro), counted as "on the map"; a US phone from that match was then reported | 3 (on_map ×2, phone_unconfirmed) | Fixed: only a typed city ties a map match to the business; without one, a match outside Turkey (or for a one-word name, any match) is not settled | `tests/round12-identity.test.mjs` |
 | "Valid certificate and HTTPS" kept for a domain answering 404 (an unconnected Wix domain) | 1 (https_healthy) | Fixed: that claim now also needs the site to load | `tests/round12-identity.test.mjs` |
+
+### Round 13 (same fresh list, after the round-12 fixes)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| A bare, common name ("MK Collection"): the name-built guess mkcollection.com.tr belongs to another Turkish business | 2 (site_online, no_https_redirect) | Planned: for a bare name, a name-built address that no search result shows needs a link to the business's own listings from search (its Instagram or Shopier page) | — |
+| ty.gl (Trendyol's short links) tried as an own site, so Parla Kozmetik's "no website" was not settled | 0 (true finding lost) | Fixed: ty.gl is on the platform list | `tests/round12-identity.test.mjs` |

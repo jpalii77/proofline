@@ -27,7 +27,7 @@ export const PLATFORM_HOSTS = {
   ],
   'marketplace / services': [
     'sahibinden.com', 'armut.com', 'bionluk.com', 'hepsiburada.com', 'n11.com', 'amazon.com', 'amazon.com.tr',
-    'etsy.com', 'letgo.com', 'dolap.com', 'shopier.com',
+    'etsy.com', 'letgo.com', 'dolap.com', 'shopier.com', 'ty.gl', // (ty.gl: Trendyol's short links, round 13)
   ],
   'social network / link hub': [
     'instagram.com', 'facebook.com', 'fb.com', 'm.facebook.com', 'tiktok.com', 'x.com', 'twitter.com',

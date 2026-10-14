@@ -1,0 +1,35 @@
+{
+  "run": "eval/runs/2026-10-14-r13.json",
+  "list": "eval/businesses-5.json: the round-12 fresh list again, after the four round-12 fixes.",
+  "checkedBy": "Independent re-check on 2026-10-14: curl (page titles and bodies), openssl, dig, Nominatim limited to Turkey; the claims repeated from round 12 were re-checked there the same day (verdicts-r12.json).",
+  "summary": { "kept": 22, "right": 20, "wrong": 2, "unverifiable": 0, "dropped": 6 },
+  "verdicts": {
+    "morn": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "kivircik": { "not_on_map": "right" },
+    "gorkito": { "not_on_map": "right" },
+    "bubble": { "no_own_website": "right", "not_on_map": "right" },
+    "begon": { "site_online": "right", "https_healthy": "right (ends 17 Dec 2026; now also checked to load)", "not_on_map": "right" },
+    "bebetto": { "site_online": "right (bebetto.com, the brand's site; the empty .com.tr is passed over)", "https_healthy": "right (ends 15 Nov 2026 = 32 days)" },
+    "formeya": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "ebru": { "no_own_website": "right", "not_on_map": "right" },
+    "ossy": { "no_own_website": "right", "not_on_map": "right" },
+    "parla": { "not_on_map": "right (no OSM match in Turkey; the guessed city Ankara was dropped and the search repeated without it)" },
+    "mk": {
+      "site_online": "WRONG: mkcollection.com.tr is 'MKCollection | Premium Protocol Gifts & Collectible Pieces', a different Turkish business, found by the name-built guess; the clothing seller only sells on Shopier",
+      "no_https_redirect": "WRONG: same namesake"
+    }
+  },
+  "droppedVerdicts": {
+    "kivircik": { "site_online": "deserved to be dropped (404)", "https_healthy": "deserved to be dropped (404; the round-12 fix)", "other": "deserved to be dropped" },
+    "styleme": { "no_own_website": "deserved caution: shopstylemeboutique.com (a US 'Style Me Boutique') left it unsettled; a true 'no website' was lost" },
+    "parla": { "no_own_website": "a true finding lost: ty.gl, Trendyol's short-link address, was tried as an own site. Fixed after the round (platform list)" },
+    "mk": { "third claim": "deserved to be dropped" }
+  },
+  "fixedSinceRound12": [
+    "styleme: no claim about the parked stylemeshop.com or the South Carolina boutique (6 wrong claims gone)",
+    "mk: no claim about the US mkcollection.com or the shop in Ukraine (4 gone; 2 new wrong about a Turkish namesake, see below)",
+    "bebetto: checked on bebetto.com, its real site (2 wrong gone, 2 right)",
+    "kivircik: no 'secure and working' for a 404 domain"
+  ],
+  "openProblem": "A bare, common name ('MK Collection') plus a name-built guess finds whoever owns that address, in Turkey too. Planned: for a bare name, a name-built address that no search result shows needs a link to the business's own listings (its Instagram or Shopier page from search) or a distinctive name."
+}

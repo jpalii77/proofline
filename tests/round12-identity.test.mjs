@@ -92,3 +92,10 @@ test('"HTTPS is healthy" is not kept for a site that answers 404 (kivircikkizlar
   assert.ok(!report.verified.some((c) => c.type === 'https_healthy'), 'no "secure and working" about a 404');
   assert.ok(report.verified.some((c) => c.type === 'site_unreachable'));
 });
+
+// Round 13: Parla Kozmetik's "no website" stayed unsettled because ty.gl, Trendyol's short-link address,
+// was tried as a possible own site (and then read as a Greenland address).
+test('ty.gl, Trendyol\'s short links, is a marketplace, never an own site', async () => {
+  const { classifyHost } = await import('../src/platforms.mjs');
+  assert.equal(classifyHost('ty.gl').kind, 'platform');
+});
