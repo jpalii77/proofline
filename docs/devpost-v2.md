@@ -30,7 +30,7 @@ Every step streams to the page as a live trace. Every claim has a **Re-run proof
 
 The public demo opens with four recorded, fictional examples (instant, free) and a capped live mode that calls Tavily and Nemotron for real. The examples replay **real Nemotron answers**, recorded once on Token Factory in English and Turkish with their model ids, tokens and latency; the panel labels them "recorded, no new tokens", and the gate and the other code checks run again on every replay. The whole report follows the visitor's language, **English or Turkish**: Nemotron writes the owner lines, summary and pitch in that language, and the page shows the fixed wording (checks, claim sentences, drop reasons) in it too. An optional four-step **"How it works" tour** explains the page to a first-time visitor.
 
-**Measured, not claimed:** seven rounds on 36 real businesses, every kept claim checked by hand outside Proofline. On 12 local businesses it had never seen (round 3), **86% of the claims the gate kept were correct** (18 of 21). On a stress test of 12 online shops typed by bare name only, it started at 52% (round 4); after fixing what each round exposed, and a better Tavily discovery search, **21 of 21** checkable kept claims were correct in round 7, with more true findings than before. See Accuracy below.
+**Measured, not claimed:** fourteen rounds on 72 real Turkish businesses, every kept claim checked by hand outside Proofline. The number that matters is on businesses the fixes were never made for: on the latest fresh list of 12 (round 14), **no kept claim was wrong (18 of 18 checkable)**. Getting there included a published fall: fixes that reached 96% on one list scored 61% on a new one (round 12), and that is what made the agent trustworthy. See Accuracy below.
 
 ## How we built it
 
@@ -50,7 +50,7 @@ The public demo opens with four recorded, fictional examples (instant, free) and
 - **Interface:** single page, no framework; English and Turkish interface and report (`public/i18n.js`, `public/report-lang.js`), guided tour (`public/tour.js`), phone layout checked at 375 px.
 - **Recorded examples:** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (7 calls each, English and Turkish) and saves every answer with its model id, tokens, latency and output format; the demo replays them (`src/agent/recorded-brain.mjs`). A step with no recording falls back to a rule-based stand-in, named as such.
 - **Nemotron 3 Ultra, measured before used:** on the planner's hardest decision (which website, if any, belongs to the business) we ran Ultra and Super side by side on the same 12 businesses (`scripts/ultra-compare.mjs`). With the improved search, Super chose right in 11 of 12 and Ultra in 10 of 12, so the planner stays on Super and the credit goes further.
-- **Tests:** 228 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
+- **Tests:** 265 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
 
 ## Challenges we ran into
 
@@ -68,6 +68,8 @@ Round 4 went looking for the limits on purpose: 12 online shops typed by bare na
 
 Then we found the bigger lever was not the model but the search. For 6 of the 9 businesses with a known site, that site was simply not among Tavily's 5 results for "name official website phone" in our comparison run, so no model could have picked it. The plain name with 10 results found it in 8 of 9 cases, at the same cost. Finding more sites also brought more namesakes and "launching soon" pages (round 6 fell to 71%), so four more guards followed: with only a name typed, identity is checked against that name, not the planner's tidier one ("Lost Mind" had become "Lost Minds", a games company); one common word is never told "no website of its own"; Turkish placeholder pages ("Yakında Başlatılacak") are recognised; a template's 212 123 45 67 is not a phone. Round 7, same list: 21 of 21 checkable kept claims correct.
 
+Our biggest lesson came last. Rounds 8–11 fixed every error on one fresh list until it reached 96%. We then ran the same agent on 12 businesses it had never seen (round 12) and it fell to **61%**: it took a script that jumps to a parking page and an empty page for shops' websites, reported a US fabrics company and a shop in Ukraine for a Turkish seller called "MK Collection", matched a South Carolina boutique on the map under a city the planner had guessed, and told a seller whose domain answers 404 that the site was "secure". The fixes had fitted the list. Each cause got a guard and a test: an empty or parked page is never a website; with a bare name, a site must be tied to the business by search or to Turkey (a .tr address, Turkish text, a lira price, a +90 number), and a common name like "MK Collection" must link to the business's own Instagram or Shopier page; only a city the user typed ties a map match; "secure HTTPS" needs a page that loads. Round 13 re-measured the same list (91%), and round 14, a third list nobody had looked at, kept no wrong claim. Since then, every fix is measured on businesses it was not made for. The price is honest too: when the agent cannot tie a site to the business it says "not settled", so some reports are shorter.
+
 Recording real Nemotron answers for the examples also caught a live bug: the Nano rewrite spent most of its 1,200-token budget thinking and returned nothing in 2 of 4 Turkish runs. The budgets are now set per call, with a test.
 
 Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS certificate API, so DNS uses DNS-over-HTTPS and certificate expiry comes from Certificate Transparency logs, behind a small adapter. Live search had to be rate-limited to protect a small trial credit. And the page had to make sense to someone who has never heard of a "proof gate", which led to the guided tour and plain error messages.
@@ -80,6 +82,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - Accuracy is measured on real businesses and published with every verdict, including the claims it got wrong.
 - Every Nemotron call is accounted for on screen: tokens, latency and what code did with the answer, also in the free examples, which replay real recorded Nemotron answers.
 - A stress test that went badly (52%) was published, fixed and re-measured until no kept claim was wrong (round 7), not hidden; so was the round in between that got worse (71%).
+- When fixes that scored 96% on one list fell to 61% on a fresh one, we published that too, found the four causes and reached a fresh list with no wrong kept claim (round 14).
 - It runs end to end with zero dependencies, locally or on a free Workers plan.
 
 ## What we learned
@@ -89,6 +92,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - Splitting work between a reasoning model (Super) and a small fast model (Nano) works well when the small model's output is checked by a simple rule.
 - The hardest input is the shortest one. A bare name is ambiguous, and the honest answer is sometimes "not settled" rather than a guess.
 - Measure the inputs before blaming the model: a better search query did more than a 550B model.
+- A score on the list you fixed is not accuracy. Only businesses the fixes were never made for tell you how the agent will do tomorrow.
 
 ## Accuracy
 
@@ -103,8 +107,13 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 5 (12 Oct, after fixes) | same 12, bare names | 25 | 3 | 22 | 18 of 20 checkable | 90% |
 | 6 (12 Oct, new search) | same 12, bare names | 34 | 4 | 30 | 17 of 24 checkable | 71% |
 | 7 (12 Oct, new search + guards) | same 12, bare names | 30 | 4 | 26 | 21 of 21 checkable | 100% |
+| 8 (12 Oct, no fixes in between) | 12 new online shops, mixed input | 24 | 1 | 23 | 21 of 23 | 91% |
+| 9–11 (14 Oct, after fixes) | same 12 | 27–28 | 2–3 | 24–25 | 22–23 of 24 | 92–96% |
+| 12 (14 Oct, fixes tested on new businesses) | 12 new shops, mixed input | 35 | 1 | 34 | 20 of 33 checkable | 61% |
+| 13 (14 Oct, after fixes) | same 12 | 28 | 6 | 22 | 20 of 22 | 91% |
+| 14 (14 Oct, after one more guard) | 12 new shops, mixed input | 25 | 5 | 20 | 18 of 18 checkable | 100% |
 
-Round 3 is the honest number for normal input (name and city): businesses the earlier fixes were not made for. Rounds 4–7 are the stress test (bare names) on one list, so they show the effect of each change, not a fresh sample. A claim the check could not settle is left out of the percentage and listed. The method, every verdict and every error are in `docs/accuracy.md`.
+The honest numbers are the rounds on businesses the earlier fixes were not made for: 3 (86%), 8 (91%), 12 (61%) and 14 (100%). Rounds re-run on the same list (2, 5–7, 9–11, 13) show the effect of each change, not a fresh sample. A claim the check could not settle is left out of the percentage and listed. The method, every verdict and every error are in `docs/accuracy.md`.
 
 ## What's next
 
