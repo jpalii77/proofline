@@ -1,0 +1,14 @@
+[
+  { "id": "morn", "query": "Morn Coffee, morncoffee.com", "note": "coffee roaster e-shop (Saker list, 12 Oct); name + domain; a healthy case" },
+  { "id": "kivircik", "query": "Kıvırcık Kızlar Gelsin, kivircikkizlargelsin.com", "note": "hair-accessory brand selling on Shopier (Saker list, 14 Oct); name + domain; the domain is registered on Wix but not connected to a site ('ConnectYourDomain Error'): expected: no working site there" },
+  { "id": "gorkito", "query": "Görkito, İstanbul", "note": "cosmetics brand (Saker list, 12 Oct); name + city; own site gorkito.com; Turkish letter in the name" },
+  { "id": "bubble", "query": "Butik Bubble, Ümraniye", "note": "clothing shop on Shopier (Saker list, 14 Oct); name + district; expected: no website of its own" },
+  { "id": "begon", "query": "Begon Kahve", "note": "coffee brand (Saker list, 12 Oct); name only; own site begonkahve.com, also sells on Trendyol and Hepsiburada" },
+  { "id": "bebetto", "query": "Bebetto", "note": "baby clothing brand from Bursa; name only; own site bebetto.com (empty title, name in og:site_name); namesake risk: shops abroad sell the brand" },
+  { "id": "formeya", "query": "Formeya", "note": "waterproof bedding e-shop (Saker list, archived 14 Oct); name only; own site formeya.com" },
+  { "id": "ebru", "query": "Ebru Elbise", "note": "own-production dresses on Shopier (Saker list, 14 Oct); name only; expected: no website of its own" },
+  { "id": "ossy", "query": "My Ossy Butik", "note": "clothing shop on Shopier (Saker list, 14 Oct); name only; expected: no website of its own" },
+  { "id": "styleme", "query": "Style Me Shop", "note": "clothing shop on Shopier (Saker list, 14 Oct); name only; trap: stylemeshop.com is a parked page nothing ties to the shop" },
+  { "id": "parla", "query": "Parla Kozmetik", "note": "cosmetics seller on Shopier, quiet for months (Saker list, 14 Oct); name only; expected: no website of its own" },
+  { "id": "mk", "query": "MK Collection", "note": "clothing seller on Shopier (Saker list, 14 Oct); name only; a very common name (namesake risk): any site found must not be taken without proof" }
+]

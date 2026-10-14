@@ -47,3 +47,17 @@ test('round-8 list: mixed input, read by intake as intended', () => {
   assert.equal(parsed.find((p) => p.id === 'dp').name, 'D&P Perfumum', 'the & stays part of the name');
   assert.equal(parsed.find((p) => p.id === 'cakil').name, 'Çakıl Butik', 'Turkish letters survive intake');
 });
+
+// Round 12 (14 Oct): rounds 8-11 re-ran one list and its fixes may fit those 12 shops only. A second fresh
+// list, again mixed: 2 name + domain (one a registered but unconnected Wix domain), 2 name + city, 8 bare.
+test('round-12 list: 12 businesses, none seen in an earlier list, mixed input', () => {
+  const fresh = load('businesses-5.json');
+  assert.equal(fresh.length, 12);
+  const seen = new Set(lists.filter((f) => f !== 'businesses-5.json').flatMap((f) => load(f).map((it) => key(it.query))));
+  for (const it of fresh) assert.ok(!seen.has(key(it.query)), `${it.query} was already measured`);
+  const parsed = fresh.map((it) => ({ id: it.id, ...intake(it.query) }));
+  assert.deepEqual(parsed.filter((p) => p.domain).map((p) => p.domain), ['morncoffee.com', 'kivircikkizlargelsin.com']);
+  assert.deepEqual(parsed.filter((p) => p.city && !p.domain).map((p) => p.city), ['İstanbul', 'Ümraniye']);
+  assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
+  assert.equal(parsed.find((p) => p.id === 'kivircik').name, 'Kıvırcık Kızlar Gelsin');
+});

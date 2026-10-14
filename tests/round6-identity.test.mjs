@@ -89,6 +89,6 @@ test('bare short name: a page whose only name is its own address does not settle
   const page = '<html><head><title>osepet.net</title><meta property="og:site_name" content="osepet.net"></head><body>Yakında Başlatılacak</body></html>';
   const r = await runCheck(fakeIO({ pages: { 'https://osepet.net/': page } }), 'site.own_site', { host: 'osepet.net', name: 'Osepet' });
   assert.notEqual(r.pass, true, r.summary);
-  const long = await runCheck(fakeIO({ pages: { 'https://erenhobi.com/': '<html><head><title>erenhobi.com</title></head><body>Drone</body></html>' } }), 'site.own_site', { host: 'erenhobi.com', name: 'Eren Hobi' });
+  const long = await runCheck(fakeIO({ pages: { 'https://erenhobi.com/': '<html lang="tr"><head><title>erenhobi.com</title></head><body>Drone ve hobi ürünleri</body></html>' } }), 'site.own_site', { host: 'erenhobi.com', name: 'Eren Hobi' });
   assert.equal(long.pass, true, 'a long name written as the address still counts');
 });

@@ -59,6 +59,8 @@ export const CLAIM_TYPES = {
       ownSite(c),
       { check: 'tls.cert_valid', params: { host: c.domain, minDays: 30 }, expect: true },
       { check: 'http.https_redirect', params: { host: c.domain }, expect: true },
+      // "secure and working" only for a site that loads (round 12: a 404 page had a valid certificate)
+      { check: 'http.reachable', params: { url: `https://${c.domain}/` }, expect: true },
     ],
     statement: (c) => `${c.domain} has a valid certificate for 30+ days and sends visitors to HTTPS.`,
   },

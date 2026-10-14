@@ -1,0 +1,49 @@
+{
+  "run": "eval/runs/2026-10-13-r12.json",
+  "list": "eval/businesses-5.json: 12 businesses never measured before, mixed input (2 name + domain, 2 name + city, 8 bare names), after the round-8 to round-11 fixes.",
+  "checkedBy": "Independent re-check on 2026-10-14: curl (page bodies, titles, sizes), openssl s_client (certificate end dates), dig on name-built domains, Nominatim (OpenStreetMap) name search limited to Turkey; sites probed before the run while the list was built.",
+  "summary": { "kept": 34, "right": 20, "wrong": 13, "unverifiable": 1, "dropped": 1 },
+  "verdicts": {
+    "morn": { "site_online": "right", "https_healthy": "right (ends 27 Dec 2026; http to https)", "not_on_map": "right (no OSM match in Turkey; the Edinburgh 'Mørn Coffee' was correctly not taken)" },
+    "kivircik": {
+      "site_unreachable": "right (the typed domain answers HTTP 404: Wix 'ConnectYourDomain Error', no site connected)",
+      "https_healthy": "WRONG (misleading): the certificate and redirect exist, but they serve a 404 page; the owner was told 'your site is secure and works over HTTPS' about a site that does not exist",
+      "not_on_map": "right"
+    },
+    "gorkito": { "not_on_map": "right (no OSM match in Turkey; it is on Yandex Maps only)" },
+    "bubble": { "no_own_website": "right (Shopier, Instagram and Şikayetvar only; butikbubble.com has no DNS)", "not_on_map": "right" },
+    "begon": { "site_online": "right", "https_healthy": "right (ends 17 Dec 2026)", "not_on_map": "right (only a village 'Begon 2' in Chad, correctly not taken)" },
+    "bebetto": {
+      "site_online": "WRONG: bebetto.com.tr answers 200 with an empty body (0 bytes); the brand's working site is bebetto.com",
+      "https_healthy": "unverifiable: the certificate and redirect on bebetto.com.tr are real, but nothing shows whether that empty address is the brand's",
+      "no_contact_path": "WRONG: true only of an empty page; bebetto.com, the real site, was never checked"
+    },
+    "formeya": { "site_online": "right", "https_healthy": "right (ends 26 Nov 2026 = 43 days)", "not_on_map": "right" },
+    "ebru": { "no_own_website": "right (ebruelbise.com/.com.tr have no DNS; Shopier store)", "not_on_map": "right" },
+    "ossy": { "no_own_website": "right (myossybutik.com has no DNS)", "not_on_map": "right" },
+    "parla": { "no_own_website": "right (parlakozmetik.com/.com.tr have no DNS; Shopier, Hepsiburada, Instagram)", "not_on_map": "right" },
+    "styleme": {
+      "site_online": "WRONG: stylemeshop.com is a 114-byte script that sends visitors to a '/lander' parking page; nothing ties it to the Shopier shop",
+      "ssl_expiring_soon": "WRONG: about a parked domain nothing ties to the business",
+      "no_https_redirect": "WRONG: same parked domain",
+      "no_contact_path": "WRONG: same parked domain",
+      "phone_unconfirmed": "WRONG: +1 843 663 1500 belongs to 'Style Me Boutique' in South Carolina, a namesake",
+      "on_map": "WRONG: the planner guessed the city 'North Myrtle Beach' and the map matched 'Style Me Boutique' there, a US namesake"
+    },
+    "mk": {
+      "site_online": "WRONG: mkcollection.com is a US fabrics and wallcoverings company, a namesake found by the name-built guess",
+      "https_healthy": "WRONG: same namesake",
+      "no_contact_path": "WRONG: same namesake",
+      "on_map": "WRONG: 'MK collection' in Dnipro, Ukraine, a namesake"
+    }
+  },
+  "droppedVerdicts": {
+    "gorkito": { "no_own_website": "deserved to be dropped (gorkito.com is its own site); a true finding lost: the page does not name İstanbul, so the site stayed 'not settled'" }
+  },
+  "causes": [
+    "A page with no title and no text (0 bytes, or a script that jumps to a parking page) counted as 'real content'",
+    "With a bare name, an address that spells the whole name was taken as the business's site with nothing tying it to Turkey (mkcollection.com, stylemeshop.com)",
+    "A map match under a city the planner guessed, or anywhere abroad for a bare name, counted as 'listed on the map'",
+    "https_healthy could be kept for a site that does not load"
+  ]
+}

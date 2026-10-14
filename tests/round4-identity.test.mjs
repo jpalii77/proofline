@@ -51,7 +51,7 @@ test('bare name: with a city given, the old rules apply (a containing title plus
 
 test('own site found: the address that is exactly the name counts, even when the page title says something else', async () => {
   const results = [{ title: 'Hilal AV Market - Yandex Maps', url: 'https://yandex.com/maps/org/hilal_av_market/98928845506', content: 'Hilal AV Market, av malzemeleri' }];
-  const page = html('Av Tüfekleri I Kamp &amp; Outdoor I Orion Arms&amp;Miras Silah San.', '<a href="/sepet">Sepet</a>');
+  const page = html('Av Tüfekleri I Kamp &amp; Outdoor I Orion Arms&amp;Miras Silah San.', '<a href="/sepet">Sepet</a> <p>Kargo ücretsiz · ₺</p>'); // (a Turkish shop page; round 12 asks for a tie to Turkey)
   const r = await runCheck(fakeIO({ results, pages: { 'https://hilalavmarket.com/': page } }), 'web.own_site_found', { name: 'Hilal AV Market' });
   assert.equal(r.pass, true, r.summary);
   assert.match(r.summary, /hilalavmarket\.com/);

@@ -56,8 +56,30 @@ export function placeholderPhone(raw) {
 
 /** A parked, for-sale or placeholder page (the same markers as page.not_parked). */
 function isParked(p) {
+  if (emptyPage(p)) return true;
   const hay = `${p.title || ''}\n${(p.text || '').slice(0, 4000)}`;
   return PARKED.some((re) => re.test(hay));
+}
+
+/**
+ * No title, no site name and almost no text: an empty answer (bebetto.com.tr, 0 bytes) or a script that jumps
+ * to a parking page (stylemeshop.com, round 12). Not real content, whatever the status code says.
+ */
+function emptyPage(p) {
+  return !(p.title || '').trim() && !metaContent(p.html || '', 'og:site_name') && (p.text || '').trim().length < 40;
+}
+
+/**
+ * Something on the page or the address ties it to Turkey, where Proofline's businesses are: a .tr address,
+ * lang="tr", Turkish-only letters, a lira price or a +90 number. With a bare name, a site that spells the name
+ * but shows none of this may belong to a namesake abroad (round 12: mkcollection.com, a US fabrics company).
+ */
+export function turkeyTie(p, host) {
+  if (/\.tr$/i.test(String(host || ''))) return true;
+  const html = p?.html || '';
+  if (/<html[^>]*\blang=["']?tr/i.test(html)) return true;
+  const hay = `${p?.title || ''} ${metaContent(html, 'og:site_name') || ''} ${(p?.text || '').slice(0, 20000)}`;
+  return /[ğışĞİŞ]/.test(hay) || /₺|\bTL\b|\+90[\s(]?\d/.test(hay);
 }
 
 const CLOSURE = [
@@ -298,6 +320,9 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
     if (!exact) {
       const loose = id.identified ? `${id.field}: “${id.value}”` : ties[0].how;
       return { pass: null, summary: `${host} only loosely matches “${name}” (${loose}); with no city or website given, it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
+    }
+    if (!ties.length && !turkeyTie(loaded ? p : null, host)) {
+      return { pass: null, summary: `${host} spells “${name}”, but no search result ties it to the business and nothing on it ties it to Turkey; with no city or website given, it may be a namesake abroad`, observed: { host, identity: id, ties, placeUnproven: true, noTurkeyTie: true } };
     }
     id = { ...id, identified: true, ...exact, score: 1 };
   }
@@ -575,6 +600,7 @@ export const CHECKS = {
     async run(io, { url }) {
       const p = await page(io, url);
       if (!okStatus(p.status)) return { pass: null, summary: 'Page did not load', observed: { status: p.status ?? null } };
+      if (emptyPage(p)) return { pass: false, summary: 'Empty page: no title and almost no text (a placeholder, or a script that jumps elsewhere)', observed: { title: p.title, marker: 'empty page' } };
       const hay = `${p.title}\n${p.text.slice(0, 4000)}`;
       const hit = PARKED.find((re) => re.test(hay));
       return {
@@ -699,11 +725,15 @@ export const CHECKS = {
       if (reordered) pass = false;
       // With no city, a one-word name found on the map can be anywhere in the world (round 4: "Shout" in
       // Massachusetts, "Loky" in Madagascar): it does not show this business is on the map.
-      const untied = pass && !place && coreTokens(name).length < 2;
+      // (round 12: a place under a city the planner guessed, "North Myrtle Beach", or anywhere abroad for a name
+      // given without a city, "MK collection" in Dnipro, is not this business either)
+      const inTurkey = /T[üu]rkiye|Turkey/i.test(String(best?.display_name || ''));
+      const typedPlace = place && !cityGuessed;
+      const untied = pass && !typedPlace && (coreTokens(name).length < 2 || !inTurkey);
       if (untied) pass = null;
       return {
         pass,
-        summary: untied ? `Found “${best.name}” (${best.display_name}), but with no city given nothing ties this place to the business`
+        summary: untied ? `Found “${best.name}” (${best.display_name}), but ${typedPlace ? 'it' : 'with no city typed'}${inTurkey ? '' : ' it is outside Turkey and'} nothing ties this place to the business`
           : pass ? `Found “${best.name}” (${best.display_name})`
           : wrongKind ? `Only “${best.name}” matched, and it is ${wrongKind}; no matching place on OpenStreetMap`
           : reordered ? `Only “${mapName}” matched: the same words in another order, so another place; no matching place on OpenStreetMap` : 'No matching place on OpenStreetMap',

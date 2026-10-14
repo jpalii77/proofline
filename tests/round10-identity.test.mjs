@@ -66,7 +66,7 @@ test('pipeline: the planner\'s pick that forwards to another site is replaced by
 });
 
 test('forwarding within the same site (http to https, to www) changes nothing', async () => {
-  const pages = { 'https://naramica.com/': { to: 'https://www.naramica.com/', body: html('Naramica | Seramik') } };
+  const pages = { 'https://naramica.com/': { to: 'https://www.naramica.com/', body: html('Naramica | Seramik', '<p>Seramik ürünleri · ₺450</p>') } };
   const ig = [{ url: 'https://www.instagram.com/naramica/', title: 'Naramica (@naramica)', content: 'Seramik' }];
   const r = await runCheck(fakeIO({ pages, results: ig }), 'web.own_site_found', { name: 'Naramica' });
   assert.equal(r.pass, true, r.summary);
