@@ -1,0 +1,31 @@
+{
+  "run": "eval/runs/2026-10-14-r14.json",
+  "list": "eval/businesses-6.json: a third fresh list (12 businesses never measured before, mixed input), after all fixes through round 13.",
+  "checkedBy": "Independent re-check on 2026-10-14: openssl s_client (certificate end dates), curl (titles, redirects), dig on name-built domains, Nominatim (OpenStreetMap) limited to Turkey; sites probed before the run while the list was built.",
+  "summary": { "kept": 20, "right": 18, "wrong": 0, "unverifiable": 2, "dropped": 5 },
+  "verdicts": {
+    "sirri": { "site_online": "right", "https_healthy": "right (ends 22 Nov 2026 = 39 days; http to https)" },
+    "melis": { "site_online": "right", "https_healthy": "right (ends 29 Nov 2026)", "not_on_map": "right (no OSM match in Turkey)" },
+    "thesezar": { "not_on_map": "right" },
+    "jurassink": { "not_on_map": "right" },
+    "fatma": { "site_online": "right (fatmaanadan.com; the apostrophe in the name handled)", "https_healthy": "right (ends 28 Dec 2026)", "not_on_map": "right" },
+    "morfose": {
+      "site_online": "unverifiable: themorfose.com is the brand's official US store (Instagram morfoseusa ties it), true as stated, but the Turkish business's own site is morfose.eu/tr",
+      "https_healthy": "unverifiable: same (certificate ends 5 Jan 2027, http to https)"
+    },
+    "ysly": { "not_on_map": "right (the Chinese ysly.com was not taken)" },
+    "gloss": { "no_own_website": "right (glossgiyim.com/.com.tr no DNS; Shopier store)", "not_on_map": "right" },
+    "rengin": { "no_own_website": "right (renginkoc.com/.com.tr no DNS)", "not_on_map": "right" },
+    "cilek": { "no_own_website": "right (cilekpay.com/.com.tr no DNS; Shopier, TikTok, Instagram, Yandex Maps)", "not_on_map": "right (on Yandex Maps only)" },
+    "zersay": { "not_on_map": "right" }
+  },
+  "droppedVerdicts": {
+    "thesezar": { "site_online": "a true finding lost: thesezar.com is its own site, but the identity check found no İzmir on it within the part it reads", "https_healthy": "same" },
+    "tbrush": { "no_own_website": "deserved caution: tbrushlb.com (Lebanon) and tbrush.co.uk are namesakes; the Chinese t-brush.com was not taken" },
+    "zersay": { "no_own_website": "deserved caution: a one-word name; Zersay sells on Hepsiburada and Trendyol as a jeweller" }
+  },
+  "notes": [
+    "No wrong kept claim on a fresh list for the first time since round 7 (which was a re-run list).",
+    "The cost of the round-12 and round-13 caution is visible: 3 true site findings were lost (Thesezar, Jurassink not proposed, Zersay). Reports are shorter, not wrong."
+  ]
+}

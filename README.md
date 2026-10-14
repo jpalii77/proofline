@@ -130,6 +130,13 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 5 | 2026-10-12, after round-4 fixes | same 12, bare names | 25 | 3 | 22 | 18 of 20 checkable | **90%** |
 | 6 | 2026-10-12, new discovery search | same 12, bare names | 34 | 4 | 30 | 17 of 24 checkable | 71% |
 | 7 | 2026-10-12, new search + round-6 guards | same 12, bare names | 30 | 4 | 26 | 21 of 21 checkable | **100%** |
+| 8 | 2026-10-12, no fixes in between | 12 new online shops, mixed input | 24 | 1 | 23 | 21 of 23 | 91% |
+| 9–11 | 2026-10-14, fixes from rounds 8–10 | same 12 | 27–28 | 2–3 | 24–25 | 22–23 of 24 | 92–96% |
+| 12 | 2026-10-14, fixes tested on new businesses | 12 new shops, mixed input | 35 | 1 | 34 | 20 of 33 checkable | 61% |
+| 13 | 2026-10-14, after round-12 fixes | same 12 | 28 | 6 | 22 | 20 of 22 | 91% |
+| 14 | 2026-10-14, after round-13 fix | 12 new shops, mixed input | 25 | 5 | 20 | 18 of 18 checkable | **100%** |
+
+Rounds 8–14 are the most useful lesson of the project. Fixing one list until it scored 96% (round 11) and then running a list the fixes had never seen gave 61% (round 12): the agent had taken a parking page, an empty page and two foreign namesakes for small Turkish shops, and called a 404 page "secure". Each cause got a guard and a regression test; the next fresh list (round 14) kept no wrong claim. Since then every fix is measured on businesses it was not made for. The price is visible too: when the agent cannot tie a site to the business it now says "not settled" instead of guessing, so some reports are shorter.
 
 Round 3 is the honest test: businesses the earlier fixes were not made for. Its 3 wrong claims came from two causes (a site that answers on http only; a one-word map match of the wrong kind of place), both now fixed with tests.
 

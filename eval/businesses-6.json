@@ -1,0 +1,14 @@
+[
+  { "id": "sirri", "query": "SIRRI, sirri.com.tr", "note": "special-occasion children's wear e-shop (Saker list, 12 Oct); name + domain; a healthy case" },
+  { "id": "melis", "query": "Melis Gold, melisgold.com", "note": "gold jewellery e-shop (Saker list, 12 Oct); name + domain; melisgold.com.tr has no DNS" },
+  { "id": "thesezar", "query": "Thesezar, İzmir", "note": "e-shop (Saker list, 14 Oct); name + city; own site thesezar.com names İzmir" },
+  { "id": "jurassink", "query": "Jurassink, İstanbul", "note": "young fashion e-shop (Saker list, archived 14 Oct); name + city; own site jurassink.com" },
+  { "id": "fatma", "query": "Fatma Ana'dan", "note": "home-made food e-shop (Saker list, archived 14 Oct); name only, with an apostrophe; own site fatmaanadan.com" },
+  { "id": "morfose", "query": "Morfose", "note": "hair-care brand (Saker list, 12 Oct); name only; morfose.com.tr forwards (http only) to morfose.eu/tr, its real site; morfose.com is a for-sale page" },
+  { "id": "tbrush", "query": "T-Brush", "note": "seller from the Saker list (archived 14 Oct); name only; trap: t-brush.com is an unrelated Chinese 'under construction' page, tbrush.com does not answer" },
+  { "id": "ysly", "query": "YSLY", "note": "seller from the Saker list (archived 12 Oct); name only, four letters; trap: ysly.com is a Chinese travel site" },
+  { "id": "gloss", "query": "Glossgiyim", "note": "men's clothing on Shopier, sales paused (Saker list, 14 Oct); name only, one word; expected: no website of its own" },
+  { "id": "rengin", "query": "Renginkoc", "note": "seller on Shopier, sales paused (Saker list, 14 Oct); name only, one word; expected: no website of its own" },
+  { "id": "cilek", "query": "Çilekpay", "note": "seller on Shopier, quiet for 1.5 years (Saker list, 14 Oct); name only; Turkish letter; expected: no website of its own" },
+  { "id": "zersay", "query": "Zersay", "note": "seller from the Saker list (12 Oct); name only, one word; zersay.com and .com.tr have no DNS; expected: no website of its own" }
+]

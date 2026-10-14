@@ -61,3 +61,17 @@ test('round-12 list: 12 businesses, none seen in an earlier list, mixed input', 
   assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
   assert.equal(parsed.find((p) => p.id === 'kivircik').name, 'Kıvırcık Kızlar Gelsin');
 });
+
+// Round 14 (14 Oct): round 13 re-ran the round-12 list after its fixes; a third fresh list checks them
+// on businesses they were not made for. Same mix; traps: a forwarding .com.tr, two foreign namesake addresses.
+test('round-14 list: 12 businesses, none seen in an earlier list, mixed input', () => {
+  const fresh = load('businesses-6.json');
+  assert.equal(fresh.length, 12);
+  const seen = new Set(lists.filter((f) => f !== 'businesses-6.json').flatMap((f) => load(f).map((it) => key(it.query))));
+  for (const it of fresh) assert.ok(!seen.has(key(it.query)), `${it.query} was already measured`);
+  const parsed = fresh.map((it) => ({ id: it.id, ...intake(it.query) }));
+  assert.deepEqual(parsed.filter((p) => p.domain).map((p) => p.domain), ['sirri.com.tr', 'melisgold.com']);
+  assert.deepEqual(parsed.filter((p) => p.city && !p.domain).map((p) => p.city), ['İzmir', 'İstanbul']);
+  assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
+  assert.equal(parsed.find((p) => p.id === 'fatma').name, "Fatma Ana'dan", 'the apostrophe stays part of the name');
+});
