@@ -267,6 +267,9 @@ function pageIdentity(p, name, min = NAME_MIN) {
 
 /** Does the place ("Kadıköy, Istanbul": either part) appear on the page, or in a search result that shows this host? */
 /** The first link on the page to its own contact or about page ("/pages/iletisim"), as a full URL; else null. */
+// How far a cut-off homepage is read again when the typed city is not in the first part (src/io/real.mjs caps it).
+const DEEP_READ = 2_000_000;
+
 function contactLink(p, host) {
   const re = /href=["']([^"'#?]*(?:iletisim|iletişim|contact|bize-ulasin|hakkimizda|hakkımızda|about)[^"'#?]*)["']/gi;
   for (const m of String(p?.html || '').matchAll(re)) {
@@ -392,6 +395,14 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
         if (hit) place = `its contact page (${link}) names ${city}`;
       }
     }
+    // Some name it on neither (round 16: patiburda.com, 1.4 MB, Ankara once at 1.2 MB; its contact page is
+    // silent): read the cut-off homepage once more, further down, for the city alone.
+    if (!place && loaded && p.truncated) {
+      const deep = await io.fetchPage(p.finalUrl || `https://${host}/`, { maxBytes: DEEP_READ });
+      const same = okStatus(deep.status) && registrable(normalizeHost(deep.finalUrl || '')) === registrable(host);
+      const hit = same && placeTie({ html: deep.body || '' }, [], host, city);
+      if (hit) place = `${hit}, far down the page (read again past the first part)`;
+    }
     if (!place) {
       return { pass: null, summary: `${host} uses the name “${name}” but nothing on it or in search ties it to ${city}; it may be a namesake`, observed: { host, identity: id, ties, placeUnproven: true } };
     }
@@ -400,7 +411,7 @@ async function ownSiteVerdict(io, { host, name, city = null, results, searchErro
     // dpperfumum.com.tr over http and refuses https): the caller checks the target instead.
     const to = loaded ? normalizeHost(p.finalUrl || '') : null;
     const movedTo = to && registrable(to) !== registrable(host) && classifyHost(to).kind !== 'platform' ? to : null;
-    return { pass: true, summary: `${host} ${why}${/contact page/.test(place || '') ? `; ${place}` : ''}`, observed: { host, identity: id, ties, ...(city ? { place } : {}), ...(movedTo ? { movedTo } : {}) } };
+    return { pass: true, summary: `${host} ${why}${/contact page|far down/.test(place || '') ? `; ${place}` : ''}`, observed: { host, identity: id, ties, ...(city ? { place } : {}), ...(movedTo ? { movedTo } : {}) } };
   }
   if (!loaded && isHostLimit(p.error)) {
     // Our host ran out of requests or time: that says nothing about the business's site.

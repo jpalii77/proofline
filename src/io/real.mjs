@@ -10,6 +10,8 @@ import { DISCOVERY_RESULTS } from '../checks.mjs';
 
 const UA = 'Proofline/0.1 (+https://github.com/jpalii77/proofline; business profile verifier)';
 const MAX_BODY = 400_000;
+// A caller may ask to read one page further (checks.mjs: a city named only deep in a long homepage), never past this.
+const DEEP_MAX_BODY = 2_000_000;
 
 const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
 export const isIPv4 = (s) => IPV4.test(String(s)) && String(s).split('.').every((n) => Number(n) <= 255);
@@ -81,7 +83,7 @@ export function createRealIO({ net, tavily, nominatimContact = '', fetchImpl = g
     },
 
     // Follows up to 5 redirects by hand so the chain can be shown as evidence.
-    async fetchPage(url) {
+    async fetchPage(url, { maxBytes } = {}) {
       const chain = [];
       let current = url;
       try {
@@ -100,7 +102,7 @@ export function createRealIO({ net, tavily, nominatimContact = '', fetchImpl = g
             current = new URL(loc, current).toString();
             continue;
           }
-          const read = /text\/html|xhtml|text\/plain/i.test(res.headers.get('content-type') || 'text/html') ? await readCapped(res) : { text: '', truncated: false };
+          const read = /text\/html|xhtml|text\/plain/i.test(res.headers.get('content-type') || 'text/html') ? await readCapped(res, Math.min(maxBytes || MAX_BODY, DEEP_MAX_BODY)) : { text: '', truncated: false };
           return { status: res.status, finalUrl: current, chain, body: read.text, ...(read.truncated ? { truncated: true } : {}) };
         }
         return { status: null, finalUrl: current, chain, error: 'too many redirects' };

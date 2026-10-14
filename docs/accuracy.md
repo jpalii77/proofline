@@ -183,4 +183,4 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | Error | Wrong claims | Fix | Regression test |
 | --- | --- | --- | --- |
 | Alesta Coffee's number was called "not on the site", but the site shows it in a WhatsApp button and in its structured business data | 1 (phone_unconfirmed) | Fixed (15 Oct, not yet re-measured): numbers in wa.me / api.whatsapp.com links and in "telephone" structured data count as listed | `tests/round14-identity.test.mjs` |
-| PatiBurda's own site not reported (Ankara named once, deep in a 1.4 MB page) | 0 (true finding lost) | Open | — |
+| PatiBurda's own site not reported (Ankara named once, deep in a 1.4 MB page) | 0 (true finding lost) | Fixed (15 Oct, not yet re-measured): when the typed city is neither in the part of the homepage we read nor on its contact page, the cut-off homepage is read once more, up to 2 MB, for the city alone (same site only). On the saved real page this now finds Ankara at 1.2 MB | `tests/round16-deep-city.test.mjs` |
