@@ -1,0 +1,32 @@
+{
+  "run": "eval/runs/2026-10-14-r15.json",
+  "list": "eval/businesses-6.json: the round-14 list again, after the lost-finding fixes (city from the linked contact page; a Turkish site preferred for a bare name; another country's ending accepted when the page is Turkish).",
+  "checkedBy": "Independent re-check on 2026-10-14: openssl s_client, curl of morfose.eu (redirects to /tr/, contact links and forms read from the page), Nominatim limited to Turkey; claims repeated from round 14 were re-checked there the same day (verdicts-r14.json).",
+  "summary": { "kept": 23, "right": 23, "wrong": 0, "unverifiable": 0, "dropped": 3 },
+  "verdicts": {
+    "sirri": { "site_online": "right", "https_healthy": "right" },
+    "melis": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "thesezar": { "site_online": "right (its own site; lost in round 14)", "https_healthy": "right (ends 9 Jan 2027; http to https)", "not_on_map": "right" },
+    "jurassink": { "not_on_map": "right" },
+    "fatma": { "site_online": "right", "https_healthy": "right", "not_on_map": "right" },
+    "morfose": {
+      "site_online": "right (morfose.eu, which redirects to /tr/, the Turkish business's site; round 14 reported the US store)",
+      "https_healthy": "right (ends 11 Dec 2026 = 58 days)",
+      "no_contact_path": "right as stated: the homepage has only a search form and a link to its contact page, no form, email, phone or WhatsApp on the homepage itself"
+    },
+    "ysly": { "not_on_map": "right" },
+    "gloss": { "no_own_website": "right", "not_on_map": "right" },
+    "rengin": { "no_own_website": "right", "not_on_map": "right" },
+    "cilek": { "no_own_website": "right", "not_on_map": "right" },
+    "zersay": { "not_on_map": "right" }
+  },
+  "droppedVerdicts": {
+    "morfose": { "on_map": "deserved to be dropped: the only OSM 'Morfose' is a hairdresser in Chișinău, Moldova" },
+    "tbrush": { "two claims": "deserved caution (namesakes in Lebanon and the UK)" }
+  },
+  "notes": [
+    "Both round-14 lost findings are back (Thesezar's site, Morfose's Turkish site); no wrong kept claim.",
+    "Thesezar was settled this time by a search result naming İzmir; the new contact-page path is covered by tests but was not needed in this run.",
+    "This is a re-run of the list the fixes were made for; the next fresh list is the real test."
+  ]
+}

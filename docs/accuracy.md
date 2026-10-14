@@ -29,6 +29,7 @@
 | 12 | 2026-10-14 (fresh list `businesses-5.json`, mixed input) | 12 | 35 | 1 | 34 | 20 of 33 checkable (1 unverifiable) | 61% |
 | 13 | 2026-10-14 (same fresh list, after the round-12 fixes) | 12 | 28 | 6 | 22 | 20 of 22 | **91%** |
 | 14 | 2026-10-14 (third fresh list `businesses-6.json`, after the round-13 fix) | 12 | 25 | 5 | 20 | 18 of 18 checkable (2 unverifiable) | **100%** |
+| 15 | 2026-10-14 (same list, after the lost-finding fixes) | 12 | 26 | 3 | 23 | 23 of 23 | **100%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -55,6 +56,8 @@ Round 12 (`eval/businesses-5.json`, 12 businesses never measured before, `eval/v
 Round 13 (same fresh list, `eval/verdicts-r13.json`): 20 of 22 kept claims right (91%). The parked page, the US and Ukrainian namesakes and the empty page are gone; Bebetto is checked on its real site. The gate dropped 6 claims, 5 rightly; Parla Kozmetik's true "no website" was lost to ty.gl, Trendyol's short-link address, now on the platform list. The 2 wrong claims show what is still open: for the bare, common name "MK Collection" the name-built guess found mkcollection.com.tr, a Turkish protocol-gift business that happens to own that address. Reports are now shorter where the agent is unsure, which is the intended trade.
 
 Round 14 (`eval/businesses-6.json`, a third list of 12 businesses never measured before, `eval/verdicts-r14.json`): no wrong kept claim, 18 of 18 checkable right. The traps held: the Chinese sites at t-brush.com and ysly.com, a Lebanese "T-Brush LB" and a UK T-Brush were not taken; the apostrophe in "Fatma Ana'dan" did not break the name-built address. Two claims could not be settled: for the bare name "Morfose" the agent reported on themorfose.com, the brand's official US store, while the Turkish business's site is morfose.eu/tr. The price of the caution added in rounds 12–13 shows too: 3 true site findings were lost (Thesezar's own site left unsettled, Jurassink's not checked, Zersay's "no website" not settled).
+
+Round 15 (same list, `eval/verdicts-r15.json`): after the lost-finding fixes, 23 of 23 kept claims right and more of them (23 kept, against 20): Thesezar's own site is back, and Morfose is now reported on morfose.eu/tr, the Turkish business's site, instead of the brand's US store. A re-run of the list the fixes were made for, so the next fresh list is the real test.
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
