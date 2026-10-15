@@ -26,6 +26,10 @@ export function discoveryQuery({ name, city, domain } = {}) {
   return `${name || ''} ${city || ''}`.replace(/\s+/g, ' ').trim();
 }
 
+// \b only knows ASCII letters, so "\bçok" and "kapandı\b" never matched (audit 15 Oct). Turkish
+// phrases use letter-aware edges instead.
+const trWord = (src) => new RegExp(`(?<![\\p{L}\\p{N}_])(?:${src})(?![\\p{L}\\p{N}_])`, 'iu');
+
 // Parking, for-sale, suspended and placeholder pages. Matched on the title and the visible text.
 const PARKED = [
   /\b(this )?domain (name )?(is|may be) for sale\b/i,
@@ -35,12 +39,14 @@ const PARKED = [
   /\baccount (has been )?suspended\b/i,
   /\bdefault web page\b|\bwelcome to nginx\b|^it works!?$/i,
   /\bindex of \//i,
-  /\balan ad[ıi] sat[ıi]l[ıi]kt[ıi]r\b|\bsat[ıi]l[ıi]k alan ad[ıi]\b/i,
-  /\bcoming soon\b|\bçok yakında\b/i,
+  trWord('alan ad[ıi] sat[ıi]l[ıi]kt[ıi]r|sat[ıi]l[ıi]k alan ad[ıi]'),
+  /\bcoming soon\b/i,
+  trWord('[çc]ok yak[ıi]nda'),
   // "osepet.com for sale | Spaceship.com", "Domain for sale" (round 4)
   /\bdomain for sale\b|\b[a-z0-9-]+\.[a-z]{2,}(\.[a-z]{2})? (is )?for sale\b/i,
   // "Yakında Başlatılacak" (round 6: osepet.net, a website-builder placeholder), "launching soon"
-  /\byakında (başlatılacak|açılacak|hizmetinizde|sizlerle)\b|\byap[ıi]m aşamas[ıi]nda\b|\blaunching soon\b|\bunder construction\b/i,
+  trWord('yak[ıi]nda (ba[şs]lat[ıi]lacak|a[çc][ıi]lacak|hizmetinizde|sizlerle)|yap[ıi]m a[şs]amas[ıi]nda'),
+  /\blaunching soon\b|\bunder construction\b/i,
 ];
 
 /**
@@ -120,12 +126,17 @@ export function turkeyTie(p, host) {
 const CLOSURE = [
   /\bpermanently closed\b/i,
   /\bclosed (its doors|for good|down)\b/i,
-  /\bkal[ıi]c[ıi] olarak kapan/i,
-  /\bkapand[ıi]\b/i,
+  trWord('kal[ıi]c[ıi] olarak kapan\\p{L}*'),
+  trWord('kapand[ıi]'),
   /\bout of business\b/i,
 ];
 
 function okStatus(s) { return typeof s === 'number' && s >= 200 && s < 400; }
+
+// Answers that mean "not for you, not now", not "this site is down".
+const REFUSED_STATUS = new Set([401, 403, 407, 429, 503]);
+// Resolver trouble on our side (temporary failure, DoH service error), unlike ENOTFOUND which is an answer.
+const DNS_SERVICE_ERROR = /EAI_AGAIN|ESERVFAIL|DoH HTTP|DNS status/i;
 
 // Pages get a second attempt too: one timeout must not decide anything.
 async function page(io, url) {
@@ -649,6 +660,16 @@ export const CHECKS = {
       if (attempts.some((a) => isHostLimit(a.error))) {
         return { pass: null, summary: `Not checked: ${last.error}`, observed: { attempts } };
       }
+      // The site answered but turned us away (bot wall, rate limit, busy), or our own DNS service failed:
+      // neither shows a visitor cannot open it (audit 15 Oct).
+      const refused = attempts.find((a) => REFUSED_STATUS.has(a.status));
+      if (refused) {
+        return { pass: null, summary: `Not checked: the site answered HTTP ${refused.status} (it refuses automated visits or is busy)`, observed: { attempts } };
+      }
+      const dnsSide = attempts.find((a) => DNS_SERVICE_ERROR.test(a.error || ''));
+      if (dnsSide) {
+        return { pass: null, summary: `Not checked: the DNS lookup itself failed (${dnsSide.error})`, observed: { attempts } };
+      }
       return {
         pass: false,
         summary: `Failed twice: ${last.error || `HTTP ${last.status}`}`,
@@ -878,7 +899,7 @@ export const CHECKS = {
 };
 
 export async function runCheck(io, id, params) {
-  const def = CHECKS[id];
+  const def = Object.hasOwn(CHECKS, id) ? CHECKS[id] : null;
   if (!def) return { pass: null, summary: `Unknown check ${id}`, observed: {} };
   const started = Date.now();
   try {

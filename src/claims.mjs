@@ -160,7 +160,8 @@ export function catalogForPrompt() {
 
 /** Build a concrete claim (statement + proof plan) from a type and the business context. */
 export function buildClaim(type, ctx, extra = {}) {
-  const t = CLAIM_TYPES[type];
+  // own keys only: a model answer like "constructor" or "toString" is not a claim type (audit 15 Oct)
+  const t = Object.hasOwn(CLAIM_TYPES, type) ? CLAIM_TYPES[type] : null;
   if (!t) return { ok: false, reason: `“${type}” is not in the claim catalog` };
   const missing = t.needs.filter((k) => !ctx[k]);
   if (missing.length) return { ok: false, reason: `missing ${missing.join(', ')}` };
