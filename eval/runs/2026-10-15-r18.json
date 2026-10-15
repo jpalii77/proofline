@@ -1,0 +1,4390 @@
+{
+  "day": "2026-10-15",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "cizgi",
+      "query": "Çizgi Triko, cizgitriko.com",
+      "note": "men's knitwear e-shop (Saker list, 15 Oct); name + domain; Turkish letter in the name, 1.5 MB homepage",
+      "ms": 18625,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 18,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 5475,
+        "rewritesRejected": 0,
+        "ms": 18624
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "cizgitriko.com loads and shows real content.",
+          "rationale": "site.own_site passed (user-given domain confirmed), dns.resolved passed (address record), http.reachable passed (HTTPS 200)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "cizgitriko.com",
+                "name": "Çizgi Triko",
+                "city": null,
+                "query": "Çizgi Triko",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://cizgitriko.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://cizgitriko.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "cizgitriko.com",
+                "name": "Çizgi Triko",
+                "city": null,
+                "query": "Çizgi Triko",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "cizgitriko.com was given by the user as the business's website",
+              "observed": {
+                "host": "cizgitriko.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:12:14.865Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://cizgitriko.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://cizgitriko.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://cizgitriko.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 109,
+              "at": "2026-10-15T10:12:14.974Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://cizgitriko.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Çizgi: Kaliteli Erkek Giyim Ürünleri ve Fiyatları”)",
+              "observed": {
+                "title": "Çizgi: Kaliteli Erkek Giyim Ürünleri ve Fiyatları",
+                "marker": null
+              },
+              "ms": 44,
+              "at": "2026-10-15T10:12:15.018Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:12:15.018Z",
+          "ownerText": "Your website loads and shows real content for visitors."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "cizgitriko.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed (certificate expires in 69 days, ≥30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "cizgitriko.com",
+                "name": "Çizgi Triko",
+                "city": null,
+                "query": "Çizgi Triko",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "cizgitriko.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "cizgitriko.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://cizgitriko.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "cizgitriko.com",
+                "name": "Çizgi Triko",
+                "city": null,
+                "query": "Çizgi Triko",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "cizgitriko.com was given by the user as the business's website",
+              "observed": {
+                "host": "cizgitriko.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:12:15.018Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "cizgitriko.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 69 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-23T23:33:50.000Z",
+                "daysLeft": 69,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 46,
+              "at": "2026-10-15T10:12:15.064Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "cizgitriko.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://cizgitriko.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://cizgitriko.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://cizgitriko.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://cizgitriko.com/"
+              },
+              "ms": 76,
+              "at": "2026-10-15T10:12:15.140Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://cizgitriko.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://cizgitriko.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://cizgitriko.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:12:15.140Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:12:15.140Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and always starts with https://."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Çizgi Triko is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false (no matching place on OpenStreetMap)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Çizgi Triko",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Çizgi Triko",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 76,
+              "at": "2026-10-15T10:12:15.216Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:12:15.216Z",
+          "ownerText": "Your business isn’t listed on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and displays real content, confirming a solid online foundation.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The website uses a valid HTTPS certificate, ensuring secure connections for your visitors.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Currently, Çizgi Triko is not present on OpenStreetMap, which many navigation apps rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1907,
+          "usage": {
+            "in": 1278,
+            "out": 236,
+            "total": 1514,
+            "reasoning": 176
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4129,
+          "usage": {
+            "in": 1106,
+            "out": 734,
+            "total": 1840,
+            "reasoning": 616
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2388,
+          "usage": {
+            "in": 354,
+            "out": 731,
+            "total": 1085,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3886,
+          "usage": {
+            "in": 352,
+            "out": 684,
+            "total": 1036,
+            "reasoning": 456
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "ceran",
+      "query": "Ceran Saat, ceransaat.com",
+      "note": "watch e-shop (Saker list, 15 Oct); name + domain; a healthy case",
+      "ms": 30491,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 6133,
+        "rewritesRejected": 0,
+        "ms": 30491
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "ceransaat.com loads and shows real content.",
+          "rationale": "http.reachable: Loaded with HTTP 200; site.own_site: ceransaat.com was given by the user as the business's website",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "ceransaat.com",
+                "name": "Ceran Saat",
+                "city": "İzmir",
+                "query": "Ceran Saat",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://ceransaat.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://ceransaat.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "ceransaat.com",
+                "name": "Ceran Saat",
+                "city": "İzmir",
+                "query": "Ceran Saat",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "ceransaat.com was given by the user as the business's website",
+              "observed": {
+                "host": "ceransaat.com",
+                "userGiven": true
+              },
+              "ms": 2,
+              "at": "2026-10-15T10:12:42.685Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://ceransaat.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://ceransaat.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://ceransaat.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 1961,
+              "at": "2026-10-15T10:12:44.646Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://ceransaat.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “none”)",
+              "observed": {
+                "title": "",
+                "marker": null
+              },
+              "ms": 1342,
+              "at": "2026-10-15T10:12:45.988Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:12:45.988Z",
+          "ownerText": "The website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "ceransaat.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid: Certificate expires in 34 day(s) (needs ≥ 30); http.https_redirect: http:// redirects to https://ceransaat.com/",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "ceransaat.com",
+                "name": "Ceran Saat",
+                "city": "İzmir",
+                "query": "Ceran Saat",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "ceransaat.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "ceransaat.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://ceransaat.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "ceransaat.com",
+                "name": "Ceran Saat",
+                "city": "İzmir",
+                "query": "Ceran Saat",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "ceransaat.com was given by the user as the business's website",
+              "observed": {
+                "host": "ceransaat.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:12:45.989Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "ceransaat.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 34 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-11-18T18:20:51.000Z",
+                "daysLeft": 34,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 47,
+              "at": "2026-10-15T10:12:46.037Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "ceransaat.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://ceransaat.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://ceransaat.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://ceransaat.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://ceransaat.com/"
+              },
+              "ms": 1334,
+              "at": "2026-10-15T10:12:47.371Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://ceransaat.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://ceransaat.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://ceransaat.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:12:47.371Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:12:47.371Z",
+          "ownerText": "The site has a valid certificate that lasts more than 30 days and redirects to HTTPS."
+        },
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Ceran Saat is listed on OpenStreetMap.",
+          "rationale": "osm.listed: Found “Ceran Saat” (Ceran Saat, 341. Sokak, Beyazevler Mahallesi, Gaziemir, Izmir, Aegean Region, 35410, Turkey)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Ceran Saat",
+                "city": "İzmir",
+                "cityGuessed": true
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Ceran Saat",
+                "city": "İzmir",
+                "cityGuessed": true
+              },
+              "pass": true,
+              "summary": "Found “Ceran Saat” (Ceran Saat, 341. Sokak, Beyazevler Mahallesi, Gaziemir, Izmir, Aegean Region, 35410, Turkey)",
+              "observed": {
+                "name": "Ceran Saat",
+                "display_name": "Ceran Saat, 341. Sokak, Beyazevler Mahallesi, Gaziemir, Izmir, Aegean Region, 35410, Turkey",
+                "lat": "38.3364182",
+                "lon": "27.1352805",
+                "osm": "node/11623985557",
+                "phone": null,
+                "website": null,
+                "score": 1,
+                "kind": "shop=department_store"
+              },
+              "ms": 157,
+              "at": "2026-10-15T10:12:47.528Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:12:47.528Z",
+          "ownerText": "The business appears on OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads and shows real content, indicating a solid foundation.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate, protecting visitor data.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Your business is listed on OpenStreetMap, helping local discoverability.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3873,
+          "usage": {
+            "in": 1298,
+            "out": 642,
+            "total": 1940,
+            "reasoning": 550
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4826,
+          "usage": {
+            "in": 1169,
+            "out": 794,
+            "total": 1963,
+            "reasoning": 618
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 4522,
+          "usage": {
+            "in": 363,
+            "out": 739,
+            "total": 1102,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3921,
+          "usage": {
+            "in": 350,
+            "out": 778,
+            "total": 1128,
+            "reasoning": 565
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "petimemama",
+      "query": "Petimemama, İzmir",
+      "note": "pet-food e-shop in Karşıyaka (Saker list, 15 Oct); name + city; own site petimemama.com (forwards to www)",
+      "ms": 22678,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 21,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 5750,
+        "rewritesRejected": 0,
+        "ms": 22677
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "petimemama.com loads and shows real content.",
+          "rationale": "site.own_site passed confirming domain petimemama.com names the business; http.reachable returned 200",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "petimemama.com",
+                "name": "Petimemama",
+                "city": "İzmir",
+                "query": "Petimemama İzmir",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://petimemama.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://petimemama.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "petimemama.com",
+                "name": "Petimemama",
+                "city": "İzmir",
+                "query": "Petimemama İzmir",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "petimemama.com names the business (title: “Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri”)",
+              "observed": {
+                "host": "petimemama.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.petimemama.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names izmir"
+              },
+              "ms": 2377,
+              "at": "2026-10-15T10:13:14.412Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://petimemama.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.petimemama.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.petimemama.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://petimemama.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.petimemama.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 405,
+              "at": "2026-10-15T10:13:14.817Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://petimemama.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri”)",
+              "observed": {
+                "title": "Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri",
+                "marker": null
+              },
+              "ms": 3,
+              "at": "2026-10-15T10:13:14.820Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:14.820Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "petimemama.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid shows certificate valid for 68 days (≥30) and http.https_redirect shows HTTP to HTTPS redirect",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "petimemama.com",
+                "name": "Petimemama",
+                "city": "İzmir",
+                "query": "Petimemama İzmir",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "petimemama.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "petimemama.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://petimemama.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "petimemama.com",
+                "name": "Petimemama",
+                "city": "İzmir",
+                "query": "Petimemama İzmir",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "petimemama.com names the business (title: “Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri”)",
+              "observed": {
+                "host": "petimemama.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.petimemama.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names izmir"
+              },
+              "ms": 8,
+              "at": "2026-10-15T10:13:14.828Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "petimemama.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 68 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-23T03:17:26.000Z",
+                "daysLeft": 68,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 91,
+              "at": "2026-10-15T10:13:14.919Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "petimemama.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.petimemama.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://petimemama.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://petimemama.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.petimemama.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.petimemama.com/"
+              },
+              "ms": 506,
+              "at": "2026-10-15T10:13:15.425Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://petimemama.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.petimemama.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.petimemama.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://petimemama.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.petimemama.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:13:15.425Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:15.425Z",
+          "ownerText": "Your site uses a safe, lasting connection."
+        },
+        {
+          "id": "phone_confirmed",
+          "type": "phone_confirmed",
+          "area": "contact",
+          "tone": "good",
+          "statement": "5334698900 is the business's own number: it is listed on its website.",
+          "rationale": "page.phone_listed confirmed phone 5334698900 is listed on the site",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "petimemama.com",
+                "name": "Petimemama",
+                "city": "İzmir",
+                "query": "Petimemama İzmir",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://petimemama.com/",
+                "phone": "5334698900"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "petimemama.com",
+                "name": "Petimemama",
+                "city": "İzmir",
+                "query": "Petimemama İzmir",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "petimemama.com names the business (title: “Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri”)",
+              "observed": {
+                "host": "petimemama.com",
+                "identity": {
+                  "identified": true,
+                  "field": "title",
+                  "value": "Petimemama | Kedi ve Köpek Maması, Evcil Hayvan Ürünleri",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.petimemama.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names izmir"
+              },
+              "ms": 5,
+              "at": "2026-10-15T10:13:15.430Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://petimemama.com/",
+                "phone": "5334698900"
+              },
+              "pass": true,
+              "summary": "5334698900 is listed on the site",
+              "observed": {
+                "looked_for": "5334698900",
+                "on_page": [
+                  "5334698900"
+                ]
+              },
+              "ms": 2,
+              "at": "2026-10-15T10:13:15.432Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:15.432Z",
+          "ownerText": "Your own phone number appears on the site."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Petimemama is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed returned false: no matching place on OpenStreetMap for Petimemama in İzmir",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Petimemama",
+                "city": "İzmir",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Petimemama",
+                "city": "İzmir",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 88,
+              "at": "2026-10-15T10:13:15.520Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:15.520Z",
+          "ownerText": "The business isn’t listed on map services."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Your phone number is correctly displayed on the website.",
+          "cites": [
+            "phone_confirmed"
+          ]
+        },
+        {
+          "text": "The business is currently missing from OpenStreetMap, which many map apps rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2459,
+          "usage": {
+            "in": 987,
+            "out": 444,
+            "total": 1431,
+            "reasoning": 348
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3952,
+          "usage": {
+            "in": 1207,
+            "out": 803,
+            "total": 2010,
+            "reasoning": 643
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3246,
+          "usage": {
+            "in": 520,
+            "out": 537,
+            "total": 1057,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4106,
+          "usage": {
+            "in": 412,
+            "out": 840,
+            "total": 1252,
+            "reasoning": 569
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "zeynep",
+      "query": "Zeynep Çeyiz, Mersin",
+      "note": "home-textile shop in Akdeniz (Saker list, 15 Oct); name + city; own site zeynepceyiz.com.tr; a common first name",
+      "ms": 19197,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 18,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6370,
+        "rewritesRejected": 0,
+        "ms": 19197
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "zeynepceyiz.com.tr loads and shows real content.",
+          "rationale": "Own website found: zeynepceyiz.com.tr names the business (og:site_name: \"Zeynep Çeyiz - Ailenizin Mağazası\") (found by trying the address built from the name)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "zeynepceyiz.com.tr",
+                "name": "Zeynep Çeyiz",
+                "city": "Mersin",
+                "query": "Zeynep Çeyiz Mersin",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://zeynepceyiz.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://zeynepceyiz.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "zeynepceyiz.com.tr",
+                "name": "Zeynep Çeyiz",
+                "city": "Mersin",
+                "query": "Zeynep Çeyiz Mersin",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "zeynepceyiz.com.tr names the business (og:site_name: “Zeynep Çeyiz - Ailenizin Mağazası”)",
+              "observed": {
+                "host": "zeynepceyiz.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Zeynep Çeyiz - Ailenizin Mağazası",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://yandex.com.tr/maps/org/zeynep_ceyiz/212006884658",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://zeynepceyiz.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names mersin"
+              },
+              "ms": 1918,
+              "at": "2026-10-15T10:13:39.620Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://zeynepceyiz.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://zeynepceyiz.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://zeynepceyiz.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 60,
+              "at": "2026-10-15T10:13:39.680Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://zeynepceyiz.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Zeynep Çeyiz”)",
+              "observed": {
+                "title": "Zeynep Çeyiz",
+                "marker": null
+              },
+              "ms": 3,
+              "at": "2026-10-15T10:13:39.683Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:39.683Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "zeynepceyiz.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "Loaded with HTTP 200; http redirects to https; Certificate expires in 68 day(s) (needs ≥ 30)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "zeynepceyiz.com.tr",
+                "name": "Zeynep Çeyiz",
+                "city": "Mersin",
+                "query": "Zeynep Çeyiz Mersin",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "zeynepceyiz.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "zeynepceyiz.com.tr"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://zeynepceyiz.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "zeynepceyiz.com.tr",
+                "name": "Zeynep Çeyiz",
+                "city": "Mersin",
+                "query": "Zeynep Çeyiz Mersin",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "zeynepceyiz.com.tr names the business (og:site_name: “Zeynep Çeyiz - Ailenizin Mağazası”)",
+              "observed": {
+                "host": "zeynepceyiz.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Zeynep Çeyiz - Ailenizin Mağazası",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://yandex.com.tr/maps/org/zeynep_ceyiz/212006884658",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://zeynepceyiz.com.tr",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ],
+                "place": "the homepage names mersin"
+              },
+              "ms": 10,
+              "at": "2026-10-15T10:13:39.693Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "zeynepceyiz.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 68 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-22T14:34:24.000Z",
+                "daysLeft": 68,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 110,
+              "at": "2026-10-15T10:13:39.803Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "zeynepceyiz.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://zeynepceyiz.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://zeynepceyiz.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://zeynepceyiz.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://zeynepceyiz.com.tr/"
+              },
+              "ms": 182,
+              "at": "2026-10-15T10:13:39.985Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://zeynepceyiz.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://zeynepceyiz.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://zeynepceyiz.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:13:39.985Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:39.985Z",
+          "ownerText": "Your site has a valid certificate for over 30 days and uses HTTPS."
+        },
+        {
+          "id": "on_map",
+          "type": "on_map",
+          "area": "presence",
+          "tone": "good",
+          "statement": "Zeynep Çeyiz is listed on OpenStreetMap.",
+          "rationale": "Found “Zeynep Çeyiz” (Zeynep Çeyiz, Zeytinli Bahçe Caddesi, Mahmudiye Mahallesi, Mersin, Akdeniz, Mersin, Mediterranean Region, 33070, Turkey)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Zeynep Çeyiz",
+                "city": "Mersin",
+                "cityGuessed": false
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Zeynep Çeyiz",
+                "city": "Mersin",
+                "cityGuessed": false
+              },
+              "pass": true,
+              "summary": "Found “Zeynep Çeyiz” (Zeynep Çeyiz, Zeytinli Bahçe Caddesi, Mahmudiye Mahallesi, Mersin, Akdeniz, Mersin, Mediterranean Region, 33070, Turkey)",
+              "observed": {
+                "name": "Zeynep Çeyiz",
+                "display_name": "Zeynep Çeyiz, Zeytinli Bahçe Caddesi, Mahmudiye Mahallesi, Mersin, Akdeniz, Mersin, Mediterranean Region, 33070, Turkey",
+                "lat": "36.8006683",
+                "lon": "34.6255116",
+                "osm": "node/11436651420",
+                "phone": null,
+                "website": null,
+                "score": 1,
+                "kind": "shop=bathroom_furnishing"
+              },
+              "ms": 82,
+              "at": "2026-10-15T10:13:40.067Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:13:40.067Z",
+          "ownerText": "Your business appears on OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and serves content over HTTPS, showing a solid technical base.",
+          "cites": [
+            "site_online",
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Your business appears on OpenStreetMap, giving you local map exposure.",
+          "cites": [
+            "on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1878,
+          "usage": {
+            "in": 1878,
+            "out": 282,
+            "total": 2160,
+            "reasoning": 217
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4346,
+          "usage": {
+            "in": 1203,
+            "out": 929,
+            "total": 2132,
+            "reasoning": 740
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2248,
+          "usage": {
+            "in": 436,
+            "out": 476,
+            "total": 912,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3855,
+          "usage": {
+            "in": 368,
+            "out": 798,
+            "total": 1166,
+            "reasoning": 569
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "teknofish",
+      "query": "Teknofish Elektronik",
+      "note": "electronics-accessory e-shop (Saker list, 15 Oct); name only; own site teknofish.com (forwards to www)",
+      "ms": 34688,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 6,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 6309,
+        "rewritesRejected": 0,
+        "ms": 34688
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Teknofish Elektronik; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 10 search result(s)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Teknofish Elektronik",
+                "city": null,
+                "query": "Teknofish Elektronik"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Teknofish Elektronik",
+                "city": null,
+                "query": "Teknofish Elektronik"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://yandex.com.tr/maps/org/teknofish/161171440269",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://yandex.com.tr/maps/org/teknofish/161171440269"
+                ]
+              },
+              "ms": 5097,
+              "at": "2026-10-15T10:14:17.669Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:14:17.669Z",
+          "ownerText": "We couldn't find a website for Teknofish Elektronik; you only appear on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Teknofish Elektronik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Teknofish Elektronik",
+                "city": "Adana",
+                "cityGuessed": true
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Teknofish Elektronik",
+                "city": "Adana",
+                "cityGuessed": true
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 1134,
+              "at": "2026-10-15T10:14:18.803Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:14:18.803Z",
+          "ownerText": "Teknofish Elektronik isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have a dedicated website of your own; you appear only on third‑party listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your business is missing from OpenStreetMap, which many navigation apps and services draw data from.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4778,
+          "usage": {
+            "in": 1891,
+            "out": 858,
+            "total": 2749,
+            "reasoning": 745
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5308,
+          "usage": {
+            "in": 842,
+            "out": 900,
+            "total": 1742,
+            "reasoning": 827
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1505,
+          "usage": {
+            "in": 260,
+            "out": 386,
+            "total": 646,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4553,
+          "usage": {
+            "in": 331,
+            "out": 841,
+            "total": 1172,
+            "reasoning": 572
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "gunes",
+      "query": "Güneş Tıp Kitabevi",
+      "note": "medical bookshop (Saker list, 15 Oct); name only; own site guneskitabevi.com, an address without the word 'tıp'",
+      "ms": 23840,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 20,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 7181,
+        "rewritesRejected": 0,
+        "ms": 23840
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "guneskitabevi.com loads and shows real content.",
+          "rationale": "domain resolves, site reachable with HTTPS, certificate valid, not parked, and og:site_name matches business name",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "guneskitabevi.com",
+                "name": "Güneş Tıp Kitabevi",
+                "city": null,
+                "query": "Güneş Tıp Kitabevi",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://guneskitabevi.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://guneskitabevi.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "guneskitabevi.com",
+                "name": "Güneş Tıp Kitabevi",
+                "city": null,
+                "query": "Güneş Tıp Kitabevi",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "guneskitabevi.com names the business (og:site_name: “Güneş Tıp Kitabevi | Tıp, Diş, Eczacılık, Veterinerlik Kitapları ve TUS Kaynakları”)",
+              "observed": {
+                "host": "guneskitabevi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Güneş Tıp Kitabevi | Tıp, Diş, Eczacılık, Veterinerlik Kitapları ve TUS Kaynakları",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://guneskitabevi.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 1709,
+              "at": "2026-10-15T10:14:45.555Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://guneskitabevi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://guneskitabevi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://guneskitabevi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 86,
+              "at": "2026-10-15T10:14:45.641Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://guneskitabevi.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Güneş Tıp Kitabevi | Tıp, Diş, Eczacılık, Veterinerlik Kitapları ve TUS Kaynakları”)",
+              "observed": {
+                "title": "Güneş Tıp Kitabevi | Tıp, Diş, Eczacılık, Veterinerlik Kitapları ve TUS Kaynakları",
+                "marker": null
+              },
+              "ms": 9,
+              "at": "2026-10-15T10:14:45.650Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:14:45.650Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "guneskitabevi.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "HTTPS redirect active and TLS certificate valid for ≥30 days (expires in 86 days)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "guneskitabevi.com",
+                "name": "Güneş Tıp Kitabevi",
+                "city": null,
+                "query": "Güneş Tıp Kitabevi",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "guneskitabevi.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "guneskitabevi.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://guneskitabevi.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "guneskitabevi.com",
+                "name": "Güneş Tıp Kitabevi",
+                "city": null,
+                "query": "Güneş Tıp Kitabevi",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "guneskitabevi.com names the business (og:site_name: “Güneş Tıp Kitabevi | Tıp, Diş, Eczacılık, Veterinerlik Kitapları ve TUS Kaynakları”)",
+              "observed": {
+                "host": "guneskitabevi.com",
+                "identity": {
+                  "identified": true,
+                  "field": "og:site_name",
+                  "value": "Güneş Tıp Kitabevi | Tıp, Diş, Eczacılık, Veterinerlik Kitapları ve TUS Kaynakları",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://guneskitabevi.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 17,
+              "at": "2026-10-15T10:14:45.667Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "guneskitabevi.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 86 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2027-01-10T00:06:24.000Z",
+                "daysLeft": 86,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 37,
+              "at": "2026-10-15T10:14:45.704Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "guneskitabevi.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://guneskitabevi.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://guneskitabevi.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://guneskitabevi.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://guneskitabevi.com/"
+              },
+              "ms": 149,
+              "at": "2026-10-15T10:14:45.853Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://guneskitabevi.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://guneskitabevi.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://guneskitabevi.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:14:45.853Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:14:45.853Z",
+          "ownerText": "Your site uses a valid HTTPS connection."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Güneş Tıp Kitabevi is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "OpenStreetMap search returned no matching place for Güneş Tıp Kitabevi in Ankara",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Güneş Tıp Kitabevi",
+                "city": "Ankara",
+                "cityGuessed": true
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Güneş Tıp Kitabevi",
+                "city": "Ankara",
+                "cityGuessed": true
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 1159,
+              "at": "2026-10-15T10:14:47.012Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:14:47.012Z",
+          "ownerText": "Your business isn’t listed on map services yet."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The site loads and shows real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate for more than 30 days.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The business is missing from OpenStreetMap, a source used by many map apps.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4812,
+          "usage": {
+            "in": 2050,
+            "out": 903,
+            "total": 2953,
+            "reasoning": 804
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4505,
+          "usage": {
+            "in": 1329,
+            "out": 829,
+            "total": 2158,
+            "reasoning": 715
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1997,
+          "usage": {
+            "in": 440,
+            "out": 604,
+            "total": 1044,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3697,
+          "usage": {
+            "in": 378,
+            "out": 648,
+            "total": 1026,
+            "reasoning": 374
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "mardini",
+      "query": "Mardini Kozmetik",
+      "note": "skin-care and perfume e-shop (Saker list, 15 Oct); name only; own site mardinikozmetik.com (1.5 MB homepage)",
+      "ms": 26306,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 7274,
+        "rewritesRejected": 0,
+        "ms": 26306
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "mardinikozmetik.com loads and shows real content.",
+          "rationale": "DNS resolves (dns.resolves true), site reachable via HTTP 200 (http.reachable true), HTTP redirects to HTTPS (http.https_redirect true), TLS certificate valid for ≥30 days (tls.cert_valid true), page contains real content not parked (page.not_parked true), page name matches business (page.name_match true), and the site is confirmed as the business’s own site (site.own_site true).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "mardinikozmetik.com",
+                "name": "Mardini Kozmetik",
+                "city": null,
+                "query": "Mardini Kozmetik",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://mardinikozmetik.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://mardinikozmetik.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "mardinikozmetik.com",
+                "name": "Mardini Kozmetik",
+                "city": null,
+                "query": "Mardini Kozmetik",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "mardinikozmetik.com names the business (address: “mardinikozmetik.com”)",
+              "observed": {
+                "host": "mardinikozmetik.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "mardinikozmetik.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 1951,
+              "at": "2026-10-15T10:15:15.926Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://mardinikozmetik.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://mardinikozmetik.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://mardinikozmetik.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 60,
+              "at": "2026-10-15T10:15:15.986Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://mardinikozmetik.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Mardini Kozmetik | Doğal Cilt Bakımı & İmza Parfümler”)",
+              "observed": {
+                "title": "Mardini Kozmetik | Doğal Cilt Bakımı & İmza Parfümler",
+                "marker": null
+              },
+              "ms": 6,
+              "at": "2026-10-15T10:15:15.993Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:15:15.993Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "mardinikozmetik.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate is valid and expires in 70 days, satisfying the ≥30‑day requirement (tls.cert_valid true).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "mardinikozmetik.com",
+                "name": "Mardini Kozmetik",
+                "city": null,
+                "query": "Mardini Kozmetik",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "mardinikozmetik.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "mardinikozmetik.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://mardinikozmetik.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "mardinikozmetik.com",
+                "name": "Mardini Kozmetik",
+                "city": null,
+                "query": "Mardini Kozmetik",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "mardinikozmetik.com names the business (address: “mardinikozmetik.com”)",
+              "observed": {
+                "host": "mardinikozmetik.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "mardinikozmetik.com",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 10,
+              "at": "2026-10-15T10:15:16.003Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "mardinikozmetik.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 70 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-25T02:27:39.000Z",
+                "daysLeft": 70,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 113,
+              "at": "2026-10-15T10:15:16.116Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "mardinikozmetik.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://mardinikozmetik.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://mardinikozmetik.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://mardinikozmetik.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://mardinikozmetik.com/"
+              },
+              "ms": 182,
+              "at": "2026-10-15T10:15:16.298Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://mardinikozmetik.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://mardinikozmetik.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://mardinikozmetik.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:15:16.298Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:15:16.298Z",
+          "ownerText": "Your site uses a secure connection that’s safe for visitors."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Mardini Kozmetik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "OpenStreetMap search for the business name in Istanbul returned no matching place (osm.listed false).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Mardini Kozmetik",
+                "city": "Istanbul",
+                "cityGuessed": true
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Mardini Kozmetik",
+                "city": "Istanbul",
+                "cityGuessed": true
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 1127,
+              "at": "2026-10-15T10:15:17.425Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:15:17.425Z",
+          "ownerText": "Your business doesn’t appear on map services like OpenStreetMap."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and presents real content, confirming a healthy online reach.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The domain uses a valid HTTPS certificate, keeping visitor connections secure.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The business is currently absent from OpenStreetMap, which many map applications rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5630,
+          "usage": {
+            "in": 2109,
+            "out": 998,
+            "total": 3107,
+            "reasoning": 921
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 5062,
+          "usage": {
+            "in": 1184,
+            "out": 939,
+            "total": 2123,
+            "reasoning": 745
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1927,
+          "usage": {
+            "in": 377,
+            "out": 576,
+            "total": 953,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3666,
+          "usage": {
+            "in": 363,
+            "out": 728,
+            "total": 1091,
+            "reasoning": 475
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "eightborn",
+      "query": "Eightborn",
+      "note": "clothing e-shop (Saker list, 15 Oct); name only, one English-looking word; own site eightborn.com",
+      "ms": 19190,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 19,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 4984,
+        "rewritesRejected": 0,
+        "ms": 19190
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "eightborn.com loads and shows real content.",
+          "rationale": "DNS resolves (dns.resolves pass true), site reachable with HTTP 200 (http.reachable pass true), and page contains real content not parked (page.not_parked pass true)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "eightborn.com",
+                "name": "Eightborn",
+                "city": null,
+                "query": "Eightborn",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://eightborn.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://eightborn.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "eightborn.com",
+                "name": "Eightborn",
+                "city": null,
+                "query": "Eightborn",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "eightborn.com names the business (address: “eightborn.com”)",
+              "observed": {
+                "host": "eightborn.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "eightborn.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/Eightborn/albums/191947129863207",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Eightborn/albums/407129929431796",
+                    "how": "a search result about the business names this domain"
+                  }
+                ]
+              },
+              "ms": 1799,
+              "at": "2026-10-15T10:15:40.491Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://eightborn.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://eightborn.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://eightborn.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 63,
+              "at": "2026-10-15T10:15:40.554Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://eightborn.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “EIGHTBORN”)",
+              "observed": {
+                "title": "EIGHTBORN",
+                "marker": null
+              },
+              "ms": 8,
+              "at": "2026-10-15T10:15:40.562Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:15:40.562Z",
+          "ownerText": "Your website loads and shows real content for visitors."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "eightborn.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate valid with >30 days expiry (tls.cert_valid pass true) and HTTP redirects to HTTPS (http.https_redirect pass true)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "eightborn.com",
+                "name": "Eightborn",
+                "city": null,
+                "query": "Eightborn",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "eightborn.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "eightborn.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://eightborn.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "eightborn.com",
+                "name": "Eightborn",
+                "city": null,
+                "query": "Eightborn",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "eightborn.com names the business (address: “eightborn.com”)",
+              "observed": {
+                "host": "eightborn.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "eightborn.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.facebook.com/Eightborn/albums/191947129863207",
+                    "how": "a search result about the business names this domain"
+                  },
+                  {
+                    "url": "https://www.facebook.com/Eightborn/albums/407129929431796",
+                    "how": "a search result about the business names this domain"
+                  }
+                ]
+              },
+              "ms": 12,
+              "at": "2026-10-15T10:15:40.574Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "eightborn.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 72 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-26T20:11:40.000Z",
+                "daysLeft": 72,
+                "issuer": "Let's Encrypt",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 121,
+              "at": "2026-10-15T10:15:40.695Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "eightborn.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://eightborn.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://eightborn.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://eightborn.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://eightborn.com/"
+              },
+              "ms": 178,
+              "at": "2026-10-15T10:15:40.873Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://eightborn.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://eightborn.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://eightborn.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:15:40.873Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:15:40.873Z",
+          "ownerText": "Your site uses a valid HTTPS certificate and redirects securely."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Eightborn is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place found on OpenStreetMap (osm.listed pass false)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Eightborn",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Eightborn",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 100,
+              "at": "2026-10-15T10:15:40.973Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:15:40.973Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which some map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads and displays real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "You have a valid HTTPS certificate that redirects visitors securely.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Eightborn is currently absent from OpenStreetMap, which many map applications rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2456,
+          "usage": {
+            "in": 1085,
+            "out": 351,
+            "total": 1436,
+            "reasoning": 279
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3881,
+          "usage": {
+            "in": 1079,
+            "out": 724,
+            "total": 1803,
+            "reasoning": 583
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1364,
+          "usage": {
+            "in": 332,
+            "out": 349,
+            "total": 681,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3874,
+          "usage": {
+            "in": 337,
+            "out": 727,
+            "total": 1064,
+            "reasoning": 493
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "ocean",
+      "query": "Ocean Marine",
+      "note": "boat and outdoor e-shop (Saker list, 15 Oct); name only, two common English words with namesakes abroad; own site oceanmarine.com.tr",
+      "ms": 42034,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 18,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 7143,
+        "rewritesRejected": 0,
+        "ms": 42034
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "oceanmarine.com.tr loads and shows real content.",
+          "rationale": "site.own_site passed: oceanmarine.com names the business",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "oceanmarine.com.tr",
+                "name": "Ocean Marine",
+                "city": null,
+                "query": "Ocean Marine",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://oceanmarine.com.tr/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://oceanmarine.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "oceanmarine.com.tr",
+                "name": "Ocean Marine",
+                "city": null,
+                "query": "Ocean Marine",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "oceanmarine.com.tr names the business (address: “oceanmarine.com.tr”)",
+              "observed": {
+                "host": "oceanmarine.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "oceanmarine.com.tr",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 3840,
+              "at": "2026-10-15T10:16:21.988Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://oceanmarine.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://oceanmarine.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://oceanmarine.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 1966,
+              "at": "2026-10-15T10:16:23.955Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://oceanmarine.com.tr/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “OCEAN MARİNE”)",
+              "observed": {
+                "title": "OCEAN MARİNE",
+                "marker": null
+              },
+              "ms": 10,
+              "at": "2026-10-15T10:16:23.965Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:16:23.965Z",
+          "ownerText": "The website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "oceanmarine.com.tr has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "http.https_redirect passed: http:// redirects to https://oceanmarine.com.tr/ and tls.cert_valid passed: Certificate expires in 71 day(s) (≥30 days)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "oceanmarine.com.tr",
+                "name": "Ocean Marine",
+                "city": null,
+                "query": "Ocean Marine",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "oceanmarine.com.tr",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "oceanmarine.com.tr"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://oceanmarine.com.tr/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "oceanmarine.com.tr",
+                "name": "Ocean Marine",
+                "city": null,
+                "query": "Ocean Marine",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "oceanmarine.com.tr names the business (address: “oceanmarine.com.tr”)",
+              "observed": {
+                "host": "oceanmarine.com.tr",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "oceanmarine.com.tr",
+                  "score": 1
+                },
+                "ties": []
+              },
+              "ms": 16,
+              "at": "2026-10-15T10:16:23.982Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "oceanmarine.com.tr",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 71 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2026-12-25T16:21:19.000Z",
+                "daysLeft": 71,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 67,
+              "at": "2026-10-15T10:16:24.049Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "oceanmarine.com.tr"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://oceanmarine.com.tr/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://oceanmarine.com.tr/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://oceanmarine.com.tr/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://oceanmarine.com.tr/"
+              },
+              "ms": 2036,
+              "at": "2026-10-15T10:16:26.085Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://oceanmarine.com.tr/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://oceanmarine.com.tr/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://oceanmarine.com.tr/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:16:26.088Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:16:26.088Z",
+          "ownerText": "The site uses a valid HTTPS certificate that lasts over 30 days and redirects to HTTPS."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The website oceanmarine.com.tr loads successfully and displays real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "The site uses a valid HTTPS certificate that will remain valid for at least 30 days, ensuring secure connections for visitors.",
+          "cites": [
+            "https_healthy"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3253,
+          "usage": {
+            "in": 1877,
+            "out": 496,
+            "total": 2373,
+            "reasoning": 429
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 10905,
+          "usage": {
+            "in": 1187,
+            "out": 1866,
+            "total": 3053,
+            "reasoning": 1596
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2714,
+          "usage": {
+            "in": 292,
+            "out": 527,
+            "total": 819,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3441,
+          "usage": {
+            "in": 303,
+            "out": 595,
+            "total": 898,
+            "reasoning": 373
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "kuzucu",
+      "query": "Kuzucu Süt Ürünleri",
+      "note": "dairy e-shop in Ereğli (Saker list, 15 Oct); name only; own site kuzucusuturunleri.com (forwards to www)",
+      "ms": 35414,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 4,
+        "verified": 4,
+        "dropped": 0,
+        "checksRun": 23,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 8223,
+        "rewritesRejected": 0,
+        "ms": 35414
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "kuzucusuturunleri.com loads and shows real content.",
+          "rationale": "Own website found (web.own_site_found true), DNS resolves (dns.resolves true), and site reachable over HTTP (http.reachable true).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "query": "Kuzucu Süt Ürünleri",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "query": "Kuzucu Süt Ürünleri",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "kuzucusuturunleri.com names the business (address: “kuzucusuturunleri.com”)",
+              "observed": {
+                "host": "kuzucusuturunleri.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "kuzucusuturunleri.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.kuzucusuturunleri.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 3635,
+              "at": "2026-10-15T10:16:57.003Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.kuzucusuturunleri.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.kuzucusuturunleri.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://kuzucusuturunleri.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.kuzucusuturunleri.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 317,
+              "at": "2026-10-15T10:16:57.320Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Kuzucu Süt Ürünleri”)",
+              "observed": {
+                "title": "Kuzucu Süt Ürünleri",
+                "marker": null
+              },
+              "ms": 6,
+              "at": "2026-10-15T10:16:57.326Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:16:57.326Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "kuzucusuturunleri.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "TLS certificate valid for 77 days (≥30) (tls.cert_valid true) and HTTP-to-HTTPS redirect works (http.https_redirect true).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "query": "Kuzucu Süt Ürünleri",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "kuzucusuturunleri.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "query": "Kuzucu Süt Ürünleri",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "kuzucusuturunleri.com names the business (address: “kuzucusuturunleri.com”)",
+              "observed": {
+                "host": "kuzucusuturunleri.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "kuzucusuturunleri.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.kuzucusuturunleri.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 13,
+              "at": "2026-10-15T10:16:57.339Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 77 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2027-01-01T08:42:41.000Z",
+                "daysLeft": 77,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 96,
+              "at": "2026-10-15T10:16:57.435Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "kuzucusuturunleri.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://www.kuzucusuturunleri.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://kuzucusuturunleri.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://kuzucusuturunleri.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.kuzucusuturunleri.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://www.kuzucusuturunleri.com/"
+              },
+              "ms": 356,
+              "at": "2026-10-15T10:16:57.791Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200 (ended at https://www.kuzucusuturunleri.com/)",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://www.kuzucusuturunleri.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://kuzucusuturunleri.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://www.kuzucusuturunleri.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-15T10:16:57.791Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:16:57.791Z",
+          "ownerText": "Your site uses a valid HTTPS certificate that lasts more than 30 days and redirects securely."
+        },
+        {
+          "id": "phone_confirmed",
+          "type": "phone_confirmed",
+          "area": "contact",
+          "tone": "good",
+          "statement": "3327135612 is the business's own number: it is listed on its website.",
+          "rationale": "Phone number 3327135612 listed on the site (page.phone_listed true).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "query": "Kuzucu Süt Ürünleri",
+                "userGiven": false
+              },
+              "expect": true
+            },
+            {
+              "check": "page.phone_listed",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/",
+                "phone": "3327135612"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "kuzucusuturunleri.com",
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "query": "Kuzucu Süt Ürünleri",
+                "userGiven": false
+              },
+              "pass": true,
+              "summary": "kuzucusuturunleri.com names the business (address: “kuzucusuturunleri.com”)",
+              "observed": {
+                "host": "kuzucusuturunleri.com",
+                "identity": {
+                  "identified": true,
+                  "field": "address",
+                  "value": "kuzucusuturunleri.com",
+                  "score": 1
+                },
+                "ties": [
+                  {
+                    "url": "https://www.kuzucusuturunleri.com",
+                    "how": "its homepage is a search result that names the business"
+                  }
+                ]
+              },
+              "ms": 8,
+              "at": "2026-10-15T10:16:57.799Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.phone_listed",
+              "title": "The phone number appears on the official site",
+              "params": {
+                "url": "https://kuzucusuturunleri.com/",
+                "phone": "3327135612"
+              },
+              "pass": true,
+              "summary": "3327135612 is listed on the site",
+              "observed": {
+                "looked_for": "3327135612",
+                "on_page": [
+                  "3327135612"
+                ]
+              },
+              "ms": 3,
+              "at": "2026-10-15T10:16:57.802Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:16:57.802Z",
+          "ownerText": "The phone number on your site is your own business number."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Kuzucu Süt Ürünleri is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "No matching place found on OpenStreetMap (osm.listed false).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Kuzucu Süt Ürünleri",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 82,
+              "at": "2026-10-15T10:16:57.884Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:16:57.884Z",
+          "ownerText": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads correctly and displays real content.",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate.",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "The phone number listed on your website matches your official line.",
+          "cites": [
+            "phone_confirmed"
+          ]
+        },
+        {
+          "text": "Your business is currently missing from OpenStreetMap, which many navigation apps rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4984,
+          "usage": {
+            "in": 2739,
+            "out": 938,
+            "total": 3677,
+            "reasoning": 837
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4682,
+          "usage": {
+            "in": 1398,
+            "out": 831,
+            "total": 2229,
+            "reasoning": 659
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 9290,
+          "usage": {
+            "in": 514,
+            "out": 448,
+            "total": 962,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4499,
+          "usage": {
+            "in": 438,
+            "out": 917,
+            "total": 1355,
+            "reasoning": 609
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "meysera",
+      "query": "Meysera",
+      "note": "clothing seller without a website (Saker list, 15 Oct; meysera.com and .com.tr have no DNS); name only, one word; expected: no website of its own",
+      "ms": 57617,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 0,
+        "modelCalls": 4,
+        "tokens": 4321,
+        "rewritesRejected": 0,
+        "ms": 57615
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Meysera; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: No website of its own among 10 search result(s); listings only: https://www.pinterest.com/meyseraosman01, https://in.pinterest.com/meysera490, https://www.instagram.com/meyseera, https://in.pinterest.com/meysera0241",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Meysera",
+                "city": null,
+                "query": "Meysera"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Meysera",
+                "city": null,
+                "query": "Meysera"
+              },
+              "pass": false,
+              "summary": "No website of its own among 10 search result(s); listings only: https://www.pinterest.com/meyseraosman01, https://in.pinterest.com/meysera490, https://www.instagram.com/meyseera, https://in.pinterest.com/meysera0241",
+              "observed": {
+                "tried": [],
+                "listings": [
+                  "https://www.pinterest.com/meyseraosman01",
+                  "https://in.pinterest.com/meysera490",
+                  "https://www.instagram.com/meyseera",
+                  "https://in.pinterest.com/meysera0241",
+                  "https://www.instagram.com/meyserakca",
+                  "https://www.facebook.com/meysera.das",
+                  "https://www.tiktok.com/@meyserakca",
+                  "https://www.instagram.com/meysera.alakel"
+                ]
+              },
+              "ms": 3010,
+              "at": "2026-10-15T10:17:28.902Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:17:28.902Z",
+          "ownerText": "We couldn't locate a website for Meysera; it shows up only on listings and platforms."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Meysera is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check failed: No matching place on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Meysera",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Meysera",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 90,
+              "at": "2026-10-15T10:17:28.992Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:17:28.992Z",
+          "ownerText": "Meysera isn’t listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "You do not have an owned website; you only appear on generic listings.",
+          "cites": [
+            "no_own_website"
+          ]
+        },
+        {
+          "text": "Your location is missing from OpenStreetMap, which many navigation apps rely on.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2478,
+          "usage": {
+            "in": 944,
+            "out": 399,
+            "total": 1343,
+            "reasoning": 347
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2431,
+          "usage": {
+            "in": 776,
+            "out": 470,
+            "total": 1246,
+            "reasoning": 344
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 40967,
+          "usage": {
+            "in": 277,
+            "out": 483,
+            "total": 760,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3331,
+          "usage": {
+            "in": 308,
+            "out": 664,
+            "total": 972,
+            "reasoning": 443
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "leyla",
+      "query": "Butik Leyla",
+      "note": "clothing seller without a website (Saker list, 15 Oct; butikleyla.com and .com.tr have no DNS); name only, a very common shop name; expected: no website of its own, namesakes likely",
+      "ms": 54583,
+      "error": null,
+      "grade": "D",
+      "stats": {
+        "proposed": 1,
+        "verified": 1,
+        "dropped": 0,
+        "checksRun": 5,
+        "notChecked": 1,
+        "modelCalls": 4,
+        "tokens": 5563,
+        "rewritesRejected": 0,
+        "ms": 54582
+      },
+      "verified": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Butik Leyla; it shows up only on listings and platforms.",
+          "rationale": "site.own_site check failed (domain leylahijabboutique.com does not identify \"Butik Leyla\") and web.own_site_found check failed (no website of its own among 9 search results)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Butik Leyla",
+                "city": null,
+                "query": "Butik Leyla"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Butik Leyla",
+                "city": null,
+                "query": "Butik Leyla"
+              },
+              "pass": false,
+              "summary": "No website of its own among 9 search result(s); listings only: https://www.instagram.com/popular/leyla-butik, https://www.shopier.com/27906804, https://www.facebook.com/ButikLeylaPolska/about, https://www.facebook.com/ButikLeylaPolska",
+              "observed": {
+                "tried": [
+                  {
+                    "host": "leyla.butik.live",
+                    "pass": false,
+                    "summary": "leyla.butik.live is a page on butik.live, a site that does not carry the business's name, so it is not its own website"
+                  }
+                ],
+                "listings": [
+                  "https://www.instagram.com/popular/leyla-butik",
+                  "https://www.shopier.com/27906804",
+                  "https://www.facebook.com/ButikLeylaPolska/about",
+                  "https://www.facebook.com/ButikLeylaPolska",
+                  "https://www.instagram.com/reel/DbIlzyuqCuW?__d=11%2F",
+                  "https://www.tiktok.com/@leyla.butik.live"
+                ]
+              },
+              "ms": 2646,
+              "at": "2026-10-15T10:18:37.091Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-15T10:18:37.091Z",
+          "ownerText": "We couldn't find a website for Butik Leyla; it shows up only on social media and marketplace listings."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business currently does not have its own website and appears only on external listings and platforms.",
+          "cites": [
+            "no_own_website"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 6210,
+          "usage": {
+            "in": 1342,
+            "out": 1238,
+            "total": 2580,
+            "reasoning": 1150
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4222,
+          "usage": {
+            "in": 949,
+            "out": 691,
+            "total": 1640,
+            "reasoning": 621
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 31275,
+          "usage": {
+            "in": 236,
+            "out": 191,
+            "total": 427,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3518,
+          "usage": {
+            "in": 279,
+            "out": 637,
+            "total": 916,
+            "reasoning": 439
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

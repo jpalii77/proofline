@@ -208,6 +208,34 @@ export function metaContent(html, prop) {
   return '';
 }
 
+/**
+ * Names the page gives itself in schema.org data ("name", "legalName", "alternateName" of an Organization,
+ * store or business). Round 18: teknofish.com's title is a slogan; only its structured data says
+ * "Teknofish Elektronik". Unreadable or oversized blocks are skipped.
+ */
+export function orgNames(html) {
+  const out = [];
+  for (const block of elements(html, 'script', 200)) {
+    if (block.length > 200_000 || !block.includes('@context')) continue;
+    let data;
+    try { data = JSON.parse(block.trim()); } catch { continue; }
+    const stack = [data];
+    for (let n = 0; stack.length && n < 2000; n++) {
+      const x = stack.pop();
+      if (Array.isArray(x)) { stack.push(...x); continue; }
+      if (!x || typeof x !== 'object') continue;
+      const types = [].concat(x['@type'] || []).map(String);
+      if (types.some((t) => /organization|business|store|corporation/i.test(t))) {
+        for (const k of ['name', 'legalName', 'alternateName']) {
+          for (const v of [].concat(x[k] || [])) if (typeof v === 'string' && v.trim() && v.length < 200) out.push(decodeEntities(v).trim());
+        }
+      }
+      if (x['@graph']) stack.push(x['@graph']);
+    }
+  }
+  return [...new Set(out)];
+}
+
 /** Text of every <h1> on the page. */
 export function headings(html) {
   return elements(html, 'h1').map((x) => visibleText(x)).filter(Boolean);

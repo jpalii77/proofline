@@ -32,6 +32,7 @@
 | 15 | 2026-10-14 (same list, after the lost-finding fixes) | 12 | 26 | 3 | 23 | 23 of 23 | **100%** |
 | 16 | 2026-10-14 (fourth fresh list `businesses-7.json`) | 12 | 33 | 0 | 33 | 32 of 33 | **97%** |
 | 17 | 2026-10-15 (same list, after the round-16 fixes) | 12 | 35 | 0 | 35 | 35 of 35 | **100%** |
+| 18 | 2026-10-15 (fifth fresh list `businesses-8.json`, after the audit fixes) | 12 | 33 | 0 | 33 | 32 of 33 | **97%** |
 
 Round 1: all 7 dropped claims deserved to be dropped. Round 2: 4 of 6 deserved it; 2 were true claims lost (petpal.com.tr is the Bursa shop, but its 6 MB homepage names "Petpal" only past the part the identity check read; fixed below). A lost claim makes the report shorter, never wrong.
 
@@ -64,6 +65,8 @@ Round 15 (same list, `eval/verdicts-r15.json`): after the lost-finding fixes, 23
 Round 16 (`eval/businesses-7.json`, a fourth list of 12 businesses never measured before, `eval/verdicts-r16.json`): 32 of 33 kept claims right (97%), with the most findings of any round (33, including a certificate 29 days from expiry and a phone number confirmed on a site). The one wrong claim: Alesta Coffee was told its number "is not on the site", but the site shows it in its WhatsApp button and its structured business data, which the phone check did not read; fixed after the round. One true finding was lost: PatiBurda's own site, whose 1.4 MB homepage names Ankara once.
 
 Round 17 (same list after the round-16 fixes, `eval/verdicts-r17.json`): 35 of 35 kept claims right, the most kept in any round. PatiBurda's own site came back with three true findings (site online, certificate healthy, phone 0850 308 00 87 shown on the site): its homepage was read a second time, further down, where its own text names its Ankara store at about 1.2 MB. Alesta's wrong "phone not on the site" is gone, but no phone claim was proposed for it at all, so its number is a true finding left out. A re-run of the list the fixes were made for, so it confirms the fixes; the next fresh list measures general accuracy.
+
+Round 18 (`eval/businesses-8.json`, a fifth list of 12 businesses never measured before, `eval/verdicts-r18.json`): 32 of 33 kept claims right (97%), every one checkable, no crash, the second fresh list in a row at 97%. The traps held: Güneş Tıp Kitabevi was found at guneskitabevi.com (an address without "tıp"), Ocean Marine at its Turkish site rather than a namesake abroad, and the two sellers with no site (Meysera, Butik Leyla) were rightly told so; Ceran Saat's map entry is its branch in the Optimum mall in Gaziemir, one of its İzmir stores. The one wrong claim: Teknofish Elektronik was told it has no website of its own, but its shop is teknofish.com. Search returned only a map listing, the name-built address (teknofishelektronik.com) does not exist, and the site's title is a slogan; only its schema.org data names "Teknofish Elektronik". Fixed after the round (below).
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
@@ -187,3 +190,9 @@ What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false
 | --- | --- | --- | --- |
 | Alesta Coffee's number was called "not on the site", but the site shows it in a WhatsApp button and in its structured business data | 1 (phone_unconfirmed) | Fixed (15 Oct; round 17: the wrong claim is gone, though no phone claim was proposed): numbers in wa.me / api.whatsapp.com links and in "telephone" structured data count as listed | `tests/round14-identity.test.mjs` |
 | PatiBurda's own site not reported (Ankara named once, deep in a 1.4 MB page) | 0 (true finding lost) | Fixed (15 Oct; round 17: the site and 3 true findings are back): when the typed city is neither in the part of the homepage we read nor on its contact page, the cut-off homepage is read once more, up to 2 MB, for the city alone (same site only). On the saved real page this now finds Ankara at 1.2 MB | `tests/round16-deep-city.test.mjs` |
+
+### Round 18 (fifth fresh list)
+
+| Error | Wrong claims | Fix | Regression test |
+| --- | --- | --- | --- |
+| Teknofish Elektronik was told it has no website of its own; its shop is teknofish.com, an address without "Elektronik", whose title is a slogan and whose name appears only in its schema.org data | 1 (no_own_website), plus 2 true findings lost (site online, certificate healthy) | Fixed (15 Oct, not yet re-measured): the schema.org Organization or store name counts as the page naming itself; the name-built guess also tries the name without a trailing word for what the shop sells ("Elektronik", "Kozmetik"), and such a shortened address counts only when its page names the whole business exactly, with or without a city. On the saved real page this now finds teknofish.com | `tests/round18-identity.test.mjs` |

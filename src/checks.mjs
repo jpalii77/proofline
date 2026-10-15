@@ -11,7 +11,7 @@ import { isHostLimit } from './limits.mjs';
 import { classifyHost } from './platforms.mjs';
 import {
   canonName, coreTokens, domainsIn, elements, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
-  openTags, pageTitle, phoneKey, visibleText,
+  openTags, orgNames, pageTitle, phoneKey, visibleText,
 } from './text.mjs';
 
 /**
@@ -242,9 +242,14 @@ function titleParts(value) {
  * With nothing but a bare name to go on, a field must name exactly the business: "SHOUT – Oversize Giyim" has
  * a part that is "Shout"; "Shout! TV" and "Loky AI" only contain the name, so they may be namesakes (round 4).
  */
+function identityFields(p) {
+  return [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x]),
+    ...orgNames(p.html).slice(0, 5).map((x) => ['structured data', x])];
+}
+
 function exactIdentity(p, name) {
   const want = nameTokens(name).join(' ');
-  const fields = [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x])];
+  const fields = identityFields(p);
   for (const [field, value] of fields) {
     if (!value) continue;
     for (const part of titleParts(value)) {
@@ -259,8 +264,7 @@ function exactIdentity(p, name) {
 
 /** Does the homepage itself say whose site this is? Title, og:site_name, <h1>, then body text. */
 function pageIdentity(p, name, min = NAME_MIN) {
-  const fields = [['og:site_name', metaContent(p.html, 'og:site_name')], ['title', p.title], ...headings(p.html).slice(0, 3).map((x) => ['h1', x])]
-    .filter(([, v]) => v);
+  const fields = identityFields(p).filter(([, v]) => v);
   let best = { field: null, value: '', score: 0 };
   for (const [field, value] of fields) {
     // A long title ("Sakal Café — Kahve & Kahvaltı, Ankara") still names the business when it
@@ -493,6 +497,23 @@ export function obviousDomains(name) {
   return [`${slug}.com`, `${slug}.com.tr`, ...doubled.map((d) => `${d}.com`)];
 }
 
+// What a shop sells, written after its name ("Teknofish Elektronik", "Mardini Kozmetik").
+const SHOP_WORDS = new Set([
+  'elektronik', 'kozmetik', 'giyim', 'moda', 'saat', 'triko', 'market', 'aksesuar', 'taki', 'ayakkabi', 'canta',
+  'cicek', 'cicekcilik', 'tekstil', 'ceyiz', 'mobilya', 'parfum', 'gida', 'kirtasiye', 'oyuncak', 'butik', 'store', 'shop',
+]);
+
+/**
+ * "Teknofish Elektronik" -> teknofish.com, teknofish.com.tr (round 18: the shop's address leaves out what it
+ * sells). Only when what is left is one word of 7+ letters; the caller accepts such an address only when its
+ * homepage names the whole business exactly, never on a looser match.
+ */
+export function shortDomains(name) {
+  const words = fold(name).split(' ').map((w) => w.replace(/[^a-z0-9]/g, '')).filter(Boolean);
+  if (words.length !== 2 || !SHOP_WORDS.has(words[1]) || words[0].length < 7) return [];
+  return [`${words[0]}.com`, `${words[0]}.com.tr`];
+}
+
 // Trade words in a name, and the OpenStreetMap kinds ("category=type") such a place can have.
 const TRADE_KINDS = [
   { words: ['dis', 'dental', 'dentist', 'agiz', 'poliklinik', 'poliklinigi', 'klinik', 'clinic'], kinds: /^(amenity=(dentist|clinic|doctors|hospital)|healthcare=)/, label: 'a clinic' },
@@ -566,11 +587,19 @@ export const CHECKS = {
       const tried = [];
       // Search can miss a shop's own site (naramica.com came back as Instagram only), so the obvious
       // address built from the name is probed too. It counts only if its homepage names the business.
-      const guesses = obviousDomains(name).filter((h) => !candidates.includes(h));
+      const full = obviousDomains(name).filter((h) => !candidates.includes(h));
+      const short = shortDomains(name).filter((h) => !candidates.includes(h) && !full.includes(h));
+      const guesses = [...full, ...short];
       for (const host of [...candidates.slice(0, max), ...guesses]) {
         const guessed = guesses.includes(host);
         const v = await ownSiteVerdict(io, { host, name, city, results });
         if (guessed && v.pass !== true && !v.observed?.notChecked && !v.observed?.placeUnproven) continue; // a guess that is not theirs is no evidence either way
+        // a shortened address ("teknofish.com") that does not name the business outright is someone else's, not a doubt
+        if (short.includes(host)) {
+          if (v.pass !== true) continue;
+          const sp = await page(io, `https://${host}/`);
+          if (!okStatus(sp.status) || !exactIdentity(sp, name)) continue; // (also with a city given: a looser match is not enough)
+        }
         // A web address read from text that has no DNS record is no website at all (round 9: the Instagram
         // handle "ahit.tr"); it must not keep "no website" from being settled.
         if (!guessed && v.pass === null && !v.observed?.notChecked) {

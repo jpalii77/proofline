@@ -1,0 +1,23 @@
+{
+  "run": "eval/runs/2026-10-15-r18.json",
+  "list": "eval/businesses-8.json, a fifth fresh list (12 businesses from the Saker list of 15 Oct, never measured before: 2 name + domain, 2 name + city, 8 bare names), after the audit fixes 1-9 and the round-16/17 fixes.",
+  "checkedBy": "Independent re-check on 2026-10-15: openssl s_client (certificate end dates of all 10 sites, compared with the day counts), curl (http→https redirects, titles, the phone numbers on petimemama.com and kuzucusuturunleri.com, Ceran Saat's contact and about pages, eightborn.com's Turkish language and ₺ prices, teknofish.com's schema.org data and Instagram link), Nominatim searches limited to Turkey for every map claim, and web searches for Meysera and Butik Leyla (no website of their own found; meysera.com, meysera.com.tr, butikleyla.com and butikleyla.com.tr have no DNS record).",
+  "summary": { "kept": 33, "right": 32, "wrong": 1, "unverifiable": 0, "dropped": 0 },
+  "verdicts": {
+    "cizgi": { "site_online": "right (title “Çizgi: Kaliteli Erkek Giyim Ürünleri ve Fiyatları”)", "https_healthy": "right (ends 23 Dec 2026 = 69 days; http forwards to https)", "not_on_map": "right (no Nominatim match)" },
+    "ceran": { "site_online": "right", "https_healthy": "right (ends 18 Nov 2026 = 34 days)", "on_map": "right (Ceran Saat, Beyazevler, Gaziemir, İzmir: its branch in the Optimum mall; the site names İzmir stores in Çankaya, Bornova and Optimum)" },
+    "petimemama": { "site_online": "right (forwards to www)", "https_healthy": "right (ends 23 Dec 2026)", "phone_confirmed": "right (0533 469 89 00 is on the homepage)", "not_on_map": "right" },
+    "zeynep": { "site_online": "right", "https_healthy": "right (ends 22 Dec 2026)", "on_map": "right (Zeynep Çeyiz, Mahmudiye, Akdeniz, Mersin; Saker lists Akdeniz)" },
+    "teknofish": { "no_own_website": "WRONG: teknofish.com is the shop (schema.org legalName “Teknofish Elektronik”, links to Instagram teknofish_, the handle in Saker); search showed only a Yandex map listing and the name-built address teknofishelektronik.com does not exist", "not_on_map": "right" },
+    "gunes": { "site_online": "right (og:site_name “Güneş Tıp Kitabevi | …”)", "https_healthy": "right (ends 10 Jan 2027)", "not_on_map": "right (neither “Güneş Tıp Kitabevi” nor “Güneş Kitabevi” on Nominatim)" },
+    "mardini": { "site_online": "right", "https_healthy": "right (ends 25 Dec 2026)", "not_on_map": "right" },
+    "eightborn": { "site_online": "right (Turkish page, lang=tr, prices in ₺)", "https_healthy": "right (ends 26 Dec 2026)", "not_on_map": "right" },
+    "ocean": { "site_online": "right (oceanmarine.com.tr, “OCEAN MARİNE”, not a namesake abroad)", "https_healthy": "right (ends 25 Dec 2026)" },
+    "kuzucu": { "site_online": "right (forwards to www)", "https_healthy": "right (ends 1 Jan 2027)", "phone_confirmed": "right (0332 713 56 12 is on the homepage)", "not_on_map": "right" },
+    "meysera": { "no_own_website": "right (search shows Pinterest and Instagram only; no DNS for meysera.com or .com.tr)", "not_on_map": "right" },
+    "leyla": { "no_own_website": "right (Instagram, Shopier and Facebook only; no DNS for butikleyla.com or .com.tr)" }
+  },
+  "lost": {
+    "teknofish": "teknofish.com's own findings (site online, certificate ends 7 Dec 2026 = 53 days, healthy) were not reported because the site was not found"
+  }
+}
