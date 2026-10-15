@@ -88,3 +88,18 @@ test('round-16 list: 12 businesses, none seen in an earlier list, mixed input', 
   assert.deepEqual(parsed.filter((p) => p.city && !p.domain).map((p) => p.city), ['Çanakkale', 'Ankara']);
   assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
 });
+
+// Round 18 (15 Oct): the audit fixes (refused answers, Turkish-letter markers) and round 17 measured on a
+// fifth fresh list before release. Same mix; traps: a site address without a word of the name (Güneş Tıp
+// Kitabevi), common English words with namesakes abroad (Ocean Marine), a very common shop name with no site.
+test('round-18 list: 12 businesses, none seen in an earlier list, mixed input', () => {
+  const fresh = load('businesses-8.json');
+  assert.equal(fresh.length, 12);
+  const seen = new Set(lists.filter((f) => f !== 'businesses-8.json').flatMap((f) => load(f).map((it) => key(it.query))));
+  for (const it of fresh) assert.ok(!seen.has(key(it.query)), `${it.query} was already measured`);
+  const parsed = fresh.map((it) => ({ id: it.id, ...intake(it.query) }));
+  assert.deepEqual(parsed.filter((p) => p.domain).map((p) => p.domain), ['cizgitriko.com', 'ceransaat.com']);
+  assert.deepEqual(parsed.filter((p) => p.city && !p.domain).map((p) => p.city), ['İzmir', 'Mersin']);
+  assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
+  assert.equal(parsed.find((p) => p.id === 'gunes').name, 'Güneş Tıp Kitabevi');
+});

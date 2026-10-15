@@ -1,0 +1,14 @@
+[
+  { "id": "cizgi", "query": "Çizgi Triko, cizgitriko.com", "note": "men's knitwear e-shop (Saker list, 15 Oct); name + domain; Turkish letter in the name, 1.5 MB homepage" },
+  { "id": "ceran", "query": "Ceran Saat, ceransaat.com", "note": "watch e-shop (Saker list, 15 Oct); name + domain; a healthy case" },
+  { "id": "petimemama", "query": "Petimemama, İzmir", "note": "pet-food e-shop in Karşıyaka (Saker list, 15 Oct); name + city; own site petimemama.com (forwards to www)" },
+  { "id": "zeynep", "query": "Zeynep Çeyiz, Mersin", "note": "home-textile shop in Akdeniz (Saker list, 15 Oct); name + city; own site zeynepceyiz.com.tr; a common first name" },
+  { "id": "teknofish", "query": "Teknofish Elektronik", "note": "electronics-accessory e-shop (Saker list, 15 Oct); name only; own site teknofish.com (forwards to www)" },
+  { "id": "gunes", "query": "Güneş Tıp Kitabevi", "note": "medical bookshop (Saker list, 15 Oct); name only; own site guneskitabevi.com, an address without the word 'tıp'" },
+  { "id": "mardini", "query": "Mardini Kozmetik", "note": "skin-care and perfume e-shop (Saker list, 15 Oct); name only; own site mardinikozmetik.com (1.5 MB homepage)" },
+  { "id": "eightborn", "query": "Eightborn", "note": "clothing e-shop (Saker list, 15 Oct); name only, one English-looking word; own site eightborn.com" },
+  { "id": "ocean", "query": "Ocean Marine", "note": "boat and outdoor e-shop (Saker list, 15 Oct); name only, two common English words with namesakes abroad; own site oceanmarine.com.tr" },
+  { "id": "kuzucu", "query": "Kuzucu Süt Ürünleri", "note": "dairy e-shop in Ereğli (Saker list, 15 Oct); name only; own site kuzucusuturunleri.com (forwards to www)" },
+  { "id": "meysera", "query": "Meysera", "note": "clothing seller without a website (Saker list, 15 Oct; meysera.com and .com.tr have no DNS); name only, one word; expected: no website of its own" },
+  { "id": "leyla", "query": "Butik Leyla", "note": "clothing seller without a website (Saker list, 15 Oct; butikleyla.com and .com.tr have no DNS); name only, a very common shop name; expected: no website of its own, namesakes likely" }
+]

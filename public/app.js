@@ -422,6 +422,16 @@ function renderError(msg, query) {
   const english = key ? DICT.en[key] : String(msg);
   const shown = key ? t(key) : serverText(msg);
   const actions = [];
+  // A first visitor types their own business while the demo is on recorded examples: one click runs it
+  // live (never automatic, live searches cost quota), as long as live search is set up and quota is left.
+  if (query && /knows four fictional/i.test(english) && demo?.live && demo.left > 0) {
+    const label = query.length > 40 ? `${query.slice(0, 39)}…` : query;
+    actions.push(h('button', { type: 'button', class: 'btn', onclick: () => {
+      document.querySelector('input[name="mode"][value="live"]').checked = true;
+      setModeNote();
+      start(query);
+    } }, t('error.searchLive', { q: label, n: demo.left })));
+  }
   if (query && !FINAL_ERROR.test(english)) actions.push(h('button', { type: 'button', class: 'btn', onclick: () => start(query) }, t('error.retry')));
   if (document.querySelector('#samples .chip')) actions.push(h('button', { type: 'button', class: 'btn ghost', onclick: () => { $('#samples').scrollIntoView({ behavior: 'smooth', block: 'center' }); $('#samples .chip')?.focus({ preventScroll: true }); } }, t('error.pickExample')));
   const box = h('div', { class: 'error-box', role: 'alert' }, h('p', {}, shown), actions.length ? h('div', { class: 'actions' }, actions) : null);

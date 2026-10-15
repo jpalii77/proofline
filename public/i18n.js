@@ -170,6 +170,7 @@ export const DICT = {
     'error.stopped': 'The run stopped before it finished (connection lost or the demo host’s time limit). Nothing was concluded from the checks that did not run.',
     'error.retry': 'Try again',
     'error.pickExample': 'Pick a recorded example',
+    'error.searchLive': 'Search “{q}” live ({n} left today)',
 
     'models.title': 'Model calls',
     'models.sample': 'Recorded example: a rule-based stand-in plays the model, so no tokens are used. Live search runs the same steps on NVIDIA Nemotron via Nebius Token Factory.',
@@ -542,6 +543,7 @@ export const DICT = {
     'error.stopped': 'Çalıştırma bitmeden durdu (bağlantı koptu ya da demo sunucusunun süre sınırı doldu). Çalışmayan kontrollerden hiçbir sonuç çıkarılmadı.',
     'error.retry': 'Yeniden dene',
     'error.pickExample': 'Kayıtlı bir örnek seç',
+    'error.searchLive': '“{q}” için canlı ara (bugün {n} hak)',
 
     'models.title': 'Model çağrıları',
     'models.sample': 'Kayıtlı örnek: modelin yerini kurallara dayalı bir yedek alır, bu yüzden token harcanmaz. Canlı arama aynı adımları Nebius Token Factory üzerinden NVIDIA Nemotron ile çalıştırır.',
