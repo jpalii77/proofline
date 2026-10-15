@@ -57,12 +57,15 @@ export function injectShareMeta(html, record) {
   if (!meta) return html.replace('<meta name="robots" content="index,follow">', '<meta name="robots" content="noindex">');
   const t = esc(meta.title);
   const d = esc(meta.description);
+  // Function replacers: in a replacement string "$2" or "$`" would be read as a pattern, so a business
+  // name holding "$2" closed the attribute and could add a redirect to the page (audit 15 Oct).
+  const put = (v) => (_, a, b) => `${a}${v}${b}`;
   return html
-    .replace(/<title>[^<]*<\/title>/, `<title>${t}</title>`)
-    .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${t}$2`)
-    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${t}$2`)
-    .replace(/(<meta name="description" content=")[^"]*(")/, `$1${d}$2`)
-    .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${d}$2`)
-    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${d}$2`)
+    .replace(/<title>[^<]*<\/title>/, () => `<title>${t}</title>`)
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, put(t))
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, put(t))
+    .replace(/(<meta name="description" content=")[^"]*(")/, put(d))
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, put(d))
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, put(d))
     .replace('<meta name="robots" content="index,follow">', '<meta name="robots" content="noindex">');
 }

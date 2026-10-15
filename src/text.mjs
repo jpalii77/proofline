@@ -85,16 +85,52 @@ export function phoneKey(raw) {
   return digits.length > 10 ? digits.slice(-10) : digits;
 }
 
-/** Phone-looking strings in free text. */
+/**
+ * Phone-looking strings in free text. Two numbers written side by side ("0212 444 55 66 - 0532 765 43 21")
+ * or a number followed by a year ("… 45 67 2024") are one run of digits to the pattern: the run is cut
+ * into numbers by the longest a number can be, judged by how it starts (audit 15 Oct: they were read as
+ * one bogus number, and the real one was then "not on the site").
+ */
 export function extractPhones(text) {
   if (!text) return [];
-  const found = String(text).match(/(?:\+?\d[\d\s().-]{7,18}\d)/g) || [];
+  const runs = String(text).match(/(?:\+?\d[\d\s().-]{7,40}\d)/g) || [];
   const keys = new Set();
-  for (const f of found) {
-    const k = phoneKey(f);
-    if (k && k.length >= 9) keys.add(k);
+  for (const run of runs) {
+    for (const piece of run.split(/\s[-–]\s|[/,;|]/)) {
+      for (const number of splitDigitGroups(piece)) {
+        const k = phoneKey(number);
+        if (k && k.length >= 9) keys.add(k);
+      }
+    }
   }
   return [...keys];
+}
+
+// The most digits one number can have: "00…" international 15, "+…" 13, "90…" 12, "0…" 11, else 10.
+function maxDigits(digits, plus) {
+  if (digits.startsWith('00')) return 15;
+  if (plus) return 13;
+  if (digits.startsWith('90')) return 12;
+  if (digits.startsWith('0')) return 11;
+  return 10;
+}
+
+/** "0212 444 55 66 0532 765 43 21" -> ["0212 444 55 66", "0532 765 43 21"]: groups are kept whole. */
+function splitDigitGroups(piece) {
+  const groups = piece.match(/\d+/g) || [];
+  const out = [];
+  let cur = '';
+  let plus = /^\s*\+/.test(piece);
+  for (const g of groups) {
+    if (cur && (cur + g).length > maxDigits(cur, plus)) {
+      out.push(cur);
+      cur = '';
+      plus = false;
+    }
+    cur += g;
+  }
+  if (cur) out.push(cur);
+  return out;
 }
 
 /** "https://www.Example.com/path" -> "example.com". Returns null for junk. */
@@ -116,20 +152,65 @@ export function looksLikeDomain(s) {
   return /^(https?:\/\/)?(www\.)?[a-z0-9-]+(\.[a-z0-9-]+)+(\/.*)?$/i.test(String(s).trim());
 }
 
+// Pages come from anyone. Tags are found with plain index scans, not with lazy regexes: a page full of
+// unclosed "<title" or "<script" made those regexes take seconds per 100 KB and minutes per 2 MB (audit 15 Oct).
+const asciiLower = (s) => s.replace(/[A-Z]+/g, (c) => c.toLowerCase()); // same length, so indexes line up
+const TAG_MAX = 8192; // longer "tags" are not real meta/html tags; regexes only ever see this much
+
+/** Each opening tag `<name …>` as written, in order. */
+export function openTags(html, name) {
+  const s = String(html || '');
+  const low = asciiLower(s);
+  const open = `<${name}`;
+  const out = [];
+  for (let i = low.indexOf(open); i !== -1; i = low.indexOf(open, i + open.length)) {
+    const next = low[i + open.length];
+    if (next !== undefined && !/[\s/>]/.test(next)) continue;
+    const end = low.indexOf('>', i);
+    if (end === -1) break;
+    out.push(s.slice(i, Math.min(end + 1, i + TAG_MAX)));
+  }
+  return out;
+}
+
+/** Inner HTML of each `<name …>…</name>` element, in order (no nesting). */
+export function elements(html, name, limit = Infinity) {
+  const s = String(html || '');
+  const low = asciiLower(s);
+  const open = `<${name}`;
+  const close = `</${name}`;
+  const out = [];
+  let i = low.indexOf(open);
+  while (i !== -1 && out.length < limit) {
+    const next = low[i + open.length];
+    if (next !== undefined && !/[\s/>]/.test(next)) { i = low.indexOf(open, i + open.length); continue; }
+    const start = low.indexOf('>', i);
+    if (start === -1) break;
+    const end = low.indexOf(close, start);
+    if (end === -1) break;
+    out.push(s.slice(start + 1, end));
+    i = low.indexOf(open, end);
+  }
+  return out;
+}
+
 export function pageTitle(html) {
-  const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html || '');
-  return m ? decodeEntities(m[1]).replace(/\s+/g, ' ').trim() : '';
+  const [t] = elements(html, 'title', 1);
+  return t !== undefined ? decodeEntities(t).replace(/\s+/g, ' ').trim() : '';
 }
 
 export function metaContent(html, prop) {
-  const re = new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]*content=["']([^"']*)["']`, 'i');
-  const m = re.exec(html || '');
-  return m ? decodeEntities(m[1]).trim() : '';
+  const re = new RegExp(`^<meta[^>]+(?:property|name)=["']${prop}["'][^>]*content=["']([^"']*)["']`, 'i');
+  for (const tag of openTags(html, 'meta')) {
+    const m = re.exec(tag);
+    if (m) return decodeEntities(m[1]).trim();
+  }
+  return '';
 }
 
 /** Text of every <h1> on the page. */
 export function headings(html) {
-  return [...String(html || '').matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => visibleText(m[1])).filter(Boolean);
+  return elements(html, 'h1').map((x) => visibleText(x)).filter(Boolean);
 }
 
 /**
@@ -155,12 +236,36 @@ export function canonName(s) {
 }
 
 export function visibleText(html) {
-  return decodeEntities(
-    String(html || '')
-      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-      .replace(/<[^>]+>/g, ' '),
-  ).replace(/\s+/g, ' ').trim();
+  return decodeEntities(stripTags(dropBlocks(dropBlocks(String(html || ''), 'script'), 'style'))).replace(/\s+/g, ' ').trim();
+}
+
+/** Removes every `<name…>…</name>` block; an unclosed one is left in place, as the old regex did. */
+function dropBlocks(s, name) {
+  const low = asciiLower(s);
+  const close = `</${name}>`;
+  let out = '';
+  let from = 0;
+  for (let i = low.indexOf(`<${name}`); i !== -1; i = low.indexOf(`<${name}`, from)) {
+    const end = low.indexOf(close, i);
+    if (end === -1) break;
+    out += `${s.slice(from, i)} `;
+    from = end + close.length;
+  }
+  return out + s.slice(from);
+}
+
+/** Every `<…>` tag becomes a space; a "<" with no ">" after it stays as text. */
+function stripTags(s) {
+  let out = '';
+  let from = 0;
+  for (let i = s.indexOf('<'); i !== -1; i = s.indexOf('<', from)) {
+    const end = s.indexOf('>', i + 1);
+    if (end === -1) break;
+    if (end === i + 1) { out += s.slice(from, end + 1); from = end + 1; continue; } // "<>" is not a tag
+    out += `${s.slice(from, i)} `;
+    from = end + 1;
+  }
+  return out + s.slice(from);
 }
 
 function decodeEntities(s) {

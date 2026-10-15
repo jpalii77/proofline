@@ -10,8 +10,8 @@ import { invalidHostSentence, isValidHostname } from './hostname.mjs';
 import { isHostLimit } from './limits.mjs';
 import { classifyHost } from './platforms.mjs';
 import {
-  canonName, coreTokens, domainsIn, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
-  pageTitle, phoneKey, visibleText,
+  canonName, coreTokens, domainsIn, elements, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
+  openTags, pageTitle, phoneKey, visibleText,
 } from './text.mjs';
 
 /**
@@ -112,7 +112,7 @@ function linksToListing(p, results, name) {
 export function turkeyTie(p, host) {
   if (/\.tr$/i.test(String(host || ''))) return true;
   const html = p?.html || '';
-  if (/<html[^>]*\blang=["']?tr/i.test(html)) return true;
+  if (/\blang=["']?tr/i.test(openTags(html, 'html')[0] || '')) return true;
   const hay = `${p?.title || ''} ${metaContent(html, 'og:site_name') || ''} ${(p?.text || '').slice(0, 20000)}`;
   return /[ğışĞİŞ]/.test(hay) || /₺|\bTL\b|\+90[\s(]?\d/.test(hay);
 }
@@ -265,14 +265,15 @@ function pageIdentity(p, name, min = NAME_MIN) {
   return { identified: false, ...best };
 }
 
-/** Does the place ("Kadıköy, Istanbul": either part) appear on the page, or in a search result that shows this host? */
-/** The first link on the page to its own contact or about page ("/pages/iletisim"), as a full URL; else null. */
 // How far a cut-off homepage is read again when the typed city is not in the first part (src/io/real.mjs caps it).
 const DEEP_READ = 2_000_000;
 
+/** The first link on the page to its own contact or about page ("/pages/iletisim"), as a full URL; else null. */
 function contactLink(p, host) {
-  const re = /href=["']([^"'#?]*(?:iletisim|iletişim|contact|bize-ulasin|hakkimizda|hakkımızda|about)[^"'#?]*)["']/gi;
-  for (const m of String(p?.html || '').matchAll(re)) {
+  // the address is captured first, then tested: one pattern doing both took seconds on a hostile page (audit 15 Oct)
+  const CONTACT = /iletisim|iletişim|contact|bize-ulasin|hakkimizda|hakkımızda|about/i;
+  for (const m of String(p?.html || '').matchAll(/href=["']([^"'#?]{1,2048})["']/gi)) {
+    if (!CONTACT.test(m[1])) continue;
     let u;
     try { u = new URL(m[1], `https://${host}/`); } catch { continue; }
     if (registrable(normalizeHost(u.href)) !== registrable(host)) continue;
@@ -281,6 +282,7 @@ function contactLink(p, host) {
   return null;
 }
 
+/** Does the place ("Kadıköy, Istanbul": either part) appear on the page, or in a search result that shows this host? */
 function placeTie(p, results, host, city) {
   const wants = String(city).split(',').map((x) => fold(x).trim()).filter((x) => x.length >= 3);
   if (!wants.length) return 'no usable city given';
@@ -713,7 +715,7 @@ export const CHECKS = {
     async run(io, { url }) {
       const p = await page(io, url);
       if (!okStatus(p.status)) return { pass: null, summary: 'Page did not load', observed: { status: p.status ?? null } };
-      const form = /<form[\s\S]*?(type=["']email["']|<textarea|name=["'](message|mesaj|email)["'])[\s\S]*?<\/form>/i.test(p.html);
+      const form = elements(p.html, 'form').some((f) => /type=["']email["']|<textarea|name=["'](message|mesaj|email)["']/i.test(f));
       const mailto = /href=["']mailto:/i.test(p.html);
       const tel = /href=["']tel:/i.test(p.html);
       const whatsapp = /wa\.me\/|api\.whatsapp\.com/i.test(p.html);
@@ -740,7 +742,7 @@ export const CHECKS = {
       if (placeholderPhone(phone)) return { pass: null, summary: `${phone} looks like a template's placeholder number, so it proves nothing either way`, observed: { looked_for: key, placeholder: true } };
       const p = await page(io, url);
       if (!okStatus(p.status)) return { pass: null, summary: 'Page did not load', observed: { status: p.status ?? null } };
-      const telLinks = [...p.html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1]);
+      const telLinks = [...p.html.matchAll(/href=["']tel:([^"']{1,64})["']/gi)].map((m) => m[1]);
       // (round 16: alestacoffee.com shows its number only in a WhatsApp button and in its structured data)
       for (const m of p.html.matchAll(/(?:wa\.me\/|api\.whatsapp\.com\/send\?phone=)(\+?\d{10,15})/gi)) telLinks.push(m[1]);
       for (const m of p.html.matchAll(/"telephone"\s*:\s*"([^"]{7,30})"/gi)) telLinks.push(m[1]);
@@ -851,13 +853,17 @@ export const CHECKS = {
     title: 'No public sign the business has closed',
     // Tavily search; a closure phrase only counts when the same result also names the business.
     async run(io, { name, city }) {
+      // a name with no letters we can compare (all Cyrillic, all symbols) would match every closure phrase
+      const folded = fold(name);
+      if (!folded) return { pass: null, summary: 'Not checked: the name has no letters this check can match', observed: {} };
       const r = await io.search(`"${name}" ${city || ''} permanently closed`.trim(), { purpose: 'closure' });
       if (r.error) return { pass: null, summary: `Search failed: ${r.error}`, observed: {} };
       const hits = [];
       for (const x of r.results || []) {
         const hay = `${x.title || ''} ${x.content || ''}`;
         const re = CLOSURE.find((c) => c.test(hay));
-        const namesIt = nameSimilarity(name, x.title || '') >= 0.4 || fold(hay).includes(fold(name));
+        // whole words only: "Ada" is not in "Canada", "Mola" not in "Molalar" (audit 15 Oct)
+        const namesIt = nameSimilarity(name, x.title || '') >= 0.4 || ` ${fold(hay)} `.includes(` ${folded} `);
         if (re && namesIt) {
           hits.push({ url: x.url, title: x.title, phrase: (hay.match(re) || [''])[0] });
         }

@@ -90,6 +90,18 @@ export function newNumbers(text, claim) {
   return [...new Set((String(text).match(/\d+/g) || []).filter((n) => !known.has(n)))];
 }
 
+/**
+ * Claims and the business's own name, address and city as one body of evidence for newNumbers ("Studio 54"
+ * may say 54). Counting the verified claims ("2 issues, 1 thing already works") is allowed up to their number.
+ */
+export function groundOf(claims, ctx = {}) {
+  const counts = Array.from({ length: claims.length + 1 }, (_, i) => i);
+  return {
+    statement: [...claims.map((c) => c.statement), ctx.name, ctx.displayName, ctx.domain, ctx.city, ctx.query, ...counts].filter((x) => x || x === 0).join(' '),
+    evidence: claims.flatMap((c) => c.evidence || []),
+  };
+}
+
 /** Keep only words the owner can verify: numbers in a rewrite must already exist in the evidence. */
 export function numbersGrounded(text, claim) {
   return newNumbers(text, claim).length === 0;
@@ -404,16 +416,34 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   for (const f of Array.isArray(w.pitch?.findings) ? w.pitch.findings : []) {
     if (!f || typeof f !== 'object') continue;
     const cites = (Array.isArray(f.cites) ? f.cites : []).filter(Boolean);
-    if (cites.length && cites.every((id) => ids.has(id))) findings.push({ text: String(f.text).slice(0, 300), cites });
-    else uncited.push({ text: f.text, cites, reason: cites.length ? 'cites a claim that did not pass the gate' : 'no citation' });
+    if (!(cites.length && cites.every((id) => ids.has(id)))) {
+      uncited.push({ text: f.text, cites, reason: cites.length ? 'cites a claim that did not pass the gate' : 'no citation' });
+      continue;
+    }
+    const text = String(f.text).slice(0, 300);
+    const extra = newNumbers(text, groundOf(verified.filter((c) => cites.includes(c.id)), ctx));
+    if (extra.length) uncited.push({ text, cites, reason: `introduced a number not in the cited evidence (${extra.join(', ')})` });
+    else findings.push({ text, cites });
   }
-  const pitch = {
-    subject: String(w.pitch?.subject || '').slice(0, 120),
-    opening: String(w.pitch?.opening || '').slice(0, 400),
-    findings,
-    offer: String(w.pitch?.offer || '').slice(0, 400),
-    closing: String(w.pitch?.closing || '').slice(0, 200),
+  // The summary and the pitch's own sentences cite nothing, so a number in them must come from the
+  // verified evidence; otherwise the sentence is left out (audit 15 Oct: "expired 12 days ago", "40%"
+  // reached the report with only a map claim verified).
+  const ground = groundOf(verified, ctx);
+  const grounded = (field, value, max) => {
+    const text = String(value || '').slice(0, max);
+    const extra = newNumbers(text, ground);
+    if (!extra.length) return text;
+    uncited.push({ text, cites: [], field, reason: `introduced a number not in the verified evidence (${extra.join(', ')})` });
+    return '';
   };
+  const pitch = {
+    subject: grounded('subject', w.pitch?.subject, 120),
+    opening: grounded('opening', w.pitch?.opening, 400),
+    findings,
+    offer: grounded('offer', w.pitch?.offer, 400),
+    closing: grounded('closing', w.pitch?.closing, 200),
+  };
+  const summary = grounded('summary', w.owner_summary, 600);
   const wc = writeOut.call;
   if (wc.outcome !== 'failed') {
     wc.outcome = uncited.length ? (findings.length ? 'partial' : 'rejected') : 'accepted';
@@ -427,7 +457,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   const report = {
     ctx,
     card,
-    summary: String(w.owner_summary || '').slice(0, 600),
+    summary,
     verified,
     dropped,
     rejected,

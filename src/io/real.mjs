@@ -20,16 +20,50 @@ export const isIP = (s) => isIPv4(s) || isIPv6(s);
 
 export function isPrivateAddress(ip) {
   if (isIPv4(ip)) {
-    const [a, b] = ip.split('.').map(Number);
+    const [a, b, c] = ip.split('.').map(Number);
     return a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31)
-      || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127) || a >= 224;
+      || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127) || a >= 224
+      || (a === 198 && (b === 18 || b === 19)) || (a === 192 && b === 0 && c === 0);
   }
   if (isIPv6(ip)) {
-    const x = ip.toLowerCase();
-    return x === '::1' || x === '::' || x.startsWith('fc') || x.startsWith('fd') || x.startsWith('fe80')
-      || x.startsWith('::ffff:') && isPrivateAddress(x.slice(7));
+    // Compared as numbers, not text: new URL() writes [::ffff:127.0.0.1] as ::ffff:7f00:1, which the
+    // old prefix test let through (audit 15 Oct). An address we cannot read is refused.
+    const h = ipv6Hextets(ip);
+    if (!h) return true;
+    const embedded = `${h[6] >> 8}.${h[6] & 255}.${h[7] >> 8}.${h[7] & 255}`;
+    const zeros = (n) => h.slice(0, n).every((x) => x === 0);
+    if (zeros(8) || (zeros(7) && h[7] === 1)) return true; // :: and ::1
+    if (zeros(5) && h[5] === 0xffff) return isPrivateAddress(embedded); // ::ffff:a.b.c.d (IPv4-mapped)
+    if (zeros(6)) return isPrivateAddress(embedded); // ::a.b.c.d (IPv4-compatible)
+    if (h[0] === 0x64 && h[1] === 0xff9b && h.slice(2, 6).every((x) => x === 0)) return isPrivateAddress(embedded); // NAT64
+    return (h[0] & 0xfe00) === 0xfc00 // fc00::/7 unique local
+      || (h[0] & 0xffc0) === 0xfe80 // fe80::/10 link-local
+      || (h[0] & 0xffc0) === 0xfec0 // fec0::/10 site-local
+      || (h[0] & 0xff00) === 0xff00 // multicast
+      || (h[0] === 0x2001 && h[1] === 0x0db8); // documentation
   }
   return true;
+}
+
+/** "::ffff:7f00:1" -> [0,0,0,0,0,0xffff,0x7f00,1]; a trailing dotted IPv4 counts as two groups. Null if unreadable. */
+function ipv6Hextets(ip) {
+  let x = String(ip).toLowerCase().replace(/%.*$/, '');
+  const v4 = /(\d{1,3}(?:\.\d{1,3}){3})$/.exec(x);
+  if (v4) {
+    if (!isIPv4(v4[1])) return null;
+    const [a, b, c, d] = v4[1].split('.').map(Number);
+    x = `${x.slice(0, -v4[1].length)}${((a << 8) | b).toString(16)}:${((c << 8) | d).toString(16)}`;
+  }
+  const halves = x.split('::');
+  if (halves.length > 2) return null;
+  const part = (p) => (p ? p.split(':') : []);
+  const head = part(halves[0]);
+  const tail = halves.length === 2 ? part(halves[1]) : [];
+  const fill = halves.length === 2 ? 8 - head.length - tail.length : 0;
+  if (fill < 0 || (halves.length === 1 && head.length !== 8)) return null;
+  const all = [...head, ...Array(fill).fill('0'), ...tail];
+  if (all.length !== 8 || !all.every((g) => /^[0-9a-f]{1,4}$/.test(g))) return null;
+  return all.map((g) => parseInt(g, 16));
 }
 
 /** Throws unless every address the host resolves to is public. `lookup` returns string[] of IPs. */
