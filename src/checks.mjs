@@ -730,7 +730,8 @@ export const CHECKS = {
       const via = r.source === 'ct-log' ? ' (expiry read from Certificate Transparency logs)' : '';
       if (!r.validTo) {
         const observed = { validTo: null, authorized: r.authorized ?? null, authorizationError: r.authorizationError || null, source: r.source || null };
-        if (r.authorized === false) return { pass: false, summary: `Certificate is not trusted${r.authorizationError ? `: ${r.authorizationError}` : ''}`, observed };
+        // "not trusted" needs a stated reason; an unreadable date alone proves nothing either way (audit 15 Oct)
+        if (r.authorized === false && r.authorizationError) return { pass: false, summary: `Certificate is not trusted: ${r.authorizationError}`, observed };
         return { pass: null, summary: 'Certificate expiry date not available', observed };
       }
       const daysLeft = Math.floor((Date.parse(r.validTo) - Date.now()) / 86400000);

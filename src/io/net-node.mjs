@@ -24,8 +24,10 @@ export function createNodeNet() {
       return new Promise((resolve) => {
         const socket = tls.connect({ host, port: 443, servername: host, rejectUnauthorized: false, timeout: timeoutMs }, () => {
           const c = socket.getPeerCertificate();
+          // an unreadable date is "no date", not a RangeError thrown out of the socket callback (audit 15 Oct)
+          const end = c && c.valid_to ? Date.parse(c.valid_to) : NaN;
           resolve({
-            validTo: c && c.valid_to ? new Date(c.valid_to).toISOString() : null,
+            validTo: Number.isFinite(end) ? new Date(end).toISOString() : null,
             issuer: c?.issuer?.O || c?.issuer?.CN || null,
             authorized: socket.authorized,
             authorizationError: socket.authorizationError ? String(socket.authorizationError) : null,

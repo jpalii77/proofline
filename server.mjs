@@ -19,7 +19,7 @@ import { injectShareMeta, newShareId, SHARE_ID, SHARE_MS, shareRecord } from './
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public');
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
-const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:";
+const CSP = "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none'";
 
 // pace: in sample mode, add realistic latency so the trace streams like a live run (off in tests).
 // reports: shared runs kept in memory for SHARE_DAYS (at most maxReports); they vanish on restart.
@@ -37,7 +37,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
   function sharePage(res, id) {
     const record = getReport(id);
     const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-    res.writeHead(record ? 200 : 404, { 'content-type': TYPES['.html'], 'x-content-type-options': 'nosniff', 'content-security-policy': CSP, 'cache-control': 'no-store' });
+    res.writeHead(record ? 200 : 404, { 'content-type': TYPES['.html'], 'x-content-type-options': 'nosniff', 'content-security-policy': CSP, 'x-frame-options': 'DENY', 'cache-control': 'no-store' });
     res.end(injectShareMeta(html, record));
   }
 
@@ -62,6 +62,7 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
       'content-type': TYPES[path.extname(file)] || 'application/octet-stream',
       'x-content-type-options': 'nosniff',
       'content-security-policy': CSP,
+      'x-frame-options': 'DENY',
     });
     fs.createReadStream(file).pipe(res);
   }
@@ -141,8 +142,10 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const cfg = readConfig();
   const problem = configProblem(cfg);
   if (problem) { console.error(`Proofline cannot start in live mode.\n${problem}`); process.exit(1); }
-  createServer(cfg, { pace: !process.argv.includes('--fast') }).listen(cfg.port, () => {
+  // this machine only, unless HOST says otherwise (HOST=0.0.0.0 shares it on the network; audit 15 Oct)
+  const host = process.env.HOST || '127.0.0.1';
+  createServer(cfg, { pace: !process.argv.includes('--fast') }).listen(cfg.port, host, () => {
     const mode = cfg.sampleMode ? 'SAMPLE_MODE (recorded data, no keys)' : `live · ${cfg.nebius.reasoningModel}`;
-    console.log(`Proofline on http://localhost:${cfg.port}  [${mode}]`);
+    console.log(`Proofline on http://${host === '127.0.0.1' ? 'localhost' : host}:${cfg.port}  [${mode}]`);
   });
 }

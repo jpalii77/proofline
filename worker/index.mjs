@@ -12,7 +12,9 @@ import { utcDay } from '../src/web/store.mjs';
 const SECURITY_HEADERS = {
   'x-content-type-options': 'nosniff',
   'referrer-policy': 'strict-origin-when-cross-origin',
-  'content-security-policy': "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'",
+  'content-security-policy': "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'",
+  // with frame-ancestors above: no other site can show the demo inside its own page (audit 15 Oct)
+  'x-frame-options': 'DENY',
 };
 
 const DAYS_KEPT = 3 * 86400000;

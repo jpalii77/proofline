@@ -60,8 +60,26 @@ export function demoConfig(env = {}) {
     },
     tavilyKey: String(env.TAVILY_API_KEY || '').trim(),
     nominatimContact: env.NOMINATIM_CONTACT || '',
-    salt: env.IP_SALT || 'proofline-demo',
+    // Live searches per network (IPv4 /24, IPv6 /48): one person rotating addresses in one network
+    // cannot use up the whole day's quota (audit 15 Oct).
+    netPerDay: int(env.LIVE_NET_PER_DAY, 6),
+    // Without IP_SALT, a secret the host already holds keeps the visitor hashes unguessable (audit 15 Oct).
+    salt: env.IP_SALT || (has('NEBIUS_API_KEY') ? `k|${String(env.NEBIUS_API_KEY).trim()}` : 'proofline-demo'),
   };
+}
+
+/** "203.0.113.9" -> "203.0.113", "2001:db8:5:1::7" -> "2001:db8:5": the network a visitor's address belongs to. */
+export function netPrefix(ip) {
+  const s = String(ip || '').trim().toLowerCase();
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(s)) return s.split('.').slice(0, 3).join('.');
+  if (s.includes(':')) {
+    const [head, tail = ''] = s.split('::');
+    const left = head ? head.split(':') : [];
+    const right = tail ? tail.split(':') : [];
+    const full = [...left, ...Array(Math.max(0, 8 - left.length - right.length)).fill('0'), ...right];
+    return full.slice(0, 3).map((x) => x.replace(/^0+(?=.)/, '')).join(':');
+  }
+  return s;
 }
 
 async function ipHash(ip, salt, day) {
@@ -127,9 +145,11 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
   }
 
   /** Stores a finished run for /r/<id> and tells the page its link. Never fails the run. */
-  async function share(sse, { query, mode, events, at = now() }) {
+  async function share(sse, { query, mode, events, at = now(), reuse = null }) {
     try {
-      const id = newShareId();
+      // A recorded example gets one link per example, language and day, not a new record per click: replays
+      // cannot fill the store and push real reports out (audit 15 Oct).
+      const id = reuse ? (await ipHash(`share|${reuse}`, cfg.salt, day())).replace(/[^a-z0-9]/g, '').slice(0, 12) : newShareId();
       const record = shareRecord({ id, query, mode, events, at });
       if (!record) return;
       await store.putReport(id, record);
@@ -153,7 +173,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
           emit,
           lang,
         });
-        await share(sse, { query: sample.input, mode: 'sample', events });
+        await share(sse, { query: sample.input, mode: 'sample', events, reuse: `${sample.id}|${lang}` });
       } catch (err) {
         sse.send({ type: 'error', message: friendlyError(err) });
       } finally { sse.close(); }
@@ -177,6 +197,9 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
       return sse.close();
     }
 
+    const network = await ipHash(`net|${netPrefix(request.headers.get('cf-connecting-ip') || 'local')}`, cfg.salt, day());
+    const netQuota = await store.take({ scope: 'run-net', ipHash: network, globalCap: Number.MAX_SAFE_INTEGER, ipCap: cfg.netPerDay });
+    if (!netQuota.ok) return fail(MESSAGES.ipQuota);
     const quota = await store.take({ scope: 'run', ipHash: await visitor(request), globalCap: cfg.globalPerDay, ipCap: cfg.ipPerDay });
     if (!quota.ok) return fail(quota.reason === 'global' ? MESSAGES.globalQuota : MESSAGES.ipQuota);
 

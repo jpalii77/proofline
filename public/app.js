@@ -165,9 +165,12 @@ async function boot() {
   } else if (!cfg.sampleMode) mode.classList.add('live');
   renderConfig();
   const params = new URLSearchParams(location.search);
-  if (demo && params.get('live') === '1') { document.querySelector('input[name="mode"][value="live"]').checked = true; setModeNote(); }
+  const liveLink = demo && params.get('live') === '1';
+  if (liveLink) { document.querySelector('input[name="mode"][value="live"]').checked = true; setModeNote(); }
   const q = params.get('q');
-  if (q) { $('#q').value = q; start(q); }
+  // A link can fill in a live search, never start one: live searches use the day's quota, so that
+  // takes the visitor's own click (audit 15 Oct). Recorded examples still open straight away.
+  if (q) { $('#q').value = q; if (liveLink) $('#go').focus(); else start(q); }
 }
 
 // ---- Language switch -------------------------------------------------------------------------

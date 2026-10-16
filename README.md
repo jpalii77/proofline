@@ -138,7 +138,7 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 15 | 2026-10-14, lost findings won back | same 12 | 26 | 3 | 23 | 23 of 23 | **100%** |
 | 16 | 2026-10-14, no fixes in between | 12 new shops, mixed input | 33 | 0 | 33 | 32 of 33 | **97%** |
 | 17 | 2026-10-15, after round-16 fixes | same 12 | 35 | 0 | 35 | 35 of 35 | **100%** |
-| 18 | 2026-10-15, after an outside audit's fixes | 12 new shops, mixed input | 33 | 0 | 33 | 32 of 33 | **97%** |
+| 18 | 2026-10-15, after the audit fixes | 12 new shops, mixed input | 33 | 0 | 33 | 32 of 33 | **97%** |
 
 Rounds 8–14 are the most useful lesson of the project. Fixing one list until it scored 96% (round 11) and then running a list the fixes had never seen gave 61% (round 12): the agent had taken a parking page, an empty page and two foreign namesakes for small Turkish shops, and called a 404 page "secure". Each cause got a guard and a regression test; the next fresh list (round 14) kept no wrong claim. Since then every fix is measured on businesses it was not made for: the last three fresh lists (rounds 14, 16, 18; 36 shops) kept 82 of 84 checkable claims right. The price is visible too: when the agent cannot tie a site to the business it now says "not settled" instead of guessing, so some reports are shorter.
 

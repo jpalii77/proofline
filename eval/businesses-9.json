@@ -1,0 +1,14 @@
+[
+  { "id": "sari", "query": "Moda Sarı Butik, modasaributik.com", "note": "women's clothing e-shop (Saker list, 16 Oct); name + domain; Turkish letter in the name, not in the address" },
+  { "id": "drsalt", "query": "Dr.Salt, drsalt.net", "note": "natural salt and care e-shop (Saker list, 16 Oct); name + domain; a dotted name and a .net address, 2.6 MB homepage" },
+  { "id": "yoresel", "query": "Yöresel Bakkal, İzmir", "note": "regional-food e-shop in Karşıyaka (Saker list, 16 Oct); name + city; own site yoreselbakkal.com.tr (forwards to www); two common words" },
+  { "id": "abfen", "query": "Abfen Farma, Ankara", "note": "cosmetics maker in Sincan (Saker list, 16 Oct); name + city; own site abfen.com.tr, an address without 'farma'" },
+  { "id": "vitisfera", "query": "Vitisfera", "note": "supplement e-shop (Saker list, 16 Oct); name only; own site vitisfera.co (a .co ending)" },
+  { "id": "fiyord", "query": "Fiyord Balık Av Market", "note": "fishing-gear e-shop (Saker list, 16 Oct); name only; own site balikavmarket.net, an address without 'Fiyord'" },
+  { "id": "vitaminbox", "query": "VitaminBox", "note": "vitamin e-shop (Saker list, 16 Oct); name only, one word; own site vitaminbox.com.tr" },
+  { "id": "bebeto", "query": "Bebeto", "note": "confectionery brand (Saker list, 16 Oct); name only, one word with namesakes; own site bebeto.com" },
+  { "id": "ergandan", "query": "Ergandan", "note": "grocery e-shop, Ergan Market (Saker list, 16 Oct); name only, one word; own site ergandan.com.tr" },
+  { "id": "deri", "query": "Deri Malzeme", "note": "leather-craft supplies e-shop in Eskişehir (Saker list, 16 Oct); name only, two common words; own site derimalzeme.com (forwards to www)" },
+  { "id": "azram", "query": "Azramtesettur", "note": "modest-wear seller without a website (Saker list, 16 Oct; azramtesettur.com and .com.tr have no DNS); name only, a handle; expected: no website of its own" },
+  { "id": "organikixir", "query": "Organikixir", "note": "cosmetics seller without a website (Saker list, 16 Oct; organikixir.com and .com.tr have no DNS); name only, one word; expected: no website of its own" }
+]

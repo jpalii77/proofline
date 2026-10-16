@@ -103,3 +103,18 @@ test('round-18 list: 12 businesses, none seen in an earlier list, mixed input', 
   assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
   assert.equal(parsed.find((p) => p.id === 'gunes').name, 'Güneş Tıp Kitabevi');
 });
+
+// Round 19 (16 Oct): the round-18 fix (schema.org names, a shortened name-built address) and the release
+// measured on a sixth fresh list. Same mix; traps: addresses that leave out part of the name (abfen.com.tr,
+// balikavmarket.net), a .co ending, a dotted name, a one-word brand with namesakes.
+test('round-19 list: 12 businesses, none seen in an earlier list, mixed input', () => {
+  const fresh = load('businesses-9.json');
+  assert.equal(fresh.length, 12);
+  const seen = new Set(lists.filter((f) => f !== 'businesses-9.json').flatMap((f) => load(f).map((it) => key(it.query))));
+  for (const it of fresh) assert.ok(!seen.has(key(it.query)), `${it.query} was already measured`);
+  const parsed = fresh.map((it) => ({ id: it.id, ...intake(it.query) }));
+  assert.deepEqual(parsed.filter((p) => p.domain).map((p) => p.domain), ['modasaributik.com', 'drsalt.net']);
+  assert.deepEqual(parsed.filter((p) => p.city && !p.domain).map((p) => p.city), ['İzmir', 'Ankara']);
+  assert.equal(parsed.filter((p) => !p.city && !p.domain).length, 8);
+  assert.equal(parsed.find((p) => p.id === 'drsalt').name, 'Dr.Salt');
+});
