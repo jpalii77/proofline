@@ -236,6 +236,24 @@ export function orgNames(html) {
   return [...new Set(out)];
 }
 
+/**
+ * The website a listing page links as the business's own: an `itemprop="url"` link (schema.org microdata,
+ * as on Yandex Maps) or a "urls" / "website" field in its page data. Round 19: Fiyord's map entry links
+ * balikavmarket.net, which search never returned. Hosts only, normalised, at most 5.
+ */
+export function listedWebsites(html) {
+  const out = [];
+  for (const tag of openTags(html, 'a')) {
+    if (!/\bitemprop=["']url["']/i.test(tag)) continue;
+    const m = /\bhref=["'](https?:\/\/[^"'\s]{1,300})["']/i.exec(tag);
+    if (m) out.push(m[1]);
+  }
+  const s = String(html || '');
+  for (const m of s.matchAll(/"urls"\s*:\s*\[([^\]]{0,1000})\]/g)) for (const u of m[1].matchAll(/"(https?:\/\/[^"\s]{1,300})"/g)) out.push(u[1]);
+  for (const m of s.matchAll(/"website"\s*:\s*"(https?:\/\/[^"\s]{1,300})"/g)) out.push(m[1]);
+  return [...new Set(out.map(normalizeHost).filter(Boolean))].slice(0, 5);
+}
+
 /** Text of every <h1> on the page. */
 export function headings(html) {
   return elements(html, 'h1').map((x) => visibleText(x)).filter(Boolean);

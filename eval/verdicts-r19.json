@@ -1,0 +1,37 @@
+{
+  "run": "eval/runs/2026-10-16-r19.json",
+  "list": "eval/businesses-9.json, a sixth fresh list (12 businesses from the Saker list of 16 Oct, never measured before: 2 name + domain, 2 name + city, 8 bare names), after the round-18 fixes and audit fixes 1-17.",
+  "checkedBy": "Independent re-check on 2026-10-16: openssl s_client (certificate end dates of all 8 sites, compared with the day counts), curl (http→https redirects, titles, abfen.com's title and Sincan address, balikavmarket.net's title and schema.org data, yoreselbakkal.com.tr's contact page with its store list), the Yandex Maps entry for Fiyord (it links balikavmarket.net), the Apple Maps result behind the closure claim, Nominatim searches limited to Turkey for every map claim (also for 'Tereci'), and web searches for Azramtesettur and Organikixir (no website of their own; azramtesettur.com/.com.tr and organikixir.com/.com.tr have no DNS record).",
+  "summary": { "kept": 30, "right": 27, "wrong": 3, "unverifiable": 0, "dropped": 2, "droppedRightly": 2 },
+  "verdicts": {
+    "sari": { "site_online": "right", "https_healthy": "right (ends 22 Nov 2026 = 37 days)", "not_on_map": "right" },
+    "drsalt": { "site_online": "right (title “Doğal Sıvı Tuz ve Kaynak Tuzları”)", "https_healthy": "right (ends 13 Jan 2027)" },
+    "yoresel": {
+      "site_online": "right (forwards to www)",
+      "https_healthy": "right (ends 1 Jan 2027)",
+      "not_on_map": "WRONG: its Bostanlı store is on OpenStreetMap as “Tereci” (Şehitler Bulvarı, Bostanlı, Karşıyaka), the brand its site and Instagram use; known limit, like round 3's hotel under an older name",
+      "possibly_closed": "WRONG: the one page is Apple Maps calling one “Tereci Yoresel Bakkal” branch in Çiğli “Permanently Closed”; the business's own site sells and lists four İzmir stores (Mavişehir/Çiğli, Soğukkuyu, Alaybey, Bostanlı) open every day. Stale data, the kind Proofline exists to stop"
+    },
+    "abfen": { "site_online": "right (abfen.com → www.abfen.com, “Abfen Farma”, Sincan - Ankara; it also links abfen.com.tr)", "https_healthy": "right (ends 11 Jan 2027)", "not_on_map": "right" },
+    "vitisfera": { "site_online": "right", "https_healthy": "right (ends 23 Nov 2026 = 38 days)", "not_on_map": "right" },
+    "fiyord": {
+      "no_own_website": "WRONG: balikavmarket.net is the shop (title and og:site_name “Fiyord Balık Av Market Balıkçılık Mağazası”, schema.org legalName “Fiyord Balık Av Market”); its Yandex Maps entry, a search result in the run, links it",
+      "not_on_map": "right"
+    },
+    "vitaminbox": { "site_online": "right", "https_healthy": "right (ends 4 Jan 2027)", "not_on_map": "right" },
+    "ergandan": { "site_online": "right (title “Ergan Sanal Market”)", "https_healthy": "right (ends 25 Dec 2026)", "not_on_map": "right (only a Tarım Kredi market on Mehmet Ergan Sokağı in Simav)" },
+    "deri": { "site_online": "right (forwards to www)", "https_healthy": "right (ends 12 Jan 2027)", "not_on_map": "right" },
+    "azram": { "no_own_website": "right", "not_on_map": "right" },
+    "organikixir": { "no_own_website": "right (Shopier store only)", "not_on_map": "right" }
+  },
+  "dropped": {
+    "bebeto": {
+      "no_own_website": "rightly dropped: the shop has bebeto.com (the gate found bebetojo.com, a namesake in Jordan, but either way 'no website' would have been wrong)",
+      "not_on_map": "rightly dropped: the only match was a Bebeto in London, nothing tied to the business"
+    }
+  },
+  "lost": {
+    "bebeto": "bebeto.com's own findings (site online, certificate) were not reported: the one-word name has namesakes",
+    "fiyord": "balikavmarket.net's own findings were not reported because the site was not found"
+  }
+}

@@ -32,6 +32,8 @@ export const DICT = {
 
     'hero.eyebrow': 'Business profile agent',
     'hero.title': 'Every claim comes with its proof.',
+    'hero.proof': 'Measured on real businesses: on the last four fresh lists (48 Turkish shops), {kept} of {total} kept claims were right ({pct}%), each checked by hand outside Proofline.',
+    'hero.proofLink': 'Every round',
     'hero.lede': 'Give it a small business. Proofline gathers its scattered web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim itself. Anything it cannot prove is dropped, in plain sight.',
     'ask.label': 'Business name and city, or a domain',
     'ask.placeholder': 'Name, city — or a domain',
@@ -405,6 +407,8 @@ export const DICT = {
 
     'hero.eyebrow': 'İşletme profili ajanı',
     'hero.title': 'Her iddia kanıtıyla gelir.',
+    'hero.proof': 'Gerçek işletmelerde ölçüldü: son dört taze listede (48 Türk işletmesi) tutulan {total} iddiadan {kept} tanesi doğru çıktı (%{pct}); her biri Proofline dışında elle kontrol edildi.',
+    'hero.proofLink': 'Tüm turlar',
     'hero.lede': 'Küçük bir işletme adı ver. Proofline işletmenin web’e dağılmış izlerini toplar; neyin doğru olduğunu NVIDIA Nemotron önerir, ardından Proofline her iddiayı kendisi yeniden kontrol eder. Kanıtlayamadığı her şeyi herkesin gözü önünde eler.',
     'ask.label': 'İşletme adı ve şehir ya da alan adı',
     'ask.placeholder': 'Ad, şehir — ya da alan adı',

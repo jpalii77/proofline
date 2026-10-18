@@ -2,7 +2,8 @@
 
 import { applyStatic, DICT, dateTime, getLang, num, onLangChange, partialText, secs, serverText, setLang, t, time } from './i18n.js';
 import { setupTour } from './tour.js';
-import { createGateStage } from './gate.js';
+import { createGateStage, mustSettle } from './gate.js';
+import { ACCURACY, accuracyPct } from './accuracy.js';
 import { ctxFromEvents, gateSummary, laneFromGate, lanesFromEvents, lanesFromReport, miniLabel, shortLabel } from './gate-data.js';
 import { cardFacts, checkTitle, claimStatement, dropReasonText, guardNoteText, modelDetailText, modelName, removedReasonText, summaryText } from './report-lang.js';
 
@@ -150,7 +151,7 @@ function renderConfig() {
 
 async function boot() {
   syncLangButtons();
-  if (getLang() !== 'en') relocalizeStatic();
+  if (getLang() !== 'en') relocalizeStatic(); else renderProofLine();
   const shared = SHARE_PATH.exec(location.pathname);
   if (shared) return openShared(shared[1] || '');
   startHero();
@@ -180,8 +181,18 @@ function syncLangButtons() {
 }
 
 // The page's fixed text, the tab title and the controls whose text depends on state.
+// The measured accuracy under the hero: the number a visitor should trust, with where it comes from.
+function renderProofLine() {
+  const n = $('#proof-line');
+  if (!n) return;
+  n.replaceChildren(
+    t('hero.proof', { kept: num(ACCURACY.kept), total: num(ACCURACY.total), pct: num(accuracyPct(ACCURACY)) }), ' ',
+    h('a', { href: ACCURACY.url, target: '_blank', rel: 'noopener' }, `${t('hero.proofLink')} →`));
+}
+
 function relocalizeStatic() {
   applyStatic();
+  renderProofLine();
   syncLangButtons();
   if (!document.body.classList.contains('shared')) document.title = t('doc.title');
   if (!$('#ask-hint').hidden) askHint(true);
@@ -287,8 +298,17 @@ const HANDLERS = {
     if (stage && !replaying) {
       // let the last cards land, then the report takes over (the gate stays in it, settled)
       const mine = run;
-      stage.close();
-      stage.whenSettled(() => { if (run === mine) renderReport(e.report); });
+      const st = stage;
+      let shown = false;
+      let guard = 0;
+      const show = () => { if (shown || run !== mine) return; shown = true; clearInterval(guard); renderReport(e.report); };
+      st.close();
+      // frames that never come (covered or throttled window) must not hold the report back
+      guard = setInterval(() => {
+        if (shown || run !== mine) { clearInterval(guard); return; }
+        if (mustSettle({ waitingMs: st.stalledFor(), hidden: document.hidden })) st.settleNow();
+      }, 1000);
+      st.whenSettled(show);
     } else renderReport(e.report);
   },
   share: (e) => { run.share = e; renderShare(); },

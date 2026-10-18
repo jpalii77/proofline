@@ -138,7 +138,7 @@ export const CLAIM_TYPES = {
   possibly_closed: {
     area: 'presence', tone: 'risk', needs: ['name'],
     proof: (c) => [
-      { check: 'web.no_closure_signal', params: { name: c.name, city: c.city }, expect: false },
+      { check: 'web.no_closure_signal', params: { name: c.name, city: c.city, ...(c.domain ? { domain: c.domain } : {}) }, expect: false },
     ],
     statement: (c) => `A public page says ${c.name} may have closed. Confirm before reaching out.`,
   },

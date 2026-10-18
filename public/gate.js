@@ -25,6 +25,13 @@ const ease = {
 };
 export const LEAD = 320; // the next card may start this long before the track is clear (it barely moves yet)
 
+// A run's report waits for the gate's last card to land. Frames can stop coming while the page is
+// still visible (a covered or throttled window, a busy phone); the report must not wait for them.
+export const STALL_MS = 4000;
+export function mustSettle({ waitingMs, hidden, limit = STALL_MS }) {
+  return !hidden && waitingMs >= limit;
+}
+
 function el(tag, cls, text) {
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -233,6 +240,7 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
   let clock = 0;
   let last = null;
   let raf = 0;
+  let lastBeat = 0; // when a frame last ran, or was last asked for
   let paused = false;
   let hidden = false;
   let offscreen = false;
@@ -458,6 +466,7 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
 
   function frame(ts) {
     raf = 0;
+    lastBeat = performance.now();
     if (last == null) last = ts;
     const dt = Math.min(64, ts - last);
     last = ts;
@@ -470,7 +479,7 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
     if (busy || loop || !settledAll()) raf = requestAnimationFrame(frame);
   }
 
-  function kick() { if (!raf && !instant) { last = null; raf = requestAnimationFrame(frame); } }
+  function kick() { if (!raf && !instant) { last = null; lastBeat = performance.now(); raf = requestAnimationFrame(frame); } }
 
   // the loop opens mid-round: the previous round already fills both lists, a card is in flight
   let loopStarted = false;
@@ -569,6 +578,8 @@ export function createGateStage({ loop = false, onPick = null, ariaLabel = '', s
     },
     whenSettled(fn) { settledFn = fn; if (instant) settleNow(); else { finishIfDone(); kick(); } },
     settleNow,
+    // how long a requested frame has been waiting (0 when none is pending)
+    stalledFor(now = performance.now()) { return raf ? Math.max(0, now - lastBeat) : 0; },
     setPaused(v) { paused = v; root.classList.toggle('paused', v); if (!v) kick(); },
     get paused() { return paused; },
     destroy() { cancelAnimationFrame(raf); io?.disconnect(); ro?.disconnect(); document.removeEventListener('visibilitychange', onVis); root.remove(); },

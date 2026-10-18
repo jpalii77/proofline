@@ -72,6 +72,9 @@ main { padding: 0 clamp(16px, 4vw, 40px) 48px; max-width: 1280px; margin: 0 auto
 .eyebrow { font: 500 12px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 0 0 14px; }
 h1 { font: 600 clamp(38px, 5.6vw, 64px)/1.0 var(--serif); letter-spacing: -0.025em; margin: 0 0 20px; text-wrap: balance; }
 .lede { color: var(--ink-2); font-size: 17.5px; line-height: 1.6; max-width: 580px; margin: 0 0 30px; text-wrap: pretty; }
+.proof-line { color: var(--ink-2); font-size: 14.5px; line-height: 1.55; max-width: 580px; margin: -12px 0 30px; padding-left: 12px; border-left: 2px solid var(--good); text-wrap: pretty; }
+.proof-line:empty { display: none; }
+.proof-line a { color: var(--ink); white-space: nowrap; }
 .ask { display: flex; gap: 8px; background: var(--card); border: 1px solid var(--line-2); border-radius: 16px; padding: 6px; box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 10px 30px -18px rgba(0,0,0,.25); }
 .ask input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: 400 16px/1 var(--sans); padding: 12px 12px; }
 .ask input:focus { outline: none; }

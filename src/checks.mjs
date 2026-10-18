@@ -11,7 +11,7 @@ import { isHostLimit } from './limits.mjs';
 import { classifyHost } from './platforms.mjs';
 import {
   canonName, coreTokens, domainsIn, elements, extractPhones, fold, headings, looksLikeDomain, metaContent, nameSimilarity, nameTokens, normalizeHost,
-  openTags, orgNames, pageTitle, phoneKey, visibleText,
+  listedWebsites, openTags, orgNames, pageTitle, phoneKey, visibleText,
 } from './text.mjs';
 
 /**
@@ -636,6 +636,27 @@ export const CHECKS = {
           if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary} (found by a second search)`, observed: { host, tried, listings, via: 'second search' } };
         }
       }
+      // The business's own listings often link its website when search does not show it (round 19: Fiyord's
+      // Yandex Maps entry links balikavmarket.net; round 18: teknofish.com). The listing came from the search
+      // for this name but may title it differently ("Fiyord Balık & Av Malzemeleri"), so the safeguard is the
+      // linked site: it must pass the same identity test, and one that only loosely matches leaves "no website"
+      // unsettled. (The listing counts as a search tie only when its result names the business.)
+      for (const url of [...new Set(listings)].slice(0, 3)) {
+        const r = (results || []).find((x) => x.url === url);
+        if (!r) continue;
+        const lp = await page(io, url);
+        if (!okStatus(lp.status)) continue;
+        for (const host of listedWebsites(lp.html)) {
+          if (!isValidHostname(host) || classifyHost(host).kind === 'platform' || candidates.includes(host) || tried.some((t) => t.host === host)) continue;
+          const tie = { url, title: r.title || name, content: `${r.content || ''} ${host}` };
+          const v = await ownSiteVerdict(io, { host, name, city, results: [...results, tie] });
+          if (v.pass === true) return { pass: true, summary: `Own website found: ${v.summary} (linked from its listing ${url})`, observed: { host, tried, listings, via: 'listing link' } };
+          if (v.pass === null && !v.observed?.notChecked) {
+            return { pass: null, summary: `Not settled: its listing ${url} links ${host}: ${v.summary}`, observed: { tried: [...tried, { host, pass: null, summary: v.summary, listingLink: true }], listings } };
+          }
+          tried.push({ host, pass: v.pass, summary: v.summary, listingLink: true });
+        }
+      }
       const unloaded = tried.filter((t) => t.pass === null).map((t) => t.host);
       // A one-word name with nothing else ("Shout") belongs to many businesses: not finding a site in its
       // results says nothing about the one the user means (round 6: the Turkish shop has shout.com.tr).
@@ -903,7 +924,7 @@ export const CHECKS = {
   'web.no_closure_signal': {
     title: 'No public sign the business has closed',
     // Tavily search; a closure phrase only counts when the same result also names the business.
-    async run(io, { name, city }) {
+    async run(io, { name, city, domain = null }) {
       // a name with no letters we can compare (all Cyrillic, all symbols) would match every closure phrase
       const folded = fold(name);
       if (!folded) return { pass: null, summary: 'Not checked: the name has no letters this check can match', observed: {} };
@@ -917,6 +938,15 @@ export const CHECKS = {
         const namesIt = nameSimilarity(name, x.title || '') >= 0.4 || ` ${fold(hay)} `.includes(` ${folded} `);
         if (re && namesIt) {
           hits.push({ url: x.url, title: x.title, phrase: (hay.match(re) || [''])[0] });
+        }
+      }
+      // One page saying "closed" is weak against the business's own website still up and showing real content:
+      // that is usually one branch or an old entry (round 19: Apple Maps calls one Tereci Yöresel Bakkal branch
+      // "Permanently Closed" while its site sells and lists four İzmir stores open every day).
+      if (hits.length && domain) {
+        const own = await page(io, `https://${domain}/`);
+        if (okStatus(own.status) && !isParked(own) && (own.text || '').trim().length > 200) {
+          return { pass: null, summary: `Not settled: “${hits[0].phrase}” on ${hits[0].url}, but ${domain} is up and shows real content, so this may be one branch or an old entry`, observed: { hits, results: (r.results || []).length, ownSiteUp: domain } };
         }
       }
       return {
