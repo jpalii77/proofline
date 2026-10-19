@@ -2,7 +2,7 @@
 
 **Proofline is an agent for people who sell web services to small businesses: it researches a business from its public web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim with code, so a stale or invented "fact" never reaches the sales call.**
 
-**Live demo: <https://proofline-demo.dwelltime-yayin.workers.dev>** · Video (1:54): <https://youtu.be/9ChqIr10PGU> · Code (MIT): <https://github.com/jpalii77/proofline>
+**Live demo: <https://proofline-demo.dwelltime-yayin.workers.dev>** · Video (2:00): <https://youtu.be/20kavMVwN70> · Code (MIT): <https://github.com/jpalii77/proofline>
 
 ### Try it in 30 seconds
 
