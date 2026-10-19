@@ -131,7 +131,7 @@ export const CLAIM_TYPES = {
   not_on_map: {
     area: 'presence', tone: 'issue', needs: ['name'],
     proof: (c) => [
-      { check: 'osm.listed', params: { name: c.name, city: c.city, cityGuessed: !!c.cityGuessed }, expect: false },
+      { check: 'osm.listed', params: { name: c.name, city: c.city, cityGuessed: !!c.cityGuessed, ...(c.domain ? { domain: c.domain } : {}) }, expect: false },
     ],
     statement: (c) => `${c.name} is missing from OpenStreetMap, which many map apps reuse.`,
   },

@@ -146,3 +146,24 @@ test('the shipped recordings replay: real calls labelled, gate still drops what 
     }
   }
 });
+
+// 19 Oct: the map check learned that Atlas is on the map under its new name, so its map claim is dropped now;
+// the summary recorded on 12 Oct still said "absent from OpenStreetMap". Recorded words are replayed only for
+// the claims they were written for.
+test('the recorded summary and pitch replay only for the claims they were written for', async () => {
+  const { sample } = await recordedLumen();
+  const io = () => createSampleIO(sample);
+  const same = await runAgent({ query: sample.input, io: io(), brain: createRecordedBrain(sample) });
+  assert.equal(same.report.models.calls.find((c) => c.stage === 'write').model, SUPER);
+  const fewer = structuredClone(sample);
+  fewer.recorded.en.verify.json.claims.push({ id: 'not_on_map', owner_text: 'A claim that is not verified now.' });
+  const other = await runAgent({ query: sample.input, io: io(), brain: createRecordedBrain(fewer) });
+  const w = other.report.models.calls.find((c) => c.stage === 'write');
+  assert.match(w.model, /sample/, 'the stand-in writes, named as such');
+  assert.doesNotMatch(JSON.stringify(other.report.pitch || {}), /Nemotron/);
+  for (const s of loadSamples().filter(hasRecording)) {
+    const { report } = await runAgent({ query: s.input, io: createSampleIO(s), brain: exampleBrain(s) });
+    const text = JSON.stringify([report.owner_summary, report.ownerSummary, report.pitch]);
+    if (!report.verified.some((c) => c.type === 'not_on_map')) assert.doesNotMatch(text, /absent from OpenStreetMap|missing from OpenStreetMap|isn.t listed on OpenStreetMap/i, s.id);
+  }
+});

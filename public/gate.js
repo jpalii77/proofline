@@ -172,9 +172,13 @@ export function planFor(lane, L, tilt = 0) {
   }
   for (const g of Object.keys(open)) if (open[g] != null) lit.push({ g: Number(g), a: open[g], b: end, kind: 'pass' });
   if (leave == null && (lane.verdict === 'dropped' || L.exit)) leave = end;
-  // a card stopped at an early post still covers the start of the track while it falls: the next
-  // card gets no head start (LEAD) or it would run into it (two drops in a row at post 2)
-  if (lane.verdict === 'dropped' && rejectAt != null && sample({ segs }, rejectAt).x < L.cardW) leave = Math.min(end, leave + LEAD);
+  // a card stopped at an early post still covers the start of the track while it falls, and one that falls
+  // back towards a dropped list under the start of the track sweeps across it: the next card gets no head
+  // start (LEAD) or it would run into it (two drops in a row at post 2; Atlas, two drops in a row at post 3)
+  if (lane.verdict === 'dropped' && rejectAt != null) {
+    const stop = sample({ segs }, rejectAt).x;
+    if (stop < L.cardW || L.dropped(0).x < stop - L.cardW) leave = Math.min(end, leave + LEAD);
+  }
   if (lane.verdict === 'verified') {
     marks.unshift({ t: passedAll ?? end - 300, state: 'kept' });
     if (leave == null) leave = cleared ?? end;

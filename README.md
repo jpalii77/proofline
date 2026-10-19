@@ -211,7 +211,7 @@ Where it lives:
 
 ## Tests
 
-**333 tests in 45 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**339 tests in 46 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 

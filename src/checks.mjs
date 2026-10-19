@@ -146,6 +146,53 @@ async function page(io, url) {
   return { ...r, html, title: pageTitle(html), text: visibleText(html) };
 }
 
+// Social links whose first path part is not an account name.
+const NOT_HANDLE = new Set(['p', 'reel', 'reels', 'explore', 'stories', 'sharer', 'sharer.php', 'share', 'pages', 'profile.php', 'watch', 'groups', 'tr', 'intent', 'hashtag', 'tag']);
+
+/**
+ * Other names the business's own site goes by: og:site_name, its structured data and the accounts it links
+ * (instagram.com/tereci_izmir → "tereci"). Only the words the typed name and city do not already hold, 4+ letters.
+ */
+export function ownSiteAliases(p, name, { place = null, max = 2 } = {}) {
+  const html = String(p?.html || '');
+  // (the city in a handle, "tereci_izmir", is not part of the name)
+  const given = new Set([...nameTokens(name), ...nameTokens(place || '')]);
+  const raw = [metaContent(html, 'og:site_name'), ...orgNames(html).slice(0, 5)];
+  for (const m of html.matchAll(/(?:instagram|facebook|tiktok)\.com\/@?([A-Za-z0-9._-]{3,40})/gi)) {
+    if (NOT_HANDLE.has(m[1].toLowerCase())) continue;
+    raw.push(m[1].replace(/[._-]+/g, ' ').replace(/\d+/g, ' '));
+  }
+  const out = [];
+  for (const r of raw) {
+    if (!r) continue;
+    const left = nameTokens(r).filter((t) => t.length >= 4 && !given.has(t));
+    const alias = left.join(' ');
+    // (a handle that runs the name together, "yoreselbakkal", is the name itself)
+    if (!alias || nameSimilarity(alias, name) >= 0.5 || fold(name).replace(/ /g, '').includes(alias.replace(/ /g, ''))) continue;
+    if (!out.includes(alias)) out.push(alias);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+/** A map place in the typed city under one of the own site's other names, or null. */
+async function mapUnderAlias(io, { name, domain, place }) {
+  const own = await page(io, `https://${domain}/`);
+  if (!okStatus(own.status) || isParked(own)) return null;
+  for (const alias of ownSiteAliases(own, name, { place })) {
+    const r = await io.nominatim(`${alias}, ${place}`);
+    if (r.error) continue;
+    for (const x of r.results || []) {
+      const mapName = x.name || String(x.display_name || '').split(',')[0];
+      if (nameSimilarity(alias, mapName) < 0.5) continue;
+      if (!/T[üu]rkiye|Turkey/i.test(String(x.display_name || ''))) continue;
+      if (!` ${fold(x.display_name)} `.includes(` ${fold(place)} `)) continue;
+      return { alias, hit: x };
+    }
+  }
+  return null;
+}
+
 // A page longer than the read limit is cut off (src/io/real.mjs). What we found on it is proof;
 // what we did not find may sit further down, so absence on a cut-off page is "not checked".
 function notWholePage(observed) {
@@ -850,7 +897,7 @@ export const CHECKS = {
 
   'osm.listed': {
     title: 'Listed on OpenStreetMap under this name',
-    async run(io, { name, city, cityGuessed = false }) {
+    async run(io, { name, city, cityGuessed = false, domain = null }) {
       // A domain in the city slot would make the lookup find nothing and read as "not on the map".
       let place = city && !looksLikeDomain(city) ? city : null;
       let at = place ? `, ${place}` : '';
@@ -905,6 +952,19 @@ export const CHECKS = {
       const typedPlace = place && !cityGuessed;
       const untied = pass && !typedPlace && (coreTokens(name).length < 2 || !inTurkey);
       if (untied) pass = null;
+      // A business can be on the map under the brand its own site goes by (round 19: Yöresel Bakkal's Bostanlı
+      // store is "Tereci", the name in its Instagram link). Before "not on the map", look up those names too, in
+      // the city the user typed; a hit there leaves the claim not settled either way.
+      if (pass === false && domain && typedPlace) {
+        const alias = await mapUnderAlias(io, { name, domain, place });
+        if (alias) {
+          return {
+            pass: null,
+            summary: `Not settled: no “${name}” on OpenStreetMap, but “${alias.hit.name}” (${alias.hit.display_name}) matches “${alias.alias}”, a name ${domain} uses`,
+            observed: { alias: alias.alias, name: alias.hit.name, display_name: alias.hit.display_name, lat: alias.hit.lat, lon: alias.hit.lon, kind: alias.hit.kind || null },
+          };
+        }
+      }
       return {
         pass,
         summary: untied ? `Found “${best.name}” (${best.display_name}), but ${typedPlace ? 'it' : 'with no city typed'}${inTurkey ? '' : ' it is outside Turkey and'} nothing ties this place to the business`

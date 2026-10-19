@@ -32,6 +32,13 @@ export function recordedStep(sample, stage, lang = 'en') {
   return hit && hit.json && typeof hit.json === 'object' ? hit : null;
 }
 
+/** The claims verified when the sample was recorded (its owner-rewrite step) are the ones verified now. */
+function sameClaims(verifyHit, claims) {
+  const then = (verifyHit?.json?.claims || []).map((c) => c?.id).filter(Boolean).sort();
+  const now = (claims || []).map((c) => c?.id).filter(Boolean).sort();
+  return then.length > 0 && then.join(' ') === now.join(' ');
+}
+
 export function createRecordedBrain(sample, { thinkMs = 0 } = {}) {
   const standIn = createSampleBrain(sample, { thinkMs });
   const at = sample.recorded?.at || null;
@@ -44,6 +51,10 @@ export function createRecordedBrain(sample, { thinkMs = 0 } = {}) {
   const step = (stage) => (args) => {
     const hit = recordedStep(sample, stage, args?.lang);
     if (!hit) return standIn[stage](args);
+    // The recorded summary and pitch were written for the claims verified on the recording day. When the
+    // gate now keeps a different set, the recorded words could rest on a claim that is gone (19 Oct: Atlas's
+    // map claim, dropped once the map check learned the shop's new name), so the stand-in writes instead.
+    if (stage === 'write' && !sameClaims(recordedStep(sample, 'verify', args?.lang), args?.claims)) return standIn.write(args);
     if (stage !== 'propose') return reply(hit, structuredClone(hit.json));
     const lang = args?.lang === 'tr' ? 'tr' : 'en';
     const own = Array.isArray(hit.json.claims) ? hit.json.claims : [];

@@ -73,9 +73,10 @@ for (const sample0 of loadSamples()) {
 
 // Found with the recorded Nemotron answers (12 Oct): two claims dropped in a row at an early post.
 // The first one falls back over the start of the track, so the next card must not get a head start.
-test('two drops in a row at an early post never touch', () => {
+// (19 Oct: the same at the last post, Atlas's two drops in a row at post 3 once its map claim was dropped)
+test('two drops in a row at any post never touch', () => {
   for (const [name, W, H, mode] of LAYOUTS) {
-    for (const dropAt of [0, 1]) {
+    for (const dropAt of [0, 1, 2]) {
       const lanes = [0, 1, 2].map(() => ({ verdict: 'dropped', dropAt, touches: [0, 1, 2].slice(0, dropAt + 1) }));
       const L = layoutFor(W, H, { kept: 1, dropped: 3 }, mode);
       const plans = lanes.map((l) => planFor(l, L));
