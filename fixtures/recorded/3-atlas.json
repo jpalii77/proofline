@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-11",
+  "at": "2026-10-19",
   "models": {
     "reasoning": "nvidia/nemotron-3-super-120b-a12b",
     "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
@@ -11,16 +11,16 @@
         "city": "Beşiktaş",
         "domain": "atlasbike.example",
         "phone": "2125553061",
-        "reasoning": "The business name and city match the query. The domain atlasbike.example appears as the business's own website in the result, while listings.example is a directory."
+        "reasoning": "The search result lists atlasbike.example as the business's website and provides the phone number matching the allowed list."
       },
       "model": "nvidia/nemotron-3-super-120b-a12b",
       "usage": {
         "in": 388,
-        "out": 506,
-        "total": 894,
-        "reasoning": 425
+        "out": 531,
+        "total": 919,
+        "reasoning": 460
       },
-      "ms": 2954,
+      "ms": 4236,
       "format": "json_schema"
     },
     "propose": {
@@ -28,42 +28,42 @@
         "claims": [
           {
             "type": "site_online",
-            "rationale": "site.own_site passed, dns.resolved, http.reachable with 200"
+            "rationale": "site.own_site passed (atlasbike.example names the business) and http.reachable passed (Loaded with HTTP 200)"
           },
           {
             "type": "https_healthy",
-            "rationale": "tls.cert_valid passed with expiry 143 days (>30)"
+            "rationale": "tls.cert_valid passed (Certificate expires in 143 day(s))"
           },
           {
             "type": "no_https_redirect",
-            "rationale": "http.https_redirect failed: http stays on plain HTTP"
-          },
-          {
-            "type": "phone_unconfirmed",
-            "rationale": "page.phone_listed failed: listed phone 2125557712 differs from given 2125553061"
-          },
-          {
-            "type": "not_on_map",
-            "rationale": "osm.listed failed: no matching place on OpenStreetMap"
-          },
-          {
-            "type": "possibly_closed",
-            "rationale": "web.no_closure_signal failed: closure signal 'Permanently closed' found"
+            "rationale": "http.https_redirect failed (http:// stays on plain HTTP)"
           },
           {
             "type": "possibly_renamed",
-            "rationale": "page.name_match failed: site title 'Velo Atölye' does not match 'Atlas Bike Repair' (similarity 0.06)"
+            "rationale": "page.name_match failed (“Velo Atölye” vs “Atlas Bike Repair”: similarity 0.06, name not found on the page)"
+          },
+          {
+            "type": "phone_unconfirmed",
+            "rationale": "page.phone_listed failed (2125553061 is not on the site; site lists 2125557712)"
+          },
+          {
+            "type": "not_on_map",
+            "rationale": "osm.listed failed (No matching place on OpenStreetMap)"
+          },
+          {
+            "type": "possibly_closed",
+            "rationale": "web.no_closure_signal failed (Closure signal: “Permanently closed” on https://listings.example/istanbul/atlas-bike-repair)"
           }
         ]
       },
       "model": "nvidia/nemotron-3-super-120b-a12b",
       "usage": {
-        "in": 1165,
-        "out": 1174,
-        "total": 2339,
-        "reasoning": 923
+        "in": 1177,
+        "out": 1060,
+        "total": 2237,
+        "reasoning": 775
       },
-      "ms": 5828,
+      "ms": 6387,
       "format": "json_schema"
     },
     "verify": {
@@ -78,79 +78,79 @@
             "owner_text": "Visitors who type your address without https stay on an insecure connection."
           },
           {
-            "id": "phone_unconfirmed",
-            "owner_text": "The phone number from listings isn’t on your site, so it might be outdated."
+            "id": "possibly_renamed",
+            "owner_text": "The domain name doesn't match your business name, so you might have renamed or changed hands."
           },
           {
-            "id": "not_on_map",
-            "owner_text": "Your business isn’t listed on OpenStreetMap, which many map apps use."
+            "id": "phone_unconfirmed",
+            "owner_text": "The phone number listed elsewhere isn’t on your own site, so it may be outdated."
           },
           {
             "id": "possibly_closed",
-            "owner_text": "A public page says your shop may be closed, so you might want to double‑check before contacting anyone."
-          },
-          {
-            "id": "possibly_renamed",
-            "owner_text": "The website uses a different name than “Atlas Bike Repair,” so the business may have changed its name or owner."
+            "owner_text": "A public page says your business may be permanently closed, so you might want to confirm."
           }
         ]
       },
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
       "usage": {
-        "in": 671,
-        "out": 1312,
-        "total": 1983,
+        "in": 621,
+        "out": 645,
+        "total": 1266,
         "reasoning": null
       },
-      "ms": 9544,
+      "ms": 2439,
       "format": "json_schema"
     },
     "write": {
       "json": {
-        "owner_summary": "Atlas Bike Repair’s website at atlasbike.example is reachable and shows real content, but visitors are kept on an insecure connection when they type the domain without HTTPS. The phone number listed in directories does not appear on the site, the business is absent from OpenStreetMap, and there are indications it may have closed or been renamed.",
+        "owner_summary": "Atlas Bike Repair’s website at atlasbike.example is reachable and displays real content, indicating an online presence. However, the site does not enforce HTTPS, leaving visitors on an insecure connection, and the listed phone number does not appear on the site itself. Additionally, the business name on the site differs from “Atlas Bike Repair,” and there are indications the shop may have been renamed, changed hands, or possibly closed.",
         "pitch": {
-          "subject": "Quick wins to secure and verify Atlas Bike Repair’s online presence",
-          "opening": "Hi Atlas Bike Repair team, I noticed your site loads correctly but there are a few straightforward improvements that could boost trust and visibility.",
+          "subject": "Helping Atlas Bike Repair secure and update its online presence",
+          "opening": "Hi Atlas Bike Repair team, I came across your site while researching bike repair services in Beşiktaş and noticed a few opportunities to strengthen your digital footprint.",
           "findings": [
             {
-              "text": "The site loads and shows real content, yet typing the domain without HTTPS leaves visitors on an insecure connection.",
+              "text": "Your site loads correctly and shows real content, confirming you are online.",
               "cites": [
-                "site_online",
+                "site_online"
+              ]
+            },
+            {
+              "text": "Visitors who type the domain without https remain on an insecure connection, which can deter customers and affect search rankings.",
+              "cites": [
                 "no_https_redirect"
               ]
             },
             {
-              "text": "The phone number 2125553061 from listings is not found on your own site, raising concerns it may be outdated.",
+              "text": "The name displayed on the site does not match ‘Atlas Bike Repair’, suggesting a possible rebrand or ownership change.",
+              "cites": [
+                "possibly_renamed"
+              ]
+            },
+            {
+              "text": "The phone number listed in directories (2125553061) is not found on your own site, indicating it may be outdated.",
               "cites": [
                 "phone_unconfirmed"
               ]
             },
             {
-              "text": "Atlas Bike Repair is missing from OpenStreetMap, which many map applications rely on for location data.",
+              "text": "Public sources note that Atlas Bike Repair may have closed, so verifying your current status is important before investing in updates.",
               "cites": [
-                "not_on_map"
-              ]
-            },
-            {
-              "text": "Public sources suggest the business may have closed or been renamed, so confirming current status is advisable before outreach.",
-              "cites": [
-                "possibly_closed",
-                "possibly_renamed"
+                "possibly_closed"
               ]
             }
           ],
-          "offer": "I can set up a proper HTTPS redirect, verify and display your correct phone number on the site, add a precise OpenStreetMap listing, and help you confirm or update your business name and status across online directories.",
-          "closing": "Let me know if you’d like to discuss these fixes—I’m happy to implement them quickly and affordably. Best regards, [Your Name]"
+          "offer": "I can implement an HTTPS redirect, audit and align your branding across the site, verify and update contact information, and set up a simple monitoring alert to notify you of any future accessibility or reputation changes.",
+          "closing": "Please let me know if you’d like to discuss these improvements—I’m happy to provide a quick, no‑obligation overview of the work and timeline. Best regards,"
         }
       },
       "model": "nvidia/nemotron-3-super-120b-a12b",
       "usage": {
-        "in": 493,
-        "out": 645,
-        "total": 1138,
-        "reasoning": 270
+        "in": 461,
+        "out": 747,
+        "total": 1208,
+        "reasoning": 324
       },
-      "ms": 3480,
+      "ms": 4027,
       "format": "json_schema"
     }
   },
@@ -160,42 +160,42 @@
         "claims": [
           {
             "type": "site_online",
-            "rationale": "site.own_site başarılı: atlasbike.example işletmeyi adlandırıyor (adres: “atlasbike.example”)"
+            "rationale": "site.own_site check passed (atlasbike.example names the business) and http.reachable returned HTTP 200, indicating the site is online."
           },
           {
             "type": "https_healthy",
-            "rationale": "tls.cert_valid başarılı: sertifika 143 gün sonra sona eriyor (≥30 gün gereklidir)"
+            "rationale": "tls.cert_valid check passed with certificate valid for 143 days (>30), indicating healthy HTTPS."
           },
           {
             "type": "no_https_redirect",
-            "rationale": "http.https_redirect başarısız: http:// atlıyorsa düz HTTP kalıyor (http://atlasbike.example/)"
+            "rationale": "http.https_redirect check failed: http:// stays on plain HTTP, indicating no HTTPS redirect."
           },
           {
             "type": "phone_unconfirmed",
-            "rationale": "page.phone_listed başarısız: verilen telefon 2125553061 sitede bulunamadı (site 2125557712 listeliyor)"
-          },
-          {
-            "type": "not_on_map",
-            "rationale": "osm.listed başarısız: Atlas Bike Repair için Beşiktaş'te eşleşen yer OpenStreetMap'te yok"
-          },
-          {
-            "type": "possibly_closed",
-            "rationale": "web.no_closure_signal başarısız: listings.example üzerinde 'Permanently closed' kapalı işareti bulundu"
+            "rationale": "page.phone_listed check failed: phone number 2125553061 not found on the site (site lists 2125557712), so phone is unconfirmed."
           },
           {
             "type": "possibly_renamed",
-            "rationale": "page.name_match başarısız: site başlığı ‘Velo Atölye’ ile ‘Atlas Bike Repair’ eşleşmiyor (benzerlik 0.06 < 0.45)"
+            "rationale": "page.name_match check failed: similarity 0.06 (<0.45) between 'Velo Atölye' and 'Atlas Bike Repair', indicating name mismatch suggesting possible renaming."
+          },
+          {
+            "type": "possibly_closed",
+            "rationale": "web.no_closure_signal check failed: closure signal 'Permanently closed' found on listings.example, indicating possible closure."
+          },
+          {
+            "type": "not_on_map",
+            "rationale": "osm.listed check failed: no matching place on OpenStreetMap for Atlas Bike Repair in Beşiktaş, indicating not on map."
           }
         ]
       },
       "model": "nvidia/nemotron-3-super-120b-a12b",
       "usage": {
-        "in": 1185,
-        "out": 1250,
-        "total": 2435,
-        "reasoning": 916
+        "in": 1197,
+        "out": 1308,
+        "total": 2505,
+        "reasoning": 983
       },
-      "ms": 6233,
+      "ms": 6865,
       "format": "json_schema"
     },
     "verify": {
@@ -203,91 +203,75 @@
         "claims": [
           {
             "id": "site_online",
-            "owner_text": "sizin siteniz atlasbike.example çalışıyor ve gerçek içerik gösteriyor."
+            "owner_text": "Sizin sitenizde gerçek içerik var ve HTTP 200 yanıt alıyor."
           },
           {
             "id": "no_https_redirect",
-            "owner_text": "siz atlasbike.example yazınca https olmadan gelenler güvenli olmayan bir sayfada kalıyor."
+            "owner_text": "Siz https olmadan yazdığınızda ziyaretçiler güvenimsiz bir bağlantıda kalıyor."
           },
           {
             "id": "phone_unconfirmed",
-            "owner_text": "sizin sitenizde 2125553061 numarası yok, listingsteki bu numara güncel olmayabilir."
-          },
-          {
-            "id": "not_on_map",
-            "owner_text": "sizin işiniz OpenStreetMap'da yok, bu yüzden birçok harita uygulamasında de görülmüyor."
-          },
-          {
-            "id": "possibly_closed",
-            "owner_text": "sizin işinizin kapalı olabileceği bir sayfada yazıyor, lütfen ulaşmadan önce kontrol edin."
+            "owner_text": "Sizin sitenizde 2125553061 numarası bulunmuyor; sadece 2125557712 numarası var."
           },
           {
             "id": "possibly_renamed",
-            "owner_text": "sizin atlasbike.example sitesi \"Velo Atölye\" adını kullanıyor, bu yüzden isim değişikliği olabilir."
+            "owner_text": "Sitenizde ‘Velo Atölye’ adı görüntüleniyor; ‘Atlas Bike Repair’ adı sitenizde bulunmuyor."
+          },
+          {
+            "id": "possibly_closed",
+            "owner_text": "Sitenizde ‘Permanently closed’ yazısı görüntüleniyor; işletmeniz kapalı olabilir."
           }
         ]
       },
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
       "usage": {
-        "in": 698,
-        "out": 2310,
-        "total": 3008,
+        "in": 648,
+        "out": 1849,
+        "total": 2497,
         "reasoning": null
       },
-      "ms": 14105,
+      "ms": 10971,
       "format": "json_schema"
     },
     "write": {
       "json": {
-        "owner_summary": "Siteniz atlasbike.example adresinde yükleniyor ve gerçek içerik gösteriyor, bu da temel bir çevrimiçi varlık sağlıyor. Ancak HTTPS yönlendirmesi eksik, telefon numaranız site üzerinde bulunmuyor ve OpenStreetMap'te yer almadığınız için güvenilirlik ve erişilebilirlikte bazı boşluklar var. Ayrıca bazı kaynaklarda kapalı olabileceğiniz veya isim değişikliği yaşadığınız belirtiliyor, bu yüzden durumu netleştirmeniz faydalı olur.",
+        "owner_summary": "Atlas Bike Repair'in web sitesi atlasbike.example yükleniyor ve gerçek içerik gösteriyor. Ancak site HTTPS'ye yönlendirme yapmıyor, telefon numarası site üzerinde bulunmuyor ve isimle eşleşmeyebilecek bir durum var; ayrıca işletmenin kapanmış olabileceği hakkında da bir bildirim mevcut. Bu faktörler sitenizin güvenilirliğini ve iletişim etkiliğini etkileyebilir.",
         "pitch": {
-          "subject": "Atlas Bike Repair için hızlı iyileştirme önerisi",
-          "opening": "Merhaba Atlas Bike Repair ekibi, sitenizin mevcut durumunu değerlendirdikten sonra size bazı öneriler sunmak istedim.",
+          "subject": "Web sitenizin güvenliğini ve güncelliğini artırabilecek bazı öneriler",
+          "opening": "Merhaba Atlas Bike Repair ekibi, sitenizi inceledim ve birkaç fark ettiğim konu paylaşmak istedim.",
           "findings": [
             {
-              "text": "Siteniz atlasbike.example adresinde sorunsuz yükleniyor ve gerçek içerik sunuyor.",
-              "cites": [
-                "site_online"
-              ]
-            },
-            {
-              "text": "Siteye https:// olmadan girdiğinizde güvenli olmayan bir bağlantı üzerinden kalıyorsunuz.",
+              "text": "Siteye https:// ön eki yazılmadan girildiğinde güvenli olmayan HTTP bağlantısı üzerinden kalıyor; bu ziyaretçilerin güvenini etkileyebilir ve arama motoru sıralamasında dezavantaj yaratabilir.",
               "cites": [
                 "no_https_redirect"
               ]
             },
             {
-              "text": "Listelerde bulunan 2125553061 numaranız sitenizde görünmüyor, bu da güncel olmayabilir.",
+              "text": "Listelerde görülen 2125553061 numaranız site üzerinde bulunmuyor; bu durum müşterilerin size ulaşmasını zorlaştırabilir ve bilgilerin güncel olmaması riskini oluşturur.",
               "cites": [
                 "phone_unconfirmed"
               ]
             },
             {
-              "text": "Atlas Bike Repair OpenStreetMap'te yer almıyor, bu da birçok harita uygulamasında görünmezliğinize yol açar.",
+              "text": "Site içeriğinde ‘Atlas Bike Repair’ adı yerine farklı bir isim görünüyor ve bazı kaynaklarda işletmenizin kapalı olduğu belirtiliyor; bu yüzden güncel işletme adınızı ve aktifliğinizi doğrulamanız önerilir.",
               "cites": [
-                "not_on_map"
-              ]
-            },
-            {
-              "text": "Bazı açık kaynaklarda işletmenizin kapalı olabileceği veya adı değiştirilmiş olduğu belirtiliyor; bu durumdan emin olmak için doğrulama gerekli.",
-              "cites": [
-                "possibly_closed",
-                "possibly_renamed"
+                "possibly_renamed",
+                "possibly_closed"
               ]
             }
           ],
-          "offer": "HTTPS yönlendirmesini ekleyerek güvenliği artırabilir, telefon bilgilerinizi siteye güncelleyebilir, işletmenizi haritalarda ve çevrimiçi kayıtlarda listeleyebilir ve kapalı/isim değişimi ihtimallerini netleştirebilirsiniz.",
-          "closing": "İlgilenirseniz daha detaylı bir plan hazırlamaktan memnuniyet duyarım. Saygılarımla, Bir web freelancer"
+          "offer": "Sizin için sitenize HTTPS yönlendirmesi eklemeyi, iletişim bilgilerinizi siteye eklemeyi ve işletme adınızın siteyle tutarlı olmasını sağlayacak basit güncellemeleri gerçekleştirebilirim; ayrıca işletmenizin aktif olduğunu doğrulayarak günlüğe alacak bir kontrol sayfası ekleyebilirim.",
+          "closing": "Bu iyileştirmelerle sitenizin güvenilirliğini artırabilir ve daha fazla müşteri çekmenize yardımcı olabilirim. İlginizi çekerse detayları konuşmak için yanıt verirseniz sevinirim. Saygılarımla, [Freelancer Adınız]"
         }
       },
       "model": "nvidia/nemotron-3-super-120b-a12b",
       "usage": {
-        "in": 520,
-        "out": 2348,
-        "total": 2868,
-        "reasoning": 1821
+        "in": 488,
+        "out": 1621,
+        "total": 2109,
+        "reasoning": 1072
       },
-      "ms": 11635,
+      "ms": 9738,
       "format": "json_schema"
     }
   }

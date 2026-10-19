@@ -7,7 +7,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createRecordedBrain, exampleBrain, hasRecording, recordedStep } from '../src/agent/recorded-brain.mjs';
-import { recordSample } from '../src/agent/recorder.mjs';
+import { mergeRecording, recordSample } from '../src/agent/recorder.mjs';
 import { runAgent } from '../src/agent/pipeline.mjs';
 import { createSampleIO, loadSamples } from '../src/io/sample.mjs';
 
@@ -166,4 +166,22 @@ test('the recorded summary and pitch replay only for the claims they were writte
     const text = JSON.stringify([report.owner_summary, report.ownerSummary, report.pitch]);
     if (!report.verified.some((c) => c.type === 'not_on_map')) assert.doesNotMatch(text, /absent from OpenStreetMap|missing from OpenStreetMap|isn.t listed on OpenStreetMap/i, s.id);
   }
+});
+
+test('a language that failed this time keeps its previous complete recording; a good one replaces it', () => {
+  const step = (t) => ({ json: { t }, model: SUPER });
+  const full = (t) => ({ plan: step(t), propose: step(t), verify: step(t), write: step(t) });
+  const previous = { at: '2026-10-12', en: full('old'), tr: full('old') };
+  const fresh = { at: '2026-10-19', en: { plan: step('new'), write: step('new') }, tr: full('new') };
+  const log = [{ lang: 'en', failed: ['propose: no answer within 60 s'] }, { lang: 'tr', failed: [] }];
+  const { recording, kept } = mergeRecording(previous, fresh, log);
+  assert.deepEqual(kept, ['en']);
+  assert.equal(recording.en.propose.json.t, 'old');
+  assert.equal(recording.tr.propose.json.t, 'new');
+  assert.equal(recording.at, '2026-10-12', 'the label never claims a newer date than the oldest part');
+  // nothing complete to keep: the fresh (partial) recording is written, its missing steps replay as the stand-in
+  const none = mergeRecording({ at: '2026-10-12', en: { plan: step('old') } }, fresh, log);
+  assert.deepEqual(none.kept, []);
+  assert.equal(none.recording.en.propose, undefined);
+  assert.deepEqual(mergeRecording(null, fresh, log).kept, []);
 });

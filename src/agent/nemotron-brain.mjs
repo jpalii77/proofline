@@ -7,7 +7,9 @@
 // 11 Oct 2026 the Nano rewrite used ~1,100 of 1,200 tokens in English and ran out (empty reply) on
 // 2 of 4 Turkish runs; the Turkish writer used 1,394 of 1,400. Room to finish, still capped.
 // The planner budget went from 1,200 to 2,000 after Nemotron 3 Ultra ran out on one of 12 plans (12 Oct).
-export const MAX_TOKENS = { plan: 2000, propose: 2000, verify: 2500, write: 2400 };
+// The Nano rewrite went from 2,500 to 4,000 after it ran out again in Turkish while re-recording Atlas
+// (19 Oct: empty reply; the English rewrite of the same claims used 1,348).
+export const MAX_TOKENS = { plan: 2000, propose: 2000, verify: 4000, write: 2400 };
 
 const RULES = 'Reply with one JSON object only. No markdown. Never invent facts, domains, phone numbers or numbers.';
 

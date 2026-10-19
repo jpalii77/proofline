@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { recordSample } from '../src/agent/recorder.mjs';
+import { mergeRecording, recordSample } from '../src/agent/recorder.mjs';
 import { createTokenFactoryClient, DEFAULT_REASONING_MODEL } from '../src/llm.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -32,7 +32,12 @@ for (const file of files) {
     total += l.tokens;
     console.log(`${sample.id.padEnd(7)} ${l.lang}  recorded: ${l.recorded.join(', ') || 'nothing'} · ${l.tokens} tokens · ${l.verified} verified, ${l.dropped} dropped${l.failed.length ? `\n        FAILED ${l.failed.join(' | ')}` : ''}`);
   }
-  if (log.some((l) => l.recorded.length)) fs.writeFileSync(path.join(outDir, file), `${JSON.stringify(recording, null, 2)}\n`);
+  const outFile = path.join(outDir, file);
+  let previous = null;
+  try { previous = JSON.parse(fs.readFileSync(outFile, 'utf8')); } catch { previous = null; }
+  const merged = mergeRecording(previous, recording, log);
+  for (const lang of merged.kept) console.log(`${sample.id.padEnd(7)} ${lang}  failed this time: kept the previous complete ${lang} recording`);
+  if (log.some((l) => l.recorded.length)) fs.writeFileSync(outFile, `${JSON.stringify(merged.recording, null, 2)}\n`);
   else console.log(`${sample.id.padEnd(7)} nothing recorded, ${file} left as it was`);
 }
 console.log(`done · ${total} tokens in total · files in fixtures/recorded/ · next: npm test, then npm run sample`);

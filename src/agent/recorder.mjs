@@ -48,3 +48,21 @@ export async function recordSample(sample, llm, { langs = ['en', 'tr'], today = 
   }
   return { recording, log };
 }
+
+/**
+ * A language whose new recording failed a step keeps the previous recording of that language when that one
+ * was complete (19 Oct: re-recording Atlas, the English proposal timed out and overwrote a good English
+ * recording made an hour before). The label shows the older date when the two dates differ.
+ */
+export function mergeRecording(previous, fresh, log) {
+  const out = structuredClone(fresh);
+  const kept = [];
+  const complete = (lang, block) => !!block && ['propose', 'verify', 'write'].every((s) => block[s]?.json) && (lang !== 'en' || !!block.plan?.json);
+  for (const l of log) {
+    if (!l.failed.length || !complete(l.lang, previous?.[l.lang])) continue;
+    out[l.lang] = structuredClone(previous[l.lang]);
+    kept.push(l.lang);
+    if (previous.at && previous.at < out.at) out.at = previous.at;
+  }
+  return { recording: out, kept };
+}
