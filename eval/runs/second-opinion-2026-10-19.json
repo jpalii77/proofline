@@ -1,0 +1,846 @@
+{
+  "day": "2026-10-19",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "ultra": "nvidia/Nemotron-3-Ultra-550b-a55b"
+  },
+  "cases": 46,
+  "tally": {
+    "superAlone": {
+      "right": 29,
+      "wrong": 14,
+      "missed": 3
+    },
+    "withUltra": {
+      "right": 32,
+      "wrong": 10,
+      "missed": 4
+    },
+    "failed": 0,
+    "ultraCalls": 31,
+    "tokens": {
+      "super": 113126,
+      "ultra": 83367
+    },
+    "ms": {
+      "super": 186097,
+      "ultra": 88655
+    }
+  },
+  "rows": [
+    {
+      "list": "businesses-4.json",
+      "id": "anafarta",
+      "query": "Anafarta",
+      "expect": [
+        "anafarta.com.tr"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "anafarta.com.tr",
+        "reasoning": "The business's own website is anafarta.com.tr as shown in the Home result. No phone numbers are provided in the allowed list."
+      },
+      "ultra": {
+        "pick": "anafarta.com.tr",
+        "reasoning": "The business's official website is anafarta.com.tr, as shown in the search results. The Ekşi Sözlük entry indicates the company is headquartered in Izmir."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "ildirella",
+      "query": "İldirella Butik",
+      "expect": [
+        "ildirella.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "ildirella.com",
+        "reasoning": "The business’s own website is ildirella.com, appearing in search results. The phone number +905532562516 from the sikayetvar complaint page matches the allowed phone 5532562516."
+      },
+      "ultra": {
+        "pick": "ildirella.com",
+        "reasoning": "The official website ildirella.com appears in search results as the boutique's own e-commerce site. The contact phone +905532562516 is listed on a review site and matches an allowed phone."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "lahza",
+      "query": "Lahza Butik",
+      "expect": [
+        "lahzaabutik.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "lahzashop.com",
+        "reasoning": "The Facebook listing shows the business located in Istanbul with phone +90 541 950 11 05, and lahzashop.com appears to be its own website."
+      },
+      "ultra": {
+        "pick": "lahzashop.com",
+        "reasoning": "The business's official website is lahzashop.com, and the primary contact phone from its Facebook business page is +90 541 950 11 05."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "dp",
+      "query": "D&P Perfumum",
+      "expect": [
+        "dpperfumum.com.tr"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "dpfragrances.com",
+        "reasoning": "The search result shows the business's own site at dpfragrances.com, which is not a listing or social platform. No phone information is provided in the allowed list."
+      },
+      "ultra": {
+        "pick": "dpfragrances.com",
+        "reasoning": "The primary website for D&P Perfumum is dpfragrances.com, which appears as the main brand site in search results. No phone number is provided in the allowed list."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "krn",
+      "query": "KRN Tesettür",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The only matching domains are Instagram (social media), Shopier (marketplace), Sikayetvar (review site), Trendyol and Modanisa (third‑party platforms). None qualify as the business’s own website, so domain is null."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "munzur",
+      "query": "Munzur Butik",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The query refers to Munzur Butik, a women's clothing boutique evidenced by Shopier and Instagram results. No clear standalone website domain or phone number is provided in the allowed lists."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "ahit",
+      "query": "Ahit Tesettür",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "aisetesettur.com",
+        "reasoning": "The Yandex Maps listing provides the business's contact phone and its own website aisesettur.com, while other results are platform listings (Instagram, Shopier) and not the business's own domain."
+      },
+      "ultra": {
+        "pick": "aisetesettur.com",
+        "reasoning": "The Yandex Maps listing for a Tesettür business shows the website www.aisetesettur.com and phone +90 534 242 69 69, which match the allowed domain and phone. Instagram and Shopier are platforms, not the business's own website."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-4.json",
+      "id": "cakil",
+      "query": "Çakıl Butik",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The Yandex Maps listing identifies Çakıl Butik as a clothing store in Kırşehir with phone +90 543 277 11 10. No independent website domain is present among the allowed options."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "begon",
+      "query": "Begon Kahve",
+      "expect": [
+        "begonkahve.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "begonkahve.com",
+        "reasoning": "The business's own website appears in the search results as begonkahve.com, which is an allowed domain and not a listing platform. No phone number is provided in the allowed list, so phone is null."
+      },
+      "ultra": {
+        "pick": "begonkahve.com",
+        "reasoning": "The official website begonkahve.com appears in search results and is listed in allowed domains. No phone number is provided in allowed phones."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "bebetto",
+      "query": "Bebetto",
+      "expect": [
+        "bebetto.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "bebetto.eu",
+        "reasoning": "The search result shows Bebetto's own site at bebetto.eu/en, indicating the company's website. No phone number is provided in the results."
+      },
+      "ultra": {
+        "pick": "bebetto.eu",
+        "reasoning": "The primary official website is bebetto.eu, as shown in the first search result describing the Polish manufacturer. No matching phone number from the allowed list appears in the results."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "formeya",
+      "query": "Formeya",
+      "expect": [
+        "formeya.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "formeya.com",
+        "reasoning": "The search results show the business's own website at formeya.com, matching the allowed domain list. No phone number is provided in the results."
+      },
+      "ultra": {
+        "pick": "formeya.com",
+        "reasoning": "Formeya is a home textile brand selling bedding protectors and fitted sheets; its official website is formeya.com and its Instagram profile indicates it operates from Denizli, Turkey."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "ebru",
+      "query": "Ebru Elbise",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "ebrumoda.com",
+        "reasoning": "The search results show ebrumoda.com as the site for 'Ebru Moda' offering a dress collection, matching the query for an Ebru Elbise business. Other domains are either retailers or platforms, not the business's own website."
+      },
+      "ultra": {
+        "pick": "ebrumoda.com",
+        "reasoning": "The domain ebrumoda.com hosts the brand's own dress collection (Elbise Koleksiyonu - Ebru Moda), indicating it is the official website. No phone number is provided in the allowed list."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "ossy",
+      "query": "My Ossy Butik",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "ossy-brand.com",
+        "reasoning": "The search result for ossy-brand.com describes a bridal and formal alterations atelier matching a boutique context, while other results are either social media or marketplace listings."
+      },
+      "ultra": {
+        "pick": null,
+        "reasoning": "The search results show a Trendyol marketplace seller 'my-ossy' but no independent business website; the business appears to only have a platform listing, so domain is null. No phone numbers are provided in the allowed list or results."
+      },
+      "superAlone": "wrong",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "styleme",
+      "query": "Style Me Shop",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "style-me-pretty.com",
+        "reasoning": "The search result for style-me-pretty.com shows a boutique homepage with a contact phone matching an allowed number. No other allowed domain provides both a clear business name and a permissible phone."
+      },
+      "ultra": {
+        "pick": "style-me-pretty.com",
+        "reasoning": "The search result for Style Me Pretty shows a shop website with matching allowed domain and phone number. The query 'Style Me Shop' aligns with this retail business."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "parla",
+      "query": "Parla Kozmetik",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "None of the allowed domains correspond clearly to the business's own website; they are review, marketplace, or platform sites. Therefore domain cannot be confidently selected."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-5.json",
+      "id": "mk",
+      "query": "MK Collection",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The search results describe a video game compilation, not a small business with its own website; allowed domains are storefronts/platforms, so domain is null."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-6.json",
+      "id": "fatma",
+      "query": "Fatma Ana'dan",
+      "expect": [
+        "fatmaanadan.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "Only social‑media profiles were found; no independent business website appears in the results."
+      },
+      "superAlone": "missed",
+      "withUltra": "missed"
+    },
+    {
+      "list": "businesses-6.json",
+      "id": "morfose",
+      "query": "Morfose",
+      "expect": [
+        "morfose.eu",
+        "morfose.com.tr"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "themorfose.com",
+        "reasoning": "The brand's own official website is themorfose.com, as indicated by the 'Official US Store' result. Other domains are social media, marketplaces, or retailers."
+      },
+      "ultra": {
+        "pick": "themorfose.com",
+        "reasoning": "The official US store website is themorfose.com, linked from Instagram and shown as the primary brand site. No phone number appears in the allowed list or results."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-6.json",
+      "id": "gloss",
+      "query": "Glossgiyim",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The search results show the business operating via a Shopier storefront and complaints on Sikayetvar, neither of which is the business's own website domain. No phone number is provided in the allowed list."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-6.json",
+      "id": "rengin",
+      "query": "Renginkoc",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "Search results pertain to the anime character Kyojuro Rengoku, not a small business; no business website or phone number is present in the allowed lists."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-6.json",
+      "id": "cilek",
+      "query": "Çilekpay",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The search results indicate the business is located in Adana, Seyhan district. None of the allowed domains represent an independent website; they are social media or marketplace pages, so domain is null."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-6.json",
+      "id": "zersay",
+      "query": "Zersay",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "zerayinsaat.com.tr",
+        "reasoning": "The search results show a dedicated website zerayinsaat.com.tr for Zeray, which appears to be the business's own site, whereas other results are marketplace or social media listings."
+      },
+      "ultra": {
+        "pick": null,
+        "reasoning": "The search results show a jewelry brand 'Zersay' listed on Turkish marketplaces Hepsiburada and Trendyol, but no dedicated business website domain appears in the allowed list. No phone number is available in the allowed phones."
+      },
+      "superAlone": "wrong",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "naturalspor",
+      "query": "Naturalspor",
+      "expect": [
+        "naturalspor.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "naturalspor.com",
+        "reasoning": "The business’s own website naturalspor.com appears in the search results and is among allowed domains. The phone number +90 531 765 40 64 matches the allowed phone list."
+      },
+      "ultra": {
+        "pick": "naturalspor.com",
+        "reasoning": "The business's official website is naturalspor.com, shown in multiple search results, and its phone number +90 531 765 40 64 appears on Yandex Maps and Facebook."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "mosso",
+      "query": "Mosso Çikolata",
+      "expect": [
+        "mossocikolata.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "mossocikolata.com",
+        "reasoning": "The business’s own website appears as mossocikolata.com in the search results, while other domains are social media or map listings. The phone number +90 544 201 19 01 matches the allowed phone 5442011901."
+      },
+      "ultra": {
+        "pick": "mossocikolata.com",
+        "reasoning": "The business's own website is mossocikolata.com, which appears in search results and Instagram bios. The phone number 5442011901 is listed across multiple sources."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "anatolia",
+      "query": "Anatolia Soap",
+      "expect": [
+        "anatoliasoap.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "anatoliasoap.com",
+        "reasoning": "The search result for anatoliasoap.com directly matches the query 'Anatolia Soap' and displays the business's product catalog. Other domains are either social media, app stores, directories, or unrelated brands."
+      },
+      "ultra": {
+        "pick": "anatoliasoap.com",
+        "reasoning": "The query matches the business name 'Anatolia Soap' and the domain anatoliasoap.com appears as the official website in search results and Instagram bio. No phone number is provided in the allowed list or results."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "paye",
+      "query": "Paye Jewelry",
+      "expect": [
+        "payejewelry.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "payejewelry.com",
+        "reasoning": "The search result shows the business's own website payejewelry.com with brand name Paye Jewelry. No phone number is present in the allowed list or snippets."
+      },
+      "ultra": {
+        "pick": "payejewelry.com",
+        "reasoning": "The official website payejewelry.com is listed in search results and allowed domains, confirming it as the business's domain. No phone number appears in the results or allowed phones."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "aksel",
+      "query": "Aksel Silver",
+      "expect": [
+        "akselsilver.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "akselsilver.com",
+        "reasoning": "The search result shows Aksel Silver's own website at akselsilver.com, which is a business domain. No phone number for Aksel Silver appears in the results, so phone is left null."
+      },
+      "ultra": {
+        "pick": "akselsilver.com",
+        "reasoning": "The search result shows akselsilver.com as the business's own website. The only phone number in the results belongs to ARNE AKSEL, a different company, so no phone can be confirmed for Aksel Silver."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "meys",
+      "query": "MeysDesignStore",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "etsy.com",
+        "reasoning": "The search results show an Etsy shop for MeysDesignStore as the primary online presence; no phone number is provided."
+      },
+      "ultra": {
+        "pick": null,
+        "reasoning": "The business only appears on platform listings (Etsy, Facebook, Instagram) with no independent website domain in the allowed list; no phone number is provided."
+      },
+      "superAlone": "wrong",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "crochet",
+      "query": "crochetgunay",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The search results only show the business on Etsy, Pinterest, Facebook, Instagram, and YouTube, which are social/network platforms, not an independent website. Hence no suitable domain can be selected."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-7.json",
+      "id": "dodo",
+      "query": "DodoCraftCo",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The only identifiable web address for DodoCraftCo in the results is its Etsy shop, which is a marketplace listing and not considered the business's own website. No other domain representing the business itself appears in the allowed list."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "teknofish",
+      "query": "Teknofish Elektronik",
+      "expect": [
+        "teknofish.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "teknofish.com",
+        "reasoning": "The business's own website is teknofish.com as shown in the search result. The phone number 0549 441 20 33 appears in the Instagram profile, matching allowed phone 5494412033."
+      },
+      "ultra": {
+        "pick": "teknofish.com",
+        "reasoning": "The business's own website is teknofish.com, shown in the search results as https://www.teknofish.com and referenced in the ekşi sözlük entry. The Instagram profile lists the WhatsApp number 0549 441 20 33, matching the allowed phone. Yandex Maps places the business in Adana."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "gunes",
+      "query": "Güneş Tıp Kitabevi",
+      "expect": [
+        "guneskitabevi.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "guneskitabevi.com",
+        "reasoning": "The business's own website appears as guneskitabevi.com in the search results. Its listed telephone number 0312 435 11 91 corresponds to allowed phone 3124351191."
+      },
+      "ultra": {
+        "pick": "guneskitabevi.com",
+        "reasoning": "The business's own website is guneskitabevi.com, listed in allowed domains, and the primary phone number 0312 435 11 91 (3124351191) appears in the directory listing and Instagram."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "mardini",
+      "query": "Mardini Kozmetik",
+      "expect": [
+        "mardinikozmetik.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "mardinikozmetik.com",
+        "reasoning": "The business's own website is mardinikozmetik.com as shown in the search results, and its phone number 2144091860 appears on the mardinicosmetics.com contact page. Headquarters are listed as Mardin, Turkey on LinkedIn."
+      },
+      "ultra": {
+        "pick": "mardinikozmetik.com",
+        "reasoning": "The business's official Turkish website is mardinikozmetik.com, and the contact phone 2144091860 appears on their international site mardinicosmetics.com. Headquarters listed as Mardin, Turkey on LinkedIn."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "eightborn",
+      "query": "Eightborn",
+      "expect": [
+        "eightborn.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "eightborn.com",
+        "reasoning": "The search result shows eightborn.com as an e‑commerce site selling clothing items like socks, hoodies, and t‑shirts, indicating it is the business’s own website."
+      },
+      "ultra": {
+        "pick": "eightborn.com",
+        "reasoning": "Eightborn operates an e-commerce store at eightborn.com selling apparel, as shown in search results. No phone number is listed in the allowed sources."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "ocean",
+      "query": "Ocean Marine",
+      "expect": [
+        "oceanmarine.com.tr"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "oceanmarine.com",
+        "reasoning": "The search result for oceanmarine.com describes Ocean Marine as a commercial vessel brokerage operating along the U.S. Gulf Coast, matching the query. No explicit phone number is provided in the results, so phone is left null."
+      },
+      "ultra": {
+        "pick": "oceanmarine.com",
+        "reasoning": "The query 'Ocean Marine' exactly matches the commercial vessel brokerage at oceanmarine.com, which is in the allowed domains. The only allowed phone number belongs to a different business (Ocean Master Marine) and is not applicable."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "kuzucu",
+      "query": "Kuzucu Süt Ürünleri",
+      "expect": [
+        "kuzucusuturunleri.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "kuzucusut.com.tr",
+        "reasoning": "The business's own website appears in the search results at https://www.kuzucusut.com.tr, indicating its domain. No phone number for Kuzucu Süt Ürünleri is present in the allowed list or results."
+      },
+      "ultra": {
+        "pick": "kuzucusut.com.tr",
+        "reasoning": "The official website kuzucusut.com.tr is the business's own domain. No phone number for Kuzucu Süt Ürünleri appears in the search results."
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "meysera",
+      "query": "Meysera",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "Search results show only personal creator profiles on social media and code repositories, with no indication of a small business website or phone number."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-8.json",
+      "id": "leyla",
+      "query": "Butik Leyla",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "leylahijabboutique.com",
+        "reasoning": "The business's own website appears to be leylahijabboutique.com based on search result showing a boutique site. The phone number from Facebook does not exactly match the allowed phone, so phone is left null."
+      },
+      "ultra": {
+        "pick": null,
+        "reasoning": "The search results show only social media profiles and a Shopier storefront for Butik Leyla, with no independent website domain; the phone number in the allowed list does not match the +48 667 107 055 found on Facebook."
+      },
+      "superAlone": "wrong",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "vitisfera",
+      "query": "Vitisfera",
+      "expect": [
+        "vitisfera.co"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "vitisfera.co",
+        "reasoning": "The vitisfera.co domain appears to be the official brand website, while other results are third‑party marketplaces or directories. No phone number is provided in the allowed list."
+      },
+      "ultra": {
+        "pick": "vitisfera.co",
+        "reasoning": "Vitisfera.co is the brand's official website showing products, homepage, and contact information. Other domains are third-party platforms or listings."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "fiyord",
+      "query": "Fiyord Balık Av Market",
+      "expect": [
+        "balikavmarket.net"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The search results show a listing on com.com.tr and social media profiles, but no clear independent website domain for the business. Therefore domain is set to null."
+      },
+      "superAlone": "missed",
+      "withUltra": "missed"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "vitaminbox",
+      "query": "VitaminBox",
+      "expect": [
+        "vitaminbox.com.tr"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "vitaminbox.com.tr",
+        "reasoning": "The business's own website appears in search results at vitaminbox.com.tr, which is an allowed domain. No phone numbers are provided in the allowed list, so phone is null."
+      },
+      "ultra": {
+        "pick": "vitaminbox.com.tr",
+        "reasoning": "The business's own website is vitaminbox.com.tr, which appears in the search results and is listed in allowed domains. No phone number is provided in allowed phones."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "bebeto",
+      "query": "Bebeto",
+      "expect": [
+        "bebeto.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "Bebeto is a former Brazilian footballer and politician, not a small business; therefore no business website or phone number is available."
+      },
+      "superAlone": "missed",
+      "withUltra": "missed"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "ergandan",
+      "query": "Ergandan",
+      "expect": [
+        "ergandan.com.tr"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "ergandan.com.tr",
+        "reasoning": "The search results show Ergandan's own website ergandan.com.tr and reference to Erzincan as location. No phone number is provided in the allowed list."
+      },
+      "ultra": {
+        "pick": "ergandan.com.tr",
+        "reasoning": "The business's own website is ergandan.com.tr, which appears in search results and is listed in allowed domains. No phone number is provided in the allowed phones list."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "deri",
+      "query": "Deri Malzeme",
+      "expect": [
+        "derimalzeme.com"
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "derimalzeme.com",
+        "reasoning": "The Instagram result shows the phone number 0538 440 91 69 and references the website www.derimalzeme.com, matching allowed values."
+      },
+      "ultra": {
+        "pick": "derimalzemeleri.com",
+        "reasoning": "The search result shows a dedicated e‑commerce site at derimalzemeleri.com for leather supplies, and the Instagram profile for the same business lists the phone number 0538 440 91 69 which matches the allowed phone."
+      },
+      "superAlone": "right",
+      "withUltra": "missed"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "azram",
+      "query": "Azramtesettur",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": "modazehrada.com",
+        "reasoning": "The query likely refers to a modest fashion brand; Modazehrada sells tesettur abiye and its own website appears in results. No phone number is listed for this business in the allowed list."
+      },
+      "ultra": {
+        "error": "model reply had no valid JSON (reply cut off at the token limit): no JSON object in model reply"
+      },
+      "superAlone": "wrong",
+      "withUltra": "wrong"
+    },
+    {
+      "list": "businesses-9.json",
+      "id": "organikixir",
+      "query": "Organikixir",
+      "expect": [
+        null
+      ],
+      "searchError": null,
+      "super": {
+        "pick": null,
+        "reasoning": "The only matching result is a Shopier storefront page, which is a listing platform rather than an independent business website. No other allowed domain clearly belongs to Organikixir."
+      },
+      "superAlone": "right",
+      "withUltra": "right"
+    }
+  ]
+}

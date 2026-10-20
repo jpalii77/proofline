@@ -1,0 +1,465 @@
+{
+ "about": "Every claim the gate dropped in rounds 1-19, labelled from the independent check in each round's verdicts file: \"false\" = the claim was wrong (dropping it was right), \"true\" = a true claim was lost, \"unknown\" = the check could not settle it or left no note. Used by scripts/gate-ablation.mjs.",
+ "rounds": [
+  {
+   "round": 1,
+   "verdicts": "eval/verdicts.json",
+   "run": "eval/runs/2026-10-08.json",
+   "dropped": [
+    {
+     "business": "peyman",
+     "type": "site_online",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    },
+    {
+     "business": "peyman",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    },
+    {
+     "business": "peyman",
+     "type": "possibly_renamed",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    },
+    {
+     "business": "kampveotesi",
+     "type": "site_online",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    },
+    {
+     "business": "kampveotesi",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    },
+    {
+     "business": "kampveotesi",
+     "type": "possibly_renamed",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    },
+    {
+     "business": "tarimgaraj",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "verdicts.json totals: droppedAndShouldHaveBeen 7 of 7"
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "verdicts": "eval/verdicts-r2.json",
+   "run": "eval/runs/2026-10-08-r2.json",
+   "dropped": [
+    {
+     "business": "petpal",
+     "type": "site_online",
+     "truth": "true",
+     "note": "true claim lost: petpal.com.tr is the Bursa (Nilüfer) shop, but its 6 MB homepage names 'Petpal' only after the part the identity check reads"
+    },
+    {
+     "business": "petpal",
+     "type": "https_healthy",
+     "truth": "true",
+     "note": "true claim lost: same site"
+    },
+    {
+     "business": "naramica",
+     "type": "site_online",
+     "truth": "false",
+     "note": "rightly dropped (naraconcept.gr is a different business)"
+    },
+    {
+     "business": "naramica",
+     "type": "https_healthy",
+     "truth": "false",
+     "note": "rightly dropped"
+    },
+    {
+     "business": "naramica",
+     "type": "phone_confirmed",
+     "truth": "false",
+     "note": "rightly dropped"
+    },
+    {
+     "business": "tarimgaraj",
+     "type": "https_healthy",
+     "truth": "false",
+     "note": "rightly dropped (perfist.com, not theirs, and it does not redirect)"
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "verdicts": "eval/verdicts-r3.json",
+   "run": "eval/runs/2026-10-11-r3.json",
+   "dropped": [
+    {
+     "business": "erguvan",
+     "type": "site_unreachable",
+     "truth": "true",
+     "note": "true claim lost, arguably: erguvankasri.com has no DNS record and directories gave it on 5 Oct; nothing in this run's search tied it to the business, so the gate refused to call it the business's site"
+    },
+    {
+     "business": "melina",
+     "type": "no_own_website",
+     "truth": "true",
+     "note": "true claim lost: melinaweddinghouse.com has no DNS record; the identity check could not settle it (possible namesake), which is the cautious outcome"
+    },
+    {
+     "business": "golden",
+     "type": "no_own_website",
+     "truth": "true",
+     "note": "true claim lost, for a wrong reason: golden-boutique.ankarahotels.org is a hotel directory page, not the hotel's own site (goldenboutiquehotel.com.tr has no DNS record)"
+    },
+    {
+     "business": "a2",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "rightly dropped (a2mtsk.com is its site), but for a wrong reason: aysansurucukursu.com ('Aysan Sürücü Kursu') is another school; only the generic words 'Sürücü Kursu' matched"
+    },
+    {
+     "business": "santral",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "rightly dropped (santralankara.com is linked from its Instagram)"
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "verdicts": "eval/verdicts-r4.json",
+   "run": "eval/runs/2026-10-11-r4.json",
+   "dropped": [
+    {
+     "business": "aktifim",
+     "type": "possibly_renamed",
+     "truth": "false",
+     "note": "rightly dropped: aktiv.com has nothing to do with Aktifim"
+    }
+   ]
+  },
+  {
+   "round": 5,
+   "verdicts": "eval/verdicts-r5.json",
+   "run": "eval/runs/2026-10-11-r5.json",
+   "dropped": [
+    {
+     "business": "hilalav",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "rightly dropped: hilalavmarket.com is its site. The planner guessed the city 'Adana', and the site does not name Adana, so it was 'not settled' rather than found"
+    },
+    {
+     "business": "shout",
+     "type": "site_online",
+     "truth": "false",
+     "note": "rightly dropped: leadiq.com is a sales tool, not the shop"
+    },
+    {
+     "business": "loky",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "rightly dropped: lokyai.com only loosely matches 'Loky', so the question stays open instead of a false 'no website' or a foreign site"
+    }
+   ]
+  },
+  {
+   "round": 6,
+   "verdicts": "eval/verdicts-r6.json",
+   "run": "eval/runs/2026-10-12-r6.json",
+   "dropped": [
+    {
+     "business": "hilalav",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "verdicts-r6.json has no note on dropped claims; hilalavmarket.com is the shop's site (verdicts-r5.json, same list)"
+    },
+    {
+     "business": "aktifim",
+     "type": "https_healthy",
+     "truth": "unknown",
+     "note": "verdicts-r6.json has no note on dropped claims; hilalavmarket.com is the shop's site (verdicts-r5.json, same list)"
+    },
+    {
+     "business": "tubabutik",
+     "type": "no_own_website",
+     "truth": "unknown",
+     "note": "verdicts-r6.json has no note on dropped claims; hilalavmarket.com is the shop's site (verdicts-r5.json, same list)"
+    },
+    {
+     "business": "loky",
+     "type": "no_own_website",
+     "truth": "unknown",
+     "note": "verdicts-r6.json has no note on dropped claims; hilalavmarket.com is the shop's site (verdicts-r5.json, same list)"
+    }
+   ]
+  },
+  {
+   "round": 7,
+   "verdicts": "eval/verdicts-r7.json",
+   "run": "eval/runs/2026-10-12-r7.json",
+   "dropped": [
+    {
+     "business": "hilalav",
+     "type": "possibly_renamed",
+     "truth": "false",
+     "note": "rightly dropped (no rename)"
+    },
+    {
+     "business": "tokerbebe",
+     "type": "site_online",
+     "truth": "true",
+     "note": "true claim lost: tokerkids.com is Toker Bebe's Çayyolu site, but its title only contains the name, so with a bare name it is 'may be a namesake' (the cautious outcome)"
+    },
+    {
+     "business": "shout",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "rightly dropped (shout.com.tr exists)"
+    },
+    {
+     "business": "osepet",
+     "type": "site_online",
+     "truth": "false",
+     "note": "rightly dropped (placeholder page)"
+    }
+   ]
+  },
+  {
+   "round": 8,
+   "verdicts": "eval/verdicts-r8.json",
+   "run": "eval/runs/2026-10-12-r8.json",
+   "dropped": [
+    {
+     "business": "antakia",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "deserved to be dropped: antakiaartisan.com is its own site. A true finding was lost: the site stayed 'not settled' because the typed city Antakya is not on the page (the brand says 'Antakia')"
+    }
+   ]
+  },
+  {
+   "round": 9,
+   "verdicts": "eval/verdicts-r9.json",
+   "run": "eval/runs/2026-10-13-r9.json",
+   "dropped": [
+    {
+     "business": "antakia",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "deserved to be dropped (antakiaartisan.com is its own site, left 'not settled': known limit, typed city Antakya vs brand 'Antakia')"
+    },
+    {
+     "business": "zens",
+     "type": "domain_parked",
+     "truth": "false",
+     "note": "deserved to be dropped (zenbutik.com is an unrelated gambling page, not the shop's domain)"
+    },
+    {
+     "business": "ahit",
+     "type": "no_own_website",
+     "truth": "true",
+     "note": "a true finding lost: 'ahit.tr' is the Instagram handle read as a web address (no DNS record), and 'shopier.co' a mangled Shopier link; neither is a site, but they left the question 'not settled'"
+    }
+   ]
+  },
+  {
+   "round": 10,
+   "verdicts": "eval/verdicts-r10.json",
+   "run": "eval/runs/2026-10-13-r10.json",
+   "dropped": [
+    {
+     "business": "antakia",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "deserved to be dropped (antakiaartisan.com is its own site; known limit)"
+    },
+    {
+     "business": "cakil",
+     "type": "no_own_website",
+     "truth": "unknown",
+     "note": "deserved to be dropped: ozgecakil.com ('Özge Çakıl Butik') may well be this shop; with a bare name nothing settles it either way"
+    }
+   ]
+  },
+  {
+   "round": 11,
+   "verdicts": "eval/verdicts-r11.json",
+   "run": "eval/runs/2026-10-13-r11.json",
+   "dropped": [
+    {
+     "business": "antakia",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "deserved to be dropped (known limit)"
+    },
+    {
+     "business": "zens",
+     "type": "site_online",
+     "truth": "false",
+     "note": "deserved to be dropped (zenbutik.com is an unrelated gambling page)"
+    },
+    {
+     "business": "zens",
+     "type": "domain_parked",
+     "truth": "false",
+     "note": "deserved to be dropped (same page; not the shop's domain)"
+    }
+   ]
+  },
+  {
+   "round": 12,
+   "verdicts": "eval/verdicts-r12.json",
+   "run": "eval/runs/2026-10-13-r12.json",
+   "dropped": [
+    {
+     "business": "gorkito",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "deserved to be dropped (gorkito.com is its own site); a true finding lost: the page does not name İstanbul, so the site stayed 'not settled'"
+    }
+   ]
+  },
+  {
+   "round": 13,
+   "verdicts": "eval/verdicts-r13.json",
+   "run": "eval/runs/2026-10-14-r13.json",
+   "dropped": [
+    {
+     "business": "kivircik",
+     "type": "site_online",
+     "truth": "false",
+     "note": "deserved to be dropped (404)"
+    },
+    {
+     "business": "kivircik",
+     "type": "https_healthy",
+     "truth": "false",
+     "note": "deserved to be dropped (404; the round-12 fix)"
+    },
+    {
+     "business": "kivircik",
+     "type": "no_contact_path",
+     "truth": "false",
+     "note": "deserved to be dropped (404) / deserved to be dropped (404; the round-12 fix) / deserved to be dropped"
+    },
+    {
+     "business": "styleme",
+     "type": "no_own_website",
+     "truth": "true",
+     "note": "deserved caution: shopstylemeboutique.com (a US 'Style Me Boutique') left it unsettled; a true 'no website' was lost"
+    },
+    {
+     "business": "parla",
+     "type": "no_own_website",
+     "truth": "true",
+     "note": "a true finding lost: ty.gl, Trendyol's short-link address, was tried as an own site. Fixed after the round (platform list)"
+    },
+    {
+     "business": "mk",
+     "type": "https_healthy",
+     "truth": "false",
+     "note": "deserved to be dropped"
+    }
+   ]
+  },
+  {
+   "round": 14,
+   "verdicts": "eval/verdicts-r14.json",
+   "run": "eval/runs/2026-10-14-r14.json",
+   "dropped": [
+    {
+     "business": "thesezar",
+     "type": "site_online",
+     "truth": "true",
+     "note": "a true finding lost: thesezar.com is its own site, but the identity check found no İzmir on it within the part it reads"
+    },
+    {
+     "business": "thesezar",
+     "type": "https_healthy",
+     "truth": "true",
+     "note": "same"
+    },
+    {
+     "business": "tbrush",
+     "type": "no_own_website",
+     "truth": "unknown",
+     "note": "deserved caution: tbrushlb.com (Lebanon) and tbrush.co.uk are namesakes; the Chinese t-brush.com was not taken"
+    },
+    {
+     "business": "zersay",
+     "type": "no_own_website",
+     "truth": "unknown",
+     "note": "deserved caution: a one-word name; Zersay sells on Hepsiburada and Trendyol as a jeweller"
+    }
+   ]
+  },
+  {
+   "round": 15,
+   "verdicts": "eval/verdicts-r15.json",
+   "run": "eval/runs/2026-10-14-r15.json",
+   "dropped": [
+    {
+     "business": "morfose",
+     "type": "on_map",
+     "truth": "false",
+     "note": "deserved to be dropped: the only OSM 'Morfose' is a hairdresser in Chișinău, Moldova"
+    },
+    {
+     "business": "tbrush",
+     "type": "no_own_website",
+     "truth": "unknown",
+     "note": "deserved caution (namesakes in Lebanon and the UK)"
+    },
+    {
+     "business": "tbrush",
+     "type": "not_on_map",
+     "truth": "unknown",
+     "note": "deserved caution (namesakes in Lebanon and the UK)"
+    }
+   ]
+  },
+  {
+   "round": 16,
+   "verdicts": "eval/verdicts-r16.json",
+   "run": "eval/runs/2026-10-14-r16.json",
+   "dropped": []
+  },
+  {
+   "round": 17,
+   "verdicts": "eval/verdicts-r17.json",
+   "run": "eval/runs/2026-10-14-r17.json",
+   "dropped": []
+  },
+  {
+   "round": 18,
+   "verdicts": "eval/verdicts-r18.json",
+   "run": "eval/runs/2026-10-15-r18.json",
+   "dropped": []
+  },
+  {
+   "round": 19,
+   "verdicts": "eval/verdicts-r19.json",
+   "run": "eval/runs/2026-10-16-r19.json",
+   "dropped": [
+    {
+     "business": "bebeto",
+     "type": "no_own_website",
+     "truth": "false",
+     "note": "rightly dropped: the shop has bebeto.com (the gate found bebetojo.com, a namesake in Jordan, but either way 'no website' would have been wrong)"
+    },
+    {
+     "business": "bebeto",
+     "type": "not_on_map",
+     "truth": "false",
+     "note": "rightly dropped: the only match was a Bebeto in London, nothing tied to the business"
+    }
+   ]
+  }
+ ]
+}

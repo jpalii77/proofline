@@ -27,6 +27,7 @@ export function readConfig(env = process.env) {
       baseUrl: env.NEBIUS_BASE_URL || DEFAULT_BASE_URL,
       reasoningModel: env.NEBIUS_REASONING_MODEL || DEFAULT_REASONING_MODEL,
       fastModel: env.NEBIUS_FAST_MODEL || '',
+      ultraModel: env.NEBIUS_ULTRA_MODEL || '',
     },
     tavilyKey: env.TAVILY_API_KEY || '',
     nominatimContact: env.NOMINATIM_CONTACT || '',
@@ -47,7 +48,7 @@ export function configProblem(cfg) {
 export function publicConfig(cfg) {
   return {
     sampleMode: cfg.sampleMode,
-    models: cfg.sampleMode ? null : { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || cfg.nebius.reasoningModel },
+    models: cfg.sampleMode ? null : { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || cfg.nebius.reasoningModel, ...(cfg.nebius.ultraModel ? { ultra: cfg.nebius.ultraModel } : {}) },
     tavily: cfg.sampleMode ? false : !!cfg.tavilyKey,
     samples: loadSamples().map((s) => ({ id: s.id, input: s.input, blurb: s.blurb })),
   };

@@ -75,7 +75,40 @@ Round 19 (`eval/businesses-9.json`, a sixth list of 12 businesses never measured
 
 Nemotron 3 Ultra vs Super on the planner's decision (`scripts/ultra-compare.mjs`, same 12 businesses): with the old search both chose right in only 7–8 of 12, mostly because the right site was not in the results at all; with the new search Super was right in 11 of 12 and Ultra in 10 of 12, Ultra a little faster (2.9 s vs 3.4 s on average) with more output tokens. Better search mattered far more than a bigger model, so the planner stays on Super.
 
+Ultra as a second opinion (20 Oct, `scripts/second-opinion-compare.mjs`, `eval/runs/second-opinion-2026-10-19.json`): on 46 businesses typed by name only (lists 4 to 9, each right answer settled by a measured round; 20 of them have no website of their own), the planner's website pick was right 29 times, a wrong site 14 times and missed 3. With the pipeline's rule (a pick stands only when Ultra, asked the same question on its own, chose the same site) it was right 32 times, a wrong site 10 times and missed 4. Ultra turned down four namesakes (ossy-brand.com, zerayinsaat.com.tr, etsy.com, leylahijabboutique.com) and one right pick (derimalzeme.com). When both models agree on a wrong site (lahzashop.com, dpfragrances.com, themorfose.com), the second opinion cannot help; the own-site checks after it still have to accept the site. Ultra was asked 31 times, about 2.9 s and 2,700 tokens a call; one reply ran out at its 3,000-token limit, now 5,000. This measures the model call alone, before the code checks.
+
 What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false "no contact path"; Petpal is no longer confused with a US site; Vatkalimon's own site is found by trying the address built from its name; Sakal Kafe Pub is found on the map.
+
+## Without the gate
+
+What would a reader have seen if every claim Nemotron proposed were shown? Each round's file already says whether every dropped claim was in fact wrong, true, or could not be settled (`eval/gate-ablation.json`, one label per dropped claim, tied to the run files by a test). `node scripts/gate-ablation.mjs` turns that into the table below; no new runs, no network.
+
+Across the 19 rounds, with the gate a reader saw **435 right and 62 wrong** claims (87.5%); without it they would have seen **446 right and 98 wrong** (82.0%). The gate removed 36 of the 98 wrong claims Nemotron proposed (37%), and lost 11 true ones; 9 dropped claims could not be settled either way and are left out of both counts.
+
+| Round | With the gate: right / wrong | Without the gate: right / wrong | Dropped: wrong / true / unsettled |
+| --- | --- | --- | --- |
+| 1 | 24 / 9 (72.7%) | 24 / 16 (60%) | 7 / 0 / 0 |
+| 2 | 29 / 4 (87.9%) | 31 / 8 (79.5%) | 4 / 2 / 0 |
+| 3 | 18 / 3 (85.7%) | 21 / 5 (80.8%) | 2 / 3 / 0 |
+| 4 | 12 / 11 (52.2%) | 12 / 12 (50%) | 1 / 0 / 0 |
+| 5 | 18 / 2 (90%) | 18 / 5 (78.3%) | 3 / 0 / 0 |
+| 6 | 17 / 7 (70.8%) | 17 / 8 (68%) | 1 / 0 / 3 |
+| 7 | 21 / 0 (100%) | 22 / 3 (88%) | 3 / 1 / 0 |
+| 8 | 21 / 2 (91.3%) | 21 / 3 (87.5%) | 1 / 0 / 0 |
+| 9 | 22 / 2 (91.7%) | 23 / 4 (85.2%) | 2 / 1 / 0 |
+| 10 | 23 / 1 (95.8%) | 23 / 2 (92%) | 1 / 0 / 1 |
+| 11 | 23 / 1 (95.8%) | 23 / 4 (85.2%) | 3 / 0 / 0 |
+| 12 | 20 / 13 (60.6%) | 20 / 14 (58.8%) | 1 / 0 / 0 |
+| 13 | 20 / 2 (90.9%) | 22 / 6 (78.6%) | 4 / 2 / 0 |
+| 14 | 18 / 0 (100%) | 20 / 0 (100%) | 0 / 2 / 3 |
+| 15 | 23 / 0 (100%) | 23 / 1 (95.8%) | 1 / 0 / 2 |
+| 16 | 32 / 1 (97%) | 32 / 1 (97%) | 0 / 0 / 0 |
+| 17 | 35 / 0 (100%) | 35 / 0 (100%) | 0 / 0 / 0 |
+| 18 | 32 / 1 (97%) | 32 / 1 (97%) | 0 / 0 / 0 |
+| 19 | 27 / 3 (90%) | 27 / 5 (84.4%) | 2 / 0 / 0 |
+| **All 19** | **435 / 62 (87.5%)** | **446 / 98 (82%)** | **36 / 11 / 9** |
+
+Two things to read with it. Nemotron proposes after the checks have run and sees their results, so it already avoids many claims that would fail: the gate is the last line, not the only one. And the gate's share shrinks over the rounds (nothing dropped in rounds 16 to 18) because the checks themselves got better between rounds, so fewer wrong proposals reached it. The wrong claims the gate did keep come from checks that were themselves wrong; "Errors found" below lists them with their fixes.
 
 ## What the gate dropped, and why
 

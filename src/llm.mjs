@@ -47,12 +47,13 @@ function callError(message, call) {
 }
 
 export function createTokenFactoryClient({
-  apiKey, baseUrl = DEFAULT_BASE_URL, reasoningModel = DEFAULT_REASONING_MODEL, fastModel,
+  apiKey, baseUrl = DEFAULT_BASE_URL, reasoningModel = DEFAULT_REASONING_MODEL, fastModel, ultraModel = '',
   fetchImpl = globalThis.fetch, timeoutMs = 60000,
 }) {
   if (!apiKey) throw new Error('NEBIUS_API_KEY is not set');
   const root = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const models = { reasoning: reasoningModel, fast: fastModel || reasoningModel };
+  // ultra: the second opinion on a hard identity call (NEBIUS_ULTRA_MODEL); off when not set
+  const models = { reasoning: reasoningModel, fast: fastModel || reasoningModel, ...(ultraModel ? { ultra: ultraModel } : {}) };
 
   // schema: optional { name, schema } (JSON Schema). Sent as response_format json_schema, so the
   // reply is decoded to that shape (enums limit the model to allowed values). If the endpoint refuses

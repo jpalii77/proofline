@@ -9,7 +9,9 @@
 // The planner budget went from 1,200 to 2,000 after Nemotron 3 Ultra ran out on one of 12 plans (12 Oct).
 // The Nano rewrite went from 2,500 to 4,000 after it ran out again in Turkish while re-recording Atlas
 // (19 Oct: empty reply; the English rewrite of the same claims used 1,348).
-export const MAX_TOKENS = { plan: 2000, propose: 2000, verify: 4000, write: 2400 };
+// Ultra's second opinion gets more room than the planner: it averaged 2,689 tokens a call on 31 name-only cases
+// and ran out once at 3,000 (eval/runs/second-opinion-2026-10-19.json).
+export const MAX_TOKENS = { plan: 2000, second: 5000, propose: 2000, verify: 4000, write: 2400 };
 
 const RULES = 'Reply with one JSON object only. No markdown. Never invent facts, domains, phone numbers or numbers.';
 
@@ -59,14 +61,14 @@ export const SCHEMAS = {
 };
 
 export function createNemotronBrain(llm) {
-  return {
-    models: { reasoning: llm.models.reasoning, fast: llm.models.fast, provider: 'Nebius Token Factory' },
-
-    plan: ({ query, parsed, discovery, grounding }) => llm.chat({
-      tier: 'reasoning',
-      maxTokens: MAX_TOKENS.plan,
-      schema: SCHEMAS.plan({ grounding }),
-      system: `You identify a small business from a user query and web search results. ${RULES}
+  const ultra = llm.models.ultra || null;
+  // The planner's question. `second` asks the same question, independently, of Nemotron 3 Ultra: the pipeline
+  // uses it only on a bare name, where a namesake is the most common error (see pipeline.mjs).
+  const identify = (tier, maxTokens) => ({ query, parsed, discovery, grounding }) => llm.chat({
+    tier,
+    maxTokens,
+    schema: SCHEMAS.plan({ grounding }),
+    system: `You identify a small business from a user query and web search results. ${RULES}
 Pick the business's own website domain and its main phone ONLY from the allowed lists. If unsure, use null.
 A listing is not a website: never pick a QR-menu/menu provider, delivery app, directory, review site, map, social network or link hub
 (e.g. menulio, yemeksepeti, tripadvisor, google maps, instagram, linktr.ee) as "domain". If the business only has listings, domain is null.
@@ -74,13 +76,19 @@ A listing is not a website: never pick a QR-menu/menu provider, delivery app, di
 ("A.Ayrancı"), @handles, emails and file names are not domains.
 Code re-checks this choice and ignores a domain that is a platform or does not identify the business.
 Schema: {"name": string|null, "city": string|null, "domain": string|null, "phone": string|null, "reasoning": string (max 2 sentences)}`,
-      user: {
-        query, parsed,
-        allowed_domains: grounding.domains,
-        allowed_phones: grounding.phones,
-        search_results: discovery.map((r) => ({ title: r.title, url: r.url, content: r.content })),
-      },
-    }),
+    user: {
+      query, parsed,
+      allowed_domains: grounding.domains,
+      allowed_phones: grounding.phones,
+      search_results: discovery.map((r) => ({ title: r.title, url: r.url, content: r.content })),
+    },
+  });
+
+  return {
+    models: { reasoning: llm.models.reasoning, fast: llm.models.fast, ...(ultra ? { ultra } : {}), provider: 'Nebius Token Factory' },
+
+    plan: identify('reasoning', MAX_TOKENS.plan),
+    ...(ultra ? { second: identify('ultra', MAX_TOKENS.second) } : {}),
 
     propose: ({ ctx, observations, catalog, lang }) => llm.chat({
       tier: 'reasoning',

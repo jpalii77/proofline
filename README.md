@@ -50,11 +50,14 @@ Every model call goes, at runtime, to **Nebius Token Factory's OpenAI-compatible
 | Role | Tier | Model (public demo) | What it does | What code does with the answer |
 | --- | --- | --- | --- | --- |
 | Planner | reasoning | `nvidia/nemotron-3-super-120b-a12b` | Picks which domain and phone belong to the business from noisy search results | Grounding guard: a domain or phone not found in the search results is removed |
+| Second opinion | ultra | `nvidia/Nemotron-3-Ultra-550b-a55b` (set `NEBIUS_ULTRA_MODEL`) | Only when just a name was typed: answers the planner's website question on its own | The planner's pick stands only if Ultra chose the same site; otherwise neither is used |
 | Claim proposer | reasoning | same | Maps observations to claims from a fixed catalog, with a rationale | Every claim goes to the proof gate |
 | Owner rewrite | fast | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` | One plain sentence per verified claim, for the owner | A rewrite that adds a number not in the evidence is rejected (`numbersGrounded`) |
 | Writer | reasoning | Super | Owner summary and a short pitch draft | Citation lint: a finding with no citation, or citing a dropped claim, is removed |
 
 **Why two tiers.** The decisions that need judgement (who is this business, which claims follow from the evidence, how to explain them) go to the reasoning model, Nemotron 3 Super. The many short rewrites go to Nemotron 3 Nano, which is fast and cheap, and whose output is checked by a simple rule, so a small model's mistake cannot reach the owner. The tiers are set with `NEBIUS_REASONING_MODEL` and `NEBIUS_FAST_MODEL`; `npm run models` lists the Nemotron IDs on your key.
+
+**Why Ultra, and only there.** With only a name typed, picking a namesake's website was the error our measured rounds hit most. On 46 such businesses (`scripts/second-opinion-compare.mjs`), asking Nemotron 3 Ultra the same question and keeping a pick only when both models agree cut wrong-site picks from 14 to 10, at the cost of one missed site; about 2.9 s per call. Everywhere else Super was as good or better in our measurements, so Ultra is not used there.
 
 **Structured output.** Every call sends a JSON Schema (`response_format: {type: "json_schema", strict: true}`, built per call by `SCHEMAS` in [`src/agent/nemotron-brain.mjs`](src/agent/nemotron-brain.mjs)). The schema's enums are filled from the run itself, so the model is held to what it may pick at decoding time, before code checks anything:
 
@@ -120,6 +123,8 @@ The page is built for someone who has never heard of Proofline:
 ## Accuracy
 
 The live agent runs on lists of 12 real Turkish small businesses; every claim the gate keeps is then checked by hand, outside Proofline (DNS, curl, openssl, the full homepage, OpenStreetMap, web search). Each error found becomes a fix with a regression test, and the next round re-measures. Full method, every verdict and every error: [`docs/accuracy.md`](docs/accuracy.md).
+
+**Without the gate** (`node scripts/gate-ablation.mjs`, from the independent verdict on every claim the gate dropped): over all 19 rounds a reader would have seen 98 wrong claims instead of 62. The gate removed 36 of the 98 wrong claims Nemotron proposed, at the cost of 11 true ones.
 
 | Round | Date | Businesses | Claims proposed | Dropped by the gate | Kept | Kept and correct (independent check) | Accuracy of kept claims |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -211,7 +216,7 @@ Where it lives:
 
 ## Tests
 
-**340 tests in 46 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**351 tests in 48 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 

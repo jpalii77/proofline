@@ -113,6 +113,8 @@ export const REPORT_LANGS = ['en', 'tr'];
 // Which model call does what. `tier` picks the model (reasoning = Nemotron Super, fast = Nano).
 export const MODEL_ROLES = {
   plan: { tier: 'reasoning', role: 'Planner', task: 'which domain and phone belong to the business' },
+  // capped well under the 60 s client timeout: a slow second opinion must not eat the time the later steps need
+  second: { tier: 'ultra', role: 'Second opinion', task: 'on a bare name, the same website question asked of Nemotron 3 Ultra', timeoutMs: 15000 },
   propose: { tier: 'reasoning', role: 'Claim proposer', task: 'claims from the catalog, with a rationale' },
   verify: { tier: 'fast', role: 'Owner rewrite', task: 'one plain sentence per verified claim' },
   write: { tier: 'reasoning', role: 'Writer', task: 'owner summary and cited pitch' },
@@ -155,7 +157,8 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   async function ask(stage, args) {
     const meta = MODEL_ROLES[stage];
     const model = brain.models?.[meta.tier] || brain.models?.reasoning || 'unknown';
-    const left = deadlineAt ? deadlineAt - now() : null;
+    const runLeft = deadlineAt ? deadlineAt - now() : null;
+    const left = meta.timeoutMs ? Math.min(meta.timeoutMs, runLeft ?? Infinity) : runLeft;
     const call = { stage, role: meta.role, tier: meta.tier, task: meta.task, model, ms: 0, usage: null, outcome: 'accepted', detail: '' };
     calls.push(call);
     if (left !== null && left <= 1000) {
@@ -169,7 +172,10 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
       work.catch(() => {}); // a late failure after the time limit must not become an unhandled rejection
       const out = left === null ? await work : await Promise.race([
         work,
-        new Promise((_, reject) => { timer = setTimeout(() => reject(Object.assign(new Error(`no answer before the run time limit (${Math.round(left / 1000)} s left)`), { call: { model } })), left); }),
+        new Promise((_, reject) => {
+          const why = left < (runLeft ?? Infinity) ? `no answer within ${Math.round(left / 1000)} s` : `no answer before the run time limit (${Math.round(left / 1000)} s left)`;
+          timer = setTimeout(() => reject(Object.assign(new Error(why), { call: { model } })), left);
+        }),
       ]);
       Object.assign(call, { model: out.model || model, ms: out.ms ?? now() - started, usage: out.usage || null, ...(out.format ? { format: out.format } : {}), ...(out.recordedAt ? { recordedAt: out.recordedAt } : {}) });
       return { json: out.json || {}, call };
@@ -245,6 +251,26 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   // games company, and its address then matched). So identity is checked against the typed name, with no
   // city; the planner's name is kept for display only, and its city only for the map lookup.
   const bareQuery = !!parsed.name && !parsed.city && !parsed.domain;
+  let secondCall = null;
+  // Second opinion (Nemotron 3 Ultra, when set): with only a name typed, the planner's website pick is the
+  // call most often wrong (rounds 4, 9 and 12: Shout's US TV channel, D&P's Egyptian namesake, MK Collection's
+  // US fabrics firm). Ultra answers the same question on its own; the pick stands only if both chose the same
+  // site. A disagreement leaves the website unchosen, and the own-site checks still look for it.
+  if (bareQuery && planned && typeof brain.second === 'function' && brain.models?.ultra) {
+    const secondOut = await ask('second', { query, parsed, discovery: discovery.results || [], grounding });
+    const other = secondOut.json?.domain ? normalizeHost(secondOut.json.domain) : null;
+    if (secondOut.error) {
+      secondOut.call.detail = `no answer (${secondOut.error}); the planner's pick ${planned} goes on to the checks`;
+    } else if (other === planned) {
+      secondOut.call.detail = `agreed: ${planned}`;
+    } else {
+      secondOut.call.outcome = 'partial';
+      secondOut.call.detail = `disagreed: Ultra chose ${other || 'no website'}, the planner ${planned}`;
+      guard.push(`only “${parsed.name}” was given and the two models chose different websites (${planned} vs ${other || 'none'}), so neither is taken as the business's site`);
+      planned = null;
+    }
+    secondCall = secondOut.call;
+  }
   const ctx = {
     name: (bareQuery ? parsed.name : plan.name || parsed.name) || null,
     city: [plan.city, parsed.city].find((c) => c && !looksLikeDomain(c)) || null,
@@ -283,6 +309,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
     settlePlan();
     step('plan', { model: planCall.model, ms: planCall.ms, reasoning: plan.reasoning || '', ctx, guard });
     modelEvent(planCall);
+    if (secondCall) modelEvent(secondCall);
     step('error', { message: 'Could not identify the business. Try “Name, City” or a domain.' });
     return { error: 'unidentified' };
   }
@@ -328,6 +355,7 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   settlePlan();
   step('plan', { model: planCall.model, ms: planCall.ms, reasoning: plan.reasoning || '', ctx, guard });
   modelEvent(planCall);
+  if (secondCall) modelEvent(secondCall);
 
   // 4. Gather observations
   for (const r of observations) step('observe', { check: r.check, title: r.title, params: r.params, pass: r.pass, summary: r.summary });

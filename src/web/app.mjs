@@ -57,6 +57,7 @@ export function demoConfig(env = {}) {
       baseUrl: env.NEBIUS_BASE_URL || DEFAULT_BASE_URL,
       reasoningModel: env.NEBIUS_REASONING_MODEL || DEFAULT_REASONING_MODEL,
       fastModel: env.NEBIUS_FAST_MODEL || '',
+      ultraModel: env.NEBIUS_ULTRA_MODEL || '',
     },
     tavilyKey: String(env.TAVILY_API_KEY || '').trim(),
     nominatimContact: env.NOMINATIM_CONTACT || '',
@@ -138,7 +139,7 @@ export function createWebApp({ env = {}, store, fetchImpl = globalThis.fetch, pa
         left: cfg.liveReady ? Math.max(0, Math.min(cfg.globalPerDay - used.global, cfg.ipPerDay - used.ip)) : 0,
         host: 'Cloudflare Workers',
       },
-      models: cfg.liveReady ? { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || cfg.nebius.reasoningModel } : null,
+      models: cfg.liveReady ? { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || cfg.nebius.reasoningModel, ...(cfg.nebius.ultraModel ? { ultra: cfg.nebius.ultraModel } : {}) } : null,
       tavily: cfg.liveReady,
       samples: loadSamples().map((s) => ({ id: s.id, input: s.input, blurb: s.blurb })),
     });
