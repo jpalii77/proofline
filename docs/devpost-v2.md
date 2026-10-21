@@ -43,7 +43,7 @@ The public demo opens with four recorded, fictional examples (instant, free) and
 - **Tavily** (`src/tavily.mjs`, `POST /search` at runtime):
   1. discovery: the only source the planner may take a domain or phone from. The query is the plain name and city with 10 results: measured on 12 businesses, it surfaces the business's own site in 8 of 9 cases, against 5 of 9 for "name official website phone" with 5 results, at the same one credit (`scripts/search-variants.mjs`);
   2. own-site identity: the same results decide whether a domain is really the business's own website or whether it only has listings;
-  3. closure check: `"<name>" <city> permanently closed`, counted only if the same result names the business.
+  3. closure check: `"<name>" <city> permanently closed`, counted only if the same result names the business, and not read as a closure when that result also says the business moved ("we moved", "taşındık"), with no extra search.
   4. before "no website of its own": a second search (`<name> .com`) and the website link on a listing the first search found, both held to the same identity test.
   The gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
   Measured over the 19 rounds (`scripts/tavily-impact.mjs`, no new runs): identity is where most mistakes were (46 of 61 wrong kept claims had a Tavily-backed proof), and reading search results better is what fixed them: claims whose proof reads Tavily results went from 52 of 77 right in rounds 1–7 to 52 of 56 on the last four fresh lists (67.5% → 92.9%); the gate dropped 45 claims because a Tavily-backed check failed, 28 of them rightly.
@@ -53,7 +53,7 @@ The public demo opens with four recorded, fictional examples (instant, free) and
 - **Recorded examples:** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (7 calls each, English and Turkish) and saves every answer with its model id, tokens, latency and output format; the demo replays them (`src/agent/recorded-brain.mjs`). A step with no recording falls back to a rule-based stand-in, named as such.
 - **Nemotron 3 Ultra, measured before used, then given one job:** as the planner, Ultra was no better than Super on the same 12 businesses (Super 11 of 12, Ultra 10 of 12, `scripts/ultra-compare.mjs`), so the planner stays on Super. But picking a namesake's website when only a name is typed was the error our rounds hit most, so Ultra (`nvidia/Nemotron-3-Ultra-550b-a55b`) became a **second opinion** there: it answers the website question independently, and a pick stands only if both models agree. On 46 such businesses from our measured lists (`scripts/second-opinion-compare.mjs`), wrong-site picks fell from 14 to 10 for one missed site; Ultra turned down four namesakes, among them a construction firm and Etsy. About 2.9 s and 2,700 tokens per call, capped at 15 s; the model calls panel labels it "Second opinion".
 - **Audit:** on 15 October four separate AI review agents, each given one area (server security, interface, accuracy and robustness, setup) and none of them the one that wrote the code, read the whole repository and found 17 issues; we reproduced the important ones by hand before fixing, among them a share-page header injection, two phone numbers side by side read as one, and a closure phrase matched inside another word ("Ada" in "Canada"). 16 are fixed, each with a test; the 17th (a free, capped self-test endpoint) was judged harmless and left as is.
-- **Tests:** 363 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
+- **Tests:** 374 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
 
 ## Challenges we ran into
 
@@ -144,7 +144,6 @@ Two real cases from round 1: a toy shop was told it has "no contact path" while 
 
 - Recognise a business listed on the map under an older name, by comparing the map entry's phone or website with the site's (round 3's one unfixed error).
 - Find a shop whose website has another name, through the links on its Instagram or marketplace page (round 5's known limit).
-- More Tavily signals: relocation / "moved", and a dedicated identity-verification search.
 - Keep measuring every new fix on a fresh list of businesses it was not made for, as in rounds 12–19, and keep winning back the true findings the caution leaves out (round 15 recovered two: a city named only on the contact page, a brand's Turkish site behind its US store; round 17 recovered a site that names its city once, deep in a 1.4 MB page).
 - Batch mode for a seller's lead list.
 

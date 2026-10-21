@@ -131,6 +131,18 @@ const CLOSURE = [
   /\bout of business\b/i,
 ];
 
+// A business that moved is often listed as "permanently closed" at its old address, so a closure phrase in
+// a result that also says it moved reads like a closure but is not one. Whole words only: "removed" and
+// "taşınmaz" (real estate) do not count. (İ has no simple lower case, so Turkish words spell it out.)
+const MOVED = [
+  /\b(we('ve| have)?|has|have) (moved|relocated)\b/i,
+  /\brelocat(ed|ing)\b/i,
+  /\bnew (location|address)\b/i,
+  /\bnow (at|located)\b/i,
+  trWord('ta[şs][ıi]nd[ıi]\\p{L}*'),
+  trWord('yen[iİ] (adres|yer)[iİ]\\p{L}*'),
+];
+
 function okStatus(s) { return typeof s === 'number' && s >= 200 && s < 400; }
 
 // Answers that mean "not for you, not now", not "this site is down".
@@ -991,28 +1003,37 @@ export const CHECKS = {
       const r = await io.search(`"${name}" ${city || ''} permanently closed`.trim(), { purpose: 'closure' });
       if (r.error) return { pass: null, summary: `Search failed: ${r.error}`, observed: {} };
       const hits = [];
+      const moved = [];
       for (const x of r.results || []) {
         const hay = `${x.title || ''} ${x.content || ''}`;
         const re = CLOSURE.find((c) => c.test(hay));
         // whole words only: "Ada" is not in "Canada", "Mola" not in "Molalar" (audit 15 Oct)
         const namesIt = nameSimilarity(name, x.title || '') >= 0.4 || ` ${fold(hay)} `.includes(` ${folded} `);
         if (re && namesIt) {
-          hits.push({ url: x.url, title: x.title, phrase: (hay.match(re) || [''])[0] });
+          const hit = { url: x.url, title: x.title, phrase: (hay.match(re) || [''])[0] };
+          const mv = MOVED.find((m) => m.test(hay));
+          if (mv) moved.push({ ...hit, moved: (hay.match(mv) || [''])[0] });
+          else hits.push(hit);
         }
       }
+      // every closure hit also says the business moved: the closure is about the old address
+      if (!hits.length && moved.length) {
+        return { pass: null, summary: `Not settled: “${moved[0].phrase}” on ${moved[0].url}, but the same result says the business moved (“${moved[0].moved}”)`, observed: { hits, moved, results: (r.results || []).length } };
+      }
+      const also = moved.length ? { moved } : {};
       // One page saying "closed" is weak against the business's own website still up and showing real content:
       // that is usually one branch or an old entry (round 19: Apple Maps calls one Tereci Yöresel Bakkal branch
       // "Permanently Closed" while its site sells and lists four İzmir stores open every day).
       if (hits.length && domain) {
         const own = await page(io, `https://${domain}/`);
         if (okStatus(own.status) && !isParked(own) && (own.text || '').trim().length > 200) {
-          return { pass: null, summary: `Not settled: “${hits[0].phrase}” on ${hits[0].url}, but ${domain} is up and shows real content, so this may be one branch or an old entry`, observed: { hits, results: (r.results || []).length, ownSiteUp: domain } };
+          return { pass: null, summary: `Not settled: “${hits[0].phrase}” on ${hits[0].url}, but ${domain} is up and shows real content, so this may be one branch or an old entry`, observed: { hits, ...also, results: (r.results || []).length, ownSiteUp: domain } };
         }
       }
       return {
         pass: hits.length === 0,
         summary: hits.length ? `Closure signal: “${hits[0].phrase}” on ${hits[0].url}` : `No closure signal in ${(r.results || []).length} search result(s)`,
-        observed: { hits, results: (r.results || []).length },
+        observed: { hits, ...also, results: (r.results || []).length },
       };
     },
   },

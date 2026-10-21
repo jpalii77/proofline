@@ -229,7 +229,12 @@ function askHint(show) {
 $('#form').addEventListener('submit', (e) => {
   e.preventDefault();
   const q = $('#q').value.trim();
-  if (q) { askHint(false); start(q); } else { askHint(true); $('#q').focus(); }
+  if (q) { askHint(false); start(q); return; }
+  askHint(true);
+  // with only the recorded examples on offer, the next step is an example, not typing (on a phone the
+  // keyboard would cover the examples)
+  const first = recordedOnly() && $('#samples .chip');
+  if (first) { first.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); first.focus({ preventScroll: true }); } else $('#q').focus();
 });
 $('#q').addEventListener('input', () => { if (!$('#ask-hint').hidden) askHint(false); });
 
@@ -245,8 +250,11 @@ function setStage(stage) {
   if (run?.gateStatus && !run.gateStarted && working(stage)) run.gateStatus.textContent = working(stage);
 }
 
+// brand names keep their English capitals: Turkish upper-casing would turn "tavily" into "TAVİLY"
+const BRAND_TAGS = new Set(['tavily']);
+
 function event(tag, body, cls = '') {
-  const li = h('li', { class: `ev ${cls}` }, h('span', { class: 'tag' }, tag), h('div', { class: 'body' }, body));
+  const li = h('li', { class: `ev ${cls}` }, h('span', { class: 'tag', ...(BRAND_TAGS.has(tag) ? { lang: 'en' } : {}) }, tag), h('div', { class: 'body' }, body));
   const list = $('#events');
   list.append(li);
   list.scrollTop = list.scrollHeight;

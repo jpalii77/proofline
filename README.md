@@ -91,15 +91,13 @@ A summary line reads "N model calls · X tokens · Y claims dropped by the gate"
 
 1. **Discovery** ([`src/agent/pipeline.mjs`](src/agent/pipeline.mjs)): one search for the business name and city. These results are the **only** source the planner may take a domain or phone from; anything the model names that is not in them is dropped.
 2. **Own-site identity** (`site.own_site` and `web.own_site_found` in [`src/checks.mjs`](src/checks.mjs)): the same discovery results decide whether a domain is the business's own website (a search result about the business must point at it when the homepage alone does not name the business), and whether the business has a website of its own at all or only listings. A name alone is not enough when a city is known: the site or a search result showing it must name that city too, so a namesake abroad is never taken for the shop. Before "no website", the address built from the name (`name.com`, `name.com.tr`) is tried and counts only if its homepage names the business.
-3. **Closure check** (`web.no_closure_signal`): `"<name>" <city> permanently closed`. A hit counts only if the same result also names the business.
+3. **Closure check** (`web.no_closure_signal`): `"<name>" <city> permanently closed`. A hit counts only if the same result also names the business. If that result also says the business moved ("we moved", "relocated", "new location", "taşındık", "yeni adresimiz"), it is not read as a closure: a move often leaves the old address listed as "permanently closed", so the check answers "not settled" instead. This reads the same results, with no extra search or credit.
 
 Within one phase a repeated search is answered from memory, but the proof gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
 
 Before "no website of its own" is said, a **second search** (`<name> .com`) runs, and a listing the first search found (a maps or directory page) is opened for the website it links; whatever either turns up faces the same identity test.
 
 **Measured** ([`docs/accuracy.md`](docs/accuracy.md#where-tavily-decides-the-claim), `node scripts/tavily-impact.mjs`, no new runs): identity is where most mistakes were, and it is where Tavily is read. Claims whose proof reads Tavily results were right in 52 of 77 checkable cases in rounds 1–7 and in 52 of 56 on the last four fresh lists (67.5% → 92.9%); "no website of its own" went from 9 of 16 to 10 of 12. Over 19 rounds the gate dropped 45 claims because a Tavily-backed check failed, 28 of them rightly.
-
-**Planned (not in the code yet):** a relocation / "moved" signal next to the closure check.
 
 ## The proof gate
 
@@ -222,7 +220,7 @@ Where it lives:
 
 ## Tests
 
-**363 tests in 51 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**374 tests in 53 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 
@@ -241,7 +239,7 @@ Where it lives:
 | `page.phone_listed` | A given phone number is on the business's own site (format-insensitive) |
 | `page.name_match` | Site name matches the business name (a mismatch is the rename / change-of-hands signal) |
 | `osm.listed` | A matching place exists on OpenStreetMap (Nominatim) |
-| `web.no_closure_signal` | No search result names the business together with "permanently closed" (Tavily) |
+| `web.no_closure_signal` | No search result names the business together with "permanently closed" (Tavily); a result that also says the business moved leaves it not settled |
 
 ### Claim catalog
 

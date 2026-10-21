@@ -563,3 +563,17 @@ body.ran .hero-ask .samples { display: flex; }
   .gate-stage[data-axis="m"] .gs-card, .gate-stage[data-axis="m"] .gs-card.settled { font-size: 11px; gap: 5px; padding-left: 6px; padding-right: 6px; }
   .gate-stage[data-axis="m"] .gs-text { overflow-wrap: break-word; hyphens: auto; }
 }
+
+/* ---- 21 Oct: first screen on a phone ------------------------------------------------------------ */
+/* Before the first run the examples sit right under the box, so the one thing to tap is on the first
+   screen; the mode cards and their note follow. The mode pill waits for a run (the mode cards already
+   say it), and "How it works" drops its "(30 s)", so the header stays one row at 375 px. */
+@media (max-width: 559px) {
+  body:not(.ran) .hero-ask { display: flex; flex-direction: column; }
+  body:not(.ran) .hero-ask .samples { order: 1; margin-top: 12px; }
+  body:not(.ran) .hero-ask .modes { order: 2; margin-top: 14px; }
+  body:not(.ran) .hero-ask .mode-note { order: 3; }
+  body:not(.ran) .top .pill { display: none; }
+  .tour-time { display: none; }
+  .top { flex-wrap: nowrap; }
+}

@@ -65,6 +65,11 @@ const HOW_TR = {
   'a search result about the business names this domain': 'işletmeyle ilgili bir arama sonucu bu alan adını anıyor',
 };
 const none = (s) => (s === 'none' ? 'yok' : s);
+// the ways to get in touch that page.contact_path names ("Found: contact form, phone number")
+const CONTACT_WAYS = {
+  'contact form': 'iletişim formu', 'email link': 'e-posta bağlantısı', 'tap-to-call link': 'dokun-ara bağlantısı',
+  'WhatsApp link': 'WhatsApp bağlantısı', 'email address': 'e-posta adresi', 'phone number': 'telefon numarası',
+};
 
 // Check results, most specific first. A function gets the match and the translator (for nested results).
 const SUMMARY_TR = [
@@ -89,7 +94,7 @@ const SUMMARY_TR = [
   [/^Parked\/placeholder marker found: “(.*)”$/, (m) => `Park/boş sayfa işareti bulundu: “${m[1]}”`],
   [/^Real content \(title: “(.*)”\)$/, (m) => `Gerçek içerik (başlık: “${none(m[1])}”)`],
   [/^Page did not load$/, () => 'Sayfa açılmadı'],
-  [/^Found: (.+)$/, (m) => `Bulundu: ${m[1]}`],
+  [/^Found: (.+)$/, (m) => `Bulundu: ${m[1].split(', ').map((w) => CONTACT_WAYS[w] || w).join(', ')}`],
   [/^No form, email, phone or WhatsApp contact on the homepage$/, () => 'Ana sayfada form, e-posta, telefon ya da WhatsApp iletişimi yok'],
   [/^No phone number to look for$/, () => 'Aranacak telefon numarası yok'],
   [/^(.+) is listed on the site$/, (m) => `${m[1]} sitede yazıyor`],
