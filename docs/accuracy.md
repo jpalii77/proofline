@@ -110,6 +110,19 @@ Across the 19 rounds, with the gate a reader saw **435 right and 62 wrong** clai
 
 Two things to read with it. Nemotron proposes after the checks have run and sees their results, so it already avoids many claims that would fail: the gate is the last line, not the only one. And the gate's share shrinks over the rounds (nothing dropped in rounds 16 to 18) because the checks themselves got better between rounds, so fewer wrong proposals reached it. The wrong claims the gate did keep come from checks that were themselves wrong; "Errors found" below lists them with their fixes.
 
+## Per report: would the message have carried a false sentence?
+
+Proofline is for people who sell web services to small businesses, and what they act on is a report, not a single claim: one false sentence in a message to an owner ("your site does not load" when it does) costs the whole conversation. So the same marks are also counted per business report: did the report show at least one wrong claim? `node scripts/report-impact.mjs` computes it from the run, verdict and gate-label files; no new runs, no network. Lists 3 to 9 are real prospects taken from the list of a web-services sales pipeline in Turkey, so these are the reports a seller would have used.
+
+| Rounds | Business reports | With at least one wrong claim, with the gate | Without the gate |
+| --- | --- | --- | --- |
+| Round 1 (first list, first run, 8 Oct) | 12 | 6 | 9 |
+| First run of every fresh list (rounds 1, 3, 4, 8, 12, 14, 16, 18, 19) | 108 | 24 | 31 |
+| Last four fresh lists (rounds 14, 16, 18, 19) | 48 | 4 | 5 |
+| All 19 rounds | 228 | 36 | 56 |
+
+On the first list, 6 of the 12 reports would have put a false sentence in front of the owner, 9 of 12 without the gate: Kaptan Oyuncak told it has "no contact path" while its phone sat past the part of the page that was read, Petpal (Bursa) reported on petpal.com, a US pet network. On the last four fresh lists, 4 of 48 reports did (and 5 of 48 without the gate). Over all 19 rounds the gate kept 20 reports clean that would otherwise have carried a wrong claim: 36 of 228 reports had one with the gate, 56 of 228 without it. Round 1's run file holds 32 of the 33 kept claims in the table above (8 of its 9 wrong ones), so its report count may be one low.
+
 ## What the gate dropped, and why
 
 | Claim type | Times dropped | Most common reason |

@@ -126,6 +126,8 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 
 **Without the gate** (`node scripts/gate-ablation.mjs`, from the independent verdict on every claim the gate dropped): over all 19 rounds a reader would have seen 98 wrong claims instead of 62. The gate removed 36 of the 98 wrong claims Nemotron proposed, at the cost of 11 true ones.
 
+**Per report** (`node scripts/report-impact.mjs`): one false sentence spoils a message to an owner, so we also count business reports with at least one wrong claim. On the first list, 6 of 12 reports had one (9 of 12 without the gate); on the last four fresh lists, real prospects from a sales pipeline, 4 of 48 did (5 without the gate). Over all 19 rounds: 36 of 228 reports with the gate, 56 without it.
+
 | Round | Date | Businesses | Claims proposed | Dropped by the gate | Kept | Kept and correct (independent check) | Accuracy of kept claims |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 2026-10-08 | 12 online shops | 40 | 7 | 33 | 24 | 73% |
@@ -216,7 +218,7 @@ Where it lives:
 
 ## Tests
 
-**351 tests in 48 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**359 tests in 50 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 
