@@ -123,6 +123,18 @@ Proofline is for people who sell web services to small businesses, and what they
 
 On the first list, 6 of the 12 reports would have put a false sentence in front of the owner, 9 of 12 without the gate: Kaptan Oyuncak told it has "no contact path" while its phone sat past the part of the page that was read, Petpal (Bursa) reported on petpal.com, a US pet network. On the last four fresh lists, 4 of 48 reports did (and 5 of 48 without the gate). Over all 19 rounds the gate kept 20 reports clean that would otherwise have carried a wrong claim: 36 of 228 reports had one with the gate, 56 of 228 without it. Round 1's run file holds 32 of the 33 kept claims in the table above (8 of its 9 wrong ones), so its report count may be one low.
 
+## Where Tavily decides the claim
+
+A kept claim is counted as **Tavily-backed** when its proof ran a check that reads Tavily results: `site.own_site` (whether a domain is the business's own; skipped when the user typed the domain), `web.own_site_found` (whether the business has a site of its own at all) and `web.no_closure_signal`. Every run also starts from the Tavily discovery search, so this is the narrower set where a search result is part of the proof itself. `node scripts/tavily-impact.mjs` computes it from the same run, verdict and gate-label files; no new runs, no network.
+
+| Rounds | Tavily-backed kept claims: right of checkable | Claims proven without Tavily | "No website of its own" | Gate drops decided by a Tavily check: rightly / wrongly / unknown |
+| --- | --- | --- | --- | --- |
+| Rounds 1–7 (first three lists) | 52 of 77 (67.5%) | 87 of 97 (89.7%) | 9 of 16 (56.3%) | 19 / 6 / 2 |
+| Last four fresh lists (rounds 14, 16, 18, 19) | 52 of 56 (92.9%) | 57 of 58 (98.3%) | 10 of 12 (83.3%) | 1 / 2 / 2 |
+| All 19 rounds | 186 of 232 (80.2%) | 249 of 264 (94.3%) | 47 of 58 (81%) | 28 / 11 / 6 |
+
+What this says: the hard part of the job is identity (is this domain the shop's, does the shop have a site at all), and that is exactly where Tavily is used, so most wrong claims were Tavily-backed: 46 of the 61 wrong kept claims in the run files. The fixes of rounds 6–19 were mostly about reading search results better (the plain-name query with 10 results, a namesake abroad, a placeholder page, the second search, a listing's website link), and the Tavily-backed share right rose from 67.5% in rounds 1–7 to 92.9% on the last four fresh lists. "No website of its own" is the riskiest sentence a seller can send and the one that leans on search the most; it went from 9 of 16 right to 10 of 12. When a Tavily-backed check failed, the gate dropped the claim: 45 drops over 19 rounds, 28 of them rightly (the claim was false), 11 wrongly (a true finding lost), 6 unknown. Both columns add up to the gate-ablation totals above (435 right kept claims).
+
 ## What the gate dropped, and why
 
 | Claim type | Times dropped | Most common reason |

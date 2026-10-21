@@ -95,7 +95,11 @@ A summary line reads "N model calls · X tokens · Y claims dropped by the gate"
 
 Within one phase a repeated search is answered from memory, but the proof gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
 
-**Planned (not in the code yet):** a relocation / "moved" signal next to the closure check, and a dedicated identity-verification search.
+Before "no website of its own" is said, a **second search** (`<name> .com`) runs, and a listing the first search found (a maps or directory page) is opened for the website it links; whatever either turns up faces the same identity test.
+
+**Measured** ([`docs/accuracy.md`](docs/accuracy.md#where-tavily-decides-the-claim), `node scripts/tavily-impact.mjs`, no new runs): identity is where most mistakes were, and it is where Tavily is read. Claims whose proof reads Tavily results were right in 52 of 77 checkable cases in rounds 1–7 and in 52 of 56 on the last four fresh lists (67.5% → 92.9%); "no website of its own" went from 9 of 16 to 10 of 12. Over 19 rounds the gate dropped 45 claims because a Tavily-backed check failed, 28 of them rightly.
+
+**Planned (not in the code yet):** a relocation / "moved" signal next to the closure check.
 
 ## The proof gate
 
@@ -218,7 +222,7 @@ Where it lives:
 
 ## Tests
 
-**359 tests in 50 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**363 tests in 51 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 

@@ -19,7 +19,7 @@ We had seen this in our own sales calls. So we wanted an agent with one rule: **
 You type a business name and city, or a domain. Proofline:
 
 1. Searches the web for the business with **Tavily**.
-2. Lets **NVIDIA Nemotron 3 Super** decide which domain and phone belong to it. A domain or phone that is not in the search results is removed by code.
+2. Lets **NVIDIA Nemotron 3 Super** decide which domain and phone belong to it. A domain or phone that is not in the search results is removed by code. When only a bare name was typed, **Nemotron 3 Ultra** answers the same question on its own, and the pick stands only if both models chose the same site.
 3. Runs up to **12 evidence checks**: own-site identity, DNS, HTTPS reachability (two attempts), HTTP-to-HTTPS redirect, TLS certificate days left, parked/for-sale page, contact path, phone on the site, name match, OpenStreetMap listing, and a "permanently closed" search.
 4. Lets Nemotron propose claims, but only from a fixed catalog of 15 claim types, where every type names the checks that prove it.
 5. **The proof gate:** code re-runs every claim's proof from scratch. A claim survives only if every check returns exactly what the claim needs. Anything else, including "inconclusive" or "not checked", is dropped and stays on screen, struck through, with the reason.
@@ -30,7 +30,7 @@ Every step streams to the page as a live trace. Every claim has a **Re-run proof
 
 The public demo opens with four recorded, fictional examples (instant, free) and a capped live mode that calls Tavily and Nemotron for real. The examples replay **real Nemotron answers**, recorded once on Token Factory in English and Turkish with their model ids, tokens and latency; the panel labels them "recorded, no new tokens", and the gate and the other code checks run again on every replay. The whole report follows the visitor's language, **English or Turkish**: Nemotron writes the owner lines, summary and pitch in that language, and the page shows the fixed wording (checks, claim sentences, drop reasons) in it too. An optional four-step **"How it works" tour** explains the page to a first-time visitor, and a visitor who types their own business while the examples are on gets a one-click "search it live" button instead of a dead end.
 
-**Measured, not claimed:** nineteen rounds on 108 real Turkish businesses, every kept claim checked by hand outside Proofline. The number that matters is on businesses the fixes were never made for: on the last four fresh lists of 12, **109 of 114 checkable kept claims were right (96%)** (round 14: 18 of 18; round 16: 32 of 33; round 18: 32 of 33; round 19: 27 of 30), and every error became a fix or a named limit. Getting there included a published fall: fixes that reached 96% on one list scored 61% on a new one (round 12), and that is what made the agent trustworthy. See Accuracy below.
+**Measured, not claimed:** nineteen rounds on 108 real Turkish businesses, every kept claim checked by hand outside Proofline. The number that matters is on businesses the fixes were never made for: on the last four fresh lists of 12, **109 of 114 checkable kept claims were right (96%)** (round 14: 18 of 18; round 16: 32 of 33; round 18: 32 of 33; round 19: 27 of 30), and every error became a fix or a named limit. Getting there included a published fall: fixes that reached 96% on one list scored 61% on a new one (round 12), and that is what made the agent trustworthy. What it means for a seller: one false sentence spoils a message to an owner, and on those four fresh lists **4 of 48 reports carried a wrong claim** (on our first list, 6 of 12 did). See Accuracy below.
 
 ## How we built it
 
@@ -44,14 +44,16 @@ The public demo opens with four recorded, fictional examples (instant, free) and
   1. discovery: the only source the planner may take a domain or phone from. The query is the plain name and city with 10 results: measured on 12 businesses, it surfaces the business's own site in 8 of 9 cases, against 5 of 9 for "name official website phone" with 5 results, at the same one credit (`scripts/search-variants.mjs`);
   2. own-site identity: the same results decide whether a domain is really the business's own website or whether it only has listings;
   3. closure check: `"<name>" <city> permanently closed`, counted only if the same result names the business.
+  4. before "no website of its own": a second search (`<name> .com`) and the website link on a listing the first search found, both held to the same identity test.
   The gate uses fresh I/O, so search-based claims are re-proven with a new Tavily call.
+  Measured over the 19 rounds (`scripts/tavily-impact.mjs`, no new runs): identity is where most mistakes were (46 of 61 wrong kept claims had a Tavily-backed proof), and reading search results better is what fixed them: claims whose proof reads Tavily results went from 52 of 77 right in rounds 1–7 to 52 of 56 on the last four fresh lists (67.5% → 92.9%); the gate dropped 45 claims because a Tavily-backed check failed, 28 of them rightly.
 - **Guards in code:** grounding guard (domain and phone must come from search results, domain must have a real public-suffix ending), own-site guard (a listing platform is never "the website"), the gate (`gateClaim`), and a citation lint on the pitch.
 - **Failure handling:** a failed model call, a time limit or a request limit turns the affected checks into "not checked", never into a finding. Server errors become a plain sentence, never a stack trace.
 - **Interface:** single page, no framework; English and Turkish interface and report (`public/i18n.js`, `public/report-lang.js`), guided tour (`public/tour.js`), phone layout checked at 375 px.
 - **Recorded examples:** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (7 calls each, English and Turkish) and saves every answer with its model id, tokens, latency and output format; the demo replays them (`src/agent/recorded-brain.mjs`). A step with no recording falls back to a rule-based stand-in, named as such.
-- **Nemotron 3 Ultra, measured before used:** on the planner's hardest decision (which website, if any, belongs to the business) we ran Ultra and Super side by side on the same 12 businesses (`scripts/ultra-compare.mjs`). With the improved search, Super chose right in 11 of 12 and Ultra in 10 of 12, so the planner stays on Super and the credit goes further.
+- **Nemotron 3 Ultra, measured before used, then given one job:** as the planner, Ultra was no better than Super on the same 12 businesses (Super 11 of 12, Ultra 10 of 12, `scripts/ultra-compare.mjs`), so the planner stays on Super. But picking a namesake's website when only a name is typed was the error our rounds hit most, so Ultra (`nvidia/Nemotron-3-Ultra-550b-a55b`) became a **second opinion** there: it answers the website question independently, and a pick stands only if both models agree. On 46 such businesses from our measured lists (`scripts/second-opinion-compare.mjs`), wrong-site picks fell from 14 to 10 for one missed site; Ultra turned down four namesakes, among them a construction firm and Etsy. About 2.9 s and 2,700 tokens per call, capped at 15 s; the model calls panel labels it "Second opinion".
 - **Audit:** on 15 October four separate AI review agents, each given one area (server security, interface, accuracy and robustness, setup) and none of them the one that wrote the code, read the whole repository and found 17 issues; we reproduced the important ones by hand before fixing, among them a share-page header injection, two phone numbers side by side read as one, and a closure phrase matched inside another word ("Ada" in "Canada"). 16 are fixed, each with a test; the 17th (a free, capped self-test endpoint) was judged harmless and left as is.
-- **Tests:** 351 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
+- **Tests:** 363 `node:test` tests, no network needed, including crash tests for odd input, broken services and malformed requests, and one regression test file per accuracy round. `SAMPLE_MODE` runs the whole agent on the recorded fixtures, so anyone can try it without keys.
 
 ## Challenges we ran into
 
@@ -84,6 +86,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - Every Nemotron call is accounted for on screen: tokens, latency and what code did with the answer, also in the free examples, which replay real recorded Nemotron answers.
 - A stress test that went badly (52%) was published, fixed and re-measured until no kept claim was wrong (round 7), not hidden; so was the round in between that got worse (71%).
 - When fixes that scored 96% on one list fell to 61% on a fresh one, we published that too, found the four causes and reached a fresh list with no wrong kept claim (round 14); the next three fresh lists (rounds 16, 18 and 19) kept 91 of 96 right, each error turned into a fix or a named limit.
+- We measured what the gate is worth instead of asserting it: across all 19 rounds it removed 36 of the 98 wrong claims Nemotron proposed, at the cost of 11 true ones.
 - We set four separate AI review agents to break it, reproduced what they found and fixed 16 of 17 issues, each with a test.
 - It runs end to end with zero dependencies, locally or on a free Workers plan.
 
@@ -93,7 +96,7 @@ Other challenges: Cloudflare Workers has no system DNS resolver and no raw TLS c
 - Provenance matters as much as correctness: a value the model only invented should not reach a check at all.
 - Splitting work between a reasoning model (Super) and a small fast model (Nano) works well when the small model's output is checked by a simple rule.
 - The hardest input is the shortest one. A bare name is ambiguous, and the honest answer is sometimes "not settled" rather than a guess.
-- Measure the inputs before blaming the model: a better search query did more than a 550B model.
+- Measure the inputs before blaming the model: a better search query did more than a 550B model. The 550B model then earned a narrower job: a second opinion on the one decision where a second view measurably helps.
 - A score on the list you fixed is not accuracy. Only businesses the fixes were never made for tell you how the agent will do tomorrow.
 
 ## Accuracy
@@ -122,6 +125,21 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 
 The honest numbers are the rounds on businesses the earlier fixes were not made for: 3 (86%), 8 (91%), 12 (61%), 14 (100%), 16 (97%), 18 (97%) and 19 (90%). The last fresh-list errors all came from what a business's own pages say: a shop whose site's address leaves out "Elektronik" and whose title is a slogan (round 18); a shop whose site only its map entry links, and a chain told it "may have closed" because one branch's map entry says so while its site sells and lists four open stores (round 19). Those are fixed; one remains a named limit (a shop on the map under its other brand name). Rounds re-run on the same list (2, 5–7, 9–11, 13, 15, 17) show the effect of each change, not a fresh sample. A claim the check could not settle is left out of the percentage and listed. The method, every verdict and every error are in `docs/accuracy.md`.
 
+**Without the gate.** Each round's files also say whether every dropped claim was in fact wrong, true, or unsettled. Across the 19 rounds, with the gate a reader saw 435 right and 62 wrong claims (87.5%); showing everything Nemotron proposed would have meant 446 right and 98 wrong (82%). The gate removed 36 of the 98 wrong claims, for 11 true ones lost. Its share shrinks in later rounds because the checks themselves improved, so fewer wrong proposals reach it (`scripts/gate-ablation.mjs`).
+
+**Per report, the unit a seller acts on.** One false sentence in a message ("your site does not load" when it does) costs the whole conversation, so we also count business reports with at least one wrong claim (`scripts/report-impact.mjs`). Lists 3 to 9 are real prospects from the lead list of a web-services sales pipeline in Turkey.
+
+| Rounds | Business reports | With a wrong claim, with the gate | Without the gate |
+| --- | --- | --- | --- |
+| Round 1 (first list, first run) | 12 | 6 | 9 |
+| First run of every fresh list (9 lists) | 108 | 24 | 31 |
+| Last four fresh lists (rounds 14, 16, 18, 19) | 48 | 4 | 5 |
+| All 19 rounds | 228 | 36 | 56 |
+
+Two real cases from round 1: a toy shop was told it has "no contact path" while its phone sat past the part of the page that was read, and a Bursa pet shop was reported on petpal.com, a US pet network. Both became fixes with tests. In round 19 the gate dropped a Jordanian namesake shop and a London map entry for a Turkish seller called Bebeto.
+
+**A final round we cannot tune for.** A seventh fresh list of 12 businesses is frozen in the repository with its SHA-256 hash (`FROZEN.md` next to the lists, checked by a test). It runs once, after the code freeze on 28 October, and its result will be published here as it comes out.
+
 ## What's next
 
 - Recognise a business listed on the map under an older name, by comparing the map entry's phone or website with the site's (round 3's one unfixed error).
@@ -136,7 +154,7 @@ Proofline is a new project. The repository's first commit is on 6 October 2026, 
 
 ## Built with
 
-javascript, node.js, nvidia-nemotron, nemotron-3-super, nemotron-3-nano, nebius-token-factory, structured-output, tavily, cloudflare-workers, durable-objects, openstreetmap, server-sent-events
+javascript, node.js, nvidia-nemotron, nemotron-3-super, nemotron-3-nano, nemotron-3-ultra, nebius-token-factory, structured-output, tavily, cloudflare-workers, durable-objects, openstreetmap, server-sent-events
 
 ## Links
 
