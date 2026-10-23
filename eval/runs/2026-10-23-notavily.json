@@ -1,0 +1,2377 @@
+{
+  "day": "2026-10-23",
+  "tavily": "off",
+  "models": {
+    "reasoning": "nvidia/nemotron-3-super-120b-a12b",
+    "fast": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  "results": [
+    {
+      "id": "sari",
+      "query": "Moda Sarı Butik, modasaributik.com",
+      "note": "women's clothing e-shop (Saker list, 16 Oct); name + domain; Turkish letter in the name, not in the address",
+      "ms": 30951,
+      "error": null,
+      "grade": "B",
+      "stats": {
+        "proposed": 3,
+        "verified": 3,
+        "dropped": 0,
+        "checksRun": 18,
+        "notChecked": 2,
+        "modelCalls": 4,
+        "tokens": 4863,
+        "rewritesRejected": 0,
+        "ms": 30951
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "modasaributik.com loads and shows real content.",
+          "rationale": "site.own_site passed, dns.resolves passed, http.reachable passed, page.not_parked passed",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "modasaributik.com",
+                "name": "Moda Sarı Butik",
+                "city": null,
+                "query": "Moda Sarı Butik",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://modasaributik.com/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://modasaributik.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "modasaributik.com",
+                "name": "Moda Sarı Butik",
+                "city": null,
+                "query": "Moda Sarı Butik",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "modasaributik.com was given by the user as the business's website",
+              "observed": {
+                "host": "modasaributik.com",
+                "userGiven": true
+              },
+              "ms": 1,
+              "at": "2026-10-23T01:43:25.877Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://modasaributik.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://modasaributik.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://modasaributik.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 1255,
+              "at": "2026-10-23T01:43:27.132Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://modasaributik.com/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Moda Sarı Butik | İndirimli Tesettür Giyim Modelleri – Genç ve Şık Stil <p>Tesettür giyimde şıklık, rahatlık ve modern çizgiler arayanların tercihi <strong data-end=\"442\" data-start=\"423\">Moda Sarı Butik</strong>, genç ve orta yaşlı kadınlara özel zengin ürün yelpazesiyle fark yaratıyor. Her tarza uygun klasik ve spor modellerin yer aldığı koleksiyonumuzda; <strong data-end=\"679\" data-start=\"590\">pantolon, tunik, kap, sweatshirt, trenchkot, elbise, jean, etek, mont, hırka ve ceket</strong> gibi birbirinden şık parçaları indirimli fiyatlarla bulabilirsiniz.</p>”)",
+              "observed": {
+                "title": "Moda Sarı Butik | İndirimli Tesettür Giyim Modelleri – Genç ve Şık Stil <p>Tesettür giyimde şıklık, rahatlık ve modern çizgiler arayanların tercihi <strong data-end=\"442\" data-start=\"423\">Moda Sarı Butik</strong>, genç ve orta yaşlı kadınlara özel zengin ürün yelpazesiyle fark yaratıyor. Her tarza uygun klasik ve spor modellerin yer aldığı koleksiyonumuzda; <strong data-end=\"679\" data-start=\"590\">pantolon, tunik, kap, sweatshirt, trenchkot, elbise, jean, etek, mont, hırka ve ceket</strong> gibi birbirinden şık parçaları indirimli fiyatlarla bulabilirsiniz.</p>",
+                "marker": null
+              },
+              "ms": 1135,
+              "at": "2026-10-23T01:43:28.267Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:43:28.267Z",
+          "ownerText": "Your site loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "modasaributik.com has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "tls.cert_valid passed with minDays 30, http.https_redirect passed",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "modasaributik.com",
+                "name": "Moda Sarı Butik",
+                "city": null,
+                "query": "Moda Sarı Butik",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "modasaributik.com",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "modasaributik.com"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://modasaributik.com/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "modasaributik.com",
+                "name": "Moda Sarı Butik",
+                "city": null,
+                "query": "Moda Sarı Butik",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "modasaributik.com was given by the user as the business's website",
+              "observed": {
+                "host": "modasaributik.com",
+                "userGiven": true
+              },
+              "ms": 0,
+              "at": "2026-10-23T01:43:28.267Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "modasaributik.com",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 89 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2027-01-20T13:04:59.000Z",
+                "daysLeft": 89,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 38,
+              "at": "2026-10-23T01:43:28.305Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "modasaributik.com"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://modasaributik.com/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://modasaributik.com/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://modasaributik.com/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://modasaributik.com/"
+              },
+              "ms": 1141,
+              "at": "2026-10-23T01:43:29.446Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://modasaributik.com/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://modasaributik.com/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://modasaributik.com/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 1,
+              "at": "2026-10-23T01:43:29.447Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:43:29.447Z",
+          "ownerText": "Your site has a valid HTTPS certificate and stays secure."
+        },
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Moda Sarı Butik is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed passed false",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Moda Sarı Butik",
+                "city": null,
+                "cityGuessed": false,
+                "domain": "modasaributik.com"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Moda Sarı Butik",
+                "city": null,
+                "cityGuessed": false,
+                "domain": "modasaributik.com"
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 74,
+              "at": "2026-10-23T01:43:29.521Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:43:29.521Z",
+          "ownerText": "Moda Sarı Butik is missing from OpenStreetMap, which many map apps reuse."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your website loads correctly and serves real content (site_online).",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "HTTPS is properly configured with a valid certificate for over 30 days (https_healthy).",
+          "cites": [
+            "https_healthy"
+          ]
+        },
+        {
+          "text": "Your business is missing from OpenStreetMap, which reduces visibility in many map apps (not_on_map).",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2434,
+          "usage": {
+            "in": 338,
+            "out": 127,
+            "total": 465,
+            "reasoning": 75
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 7719,
+          "usage": {
+            "in": 1487,
+            "out": 627,
+            "total": 2114,
+            "reasoning": 529
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 9341,
+          "usage": {
+            "in": 545,
+            "out": 838,
+            "total": 1383,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3388,
+          "usage": {
+            "in": 359,
+            "out": 542,
+            "total": 901,
+            "reasoning": 256
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "drsalt",
+      "query": "Dr.Salt, drsalt.net",
+      "note": "natural salt and care e-shop (Saker list, 16 Oct); name + domain; a dotted name and a .net address, 2.6 MB homepage",
+      "ms": 15206,
+      "error": null,
+      "grade": "A",
+      "stats": {
+        "proposed": 2,
+        "verified": 2,
+        "dropped": 0,
+        "checksRun": 17,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 3720,
+        "rewritesRejected": 0,
+        "ms": 15206
+      },
+      "verified": [
+        {
+          "id": "site_online",
+          "type": "site_online",
+          "area": "reach",
+          "tone": "good",
+          "statement": "drsalt.net loads and shows real content.",
+          "rationale": "drsalt.net resolves, returns HTTP 200, and the site is not parked",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "drsalt.net",
+                "name": "Dr.Salt",
+                "city": null,
+                "query": "Dr.Salt",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://drsalt.net/"
+              },
+              "expect": true
+            },
+            {
+              "check": "page.not_parked",
+              "params": {
+                "url": "https://drsalt.net/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "drsalt.net",
+                "name": "Dr.Salt",
+                "city": null,
+                "query": "Dr.Salt",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "drsalt.net was given by the user as the business's website",
+              "observed": {
+                "host": "drsalt.net",
+                "userGiven": true
+              },
+              "ms": 1,
+              "at": "2026-10-23T01:43:52.908Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://drsalt.net/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://drsalt.net/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://drsalt.net/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 145,
+              "at": "2026-10-23T01:43:53.055Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "page.not_parked",
+              "title": "Homepage is a real site, not a parked or placeholder page",
+              "params": {
+                "url": "https://drsalt.net/"
+              },
+              "pass": true,
+              "summary": "Real content (title: “Doğal Sıvı Tuz ve Kaynak Tuzları”)",
+              "observed": {
+                "title": "Doğal Sıvı Tuz ve Kaynak Tuzları",
+                "marker": null
+              },
+              "ms": 80,
+              "at": "2026-10-23T01:43:53.135Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:43:53.135Z",
+          "ownerText": "Your website loads and shows real content."
+        },
+        {
+          "id": "https_healthy",
+          "type": "https_healthy",
+          "area": "security",
+          "tone": "good",
+          "statement": "drsalt.net has a valid certificate for 30+ days and sends visitors to HTTPS.",
+          "rationale": "HTTPS redirect works and TLS certificate is valid with >30 days left",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "site.own_site",
+              "params": {
+                "host": "drsalt.net",
+                "name": "Dr.Salt",
+                "city": null,
+                "query": "Dr.Salt",
+                "userGiven": true
+              },
+              "expect": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "params": {
+                "host": "drsalt.net",
+                "minDays": 30
+              },
+              "expect": true
+            },
+            {
+              "check": "http.https_redirect",
+              "params": {
+                "host": "drsalt.net"
+              },
+              "expect": true
+            },
+            {
+              "check": "http.reachable",
+              "params": {
+                "url": "https://drsalt.net/"
+              },
+              "expect": true
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "site.own_site",
+              "title": "The domain is the business's own website",
+              "params": {
+                "host": "drsalt.net",
+                "name": "Dr.Salt",
+                "city": null,
+                "query": "Dr.Salt",
+                "userGiven": true
+              },
+              "pass": true,
+              "summary": "drsalt.net was given by the user as the business's website",
+              "observed": {
+                "host": "drsalt.net",
+                "userGiven": true
+              },
+              "ms": 1,
+              "at": "2026-10-23T01:43:53.136Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "tls.cert_valid",
+              "title": "TLS certificate is valid",
+              "params": {
+                "host": "drsalt.net",
+                "minDays": 30
+              },
+              "pass": true,
+              "summary": "Certificate expires in 82 day(s) (needs ≥ 30)",
+              "observed": {
+                "validTo": "2027-01-13T02:27:44.000Z",
+                "daysLeft": 82,
+                "issuer": "Google Trust Services",
+                "authorized": true,
+                "source": "handshake"
+              },
+              "ms": 139,
+              "at": "2026-10-23T01:43:53.275Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.https_redirect",
+              "title": "Plain HTTP upgrades to HTTPS",
+              "params": {
+                "host": "drsalt.net"
+              },
+              "pass": true,
+              "summary": "http:// redirects to https://drsalt.net/",
+              "observed": {
+                "chain": [
+                  {
+                    "url": "http://drsalt.net/",
+                    "status": 301
+                  },
+                  {
+                    "url": "https://drsalt.net/",
+                    "status": 200
+                  }
+                ],
+                "finalUrl": "https://drsalt.net/"
+              },
+              "ms": 121,
+              "at": "2026-10-23T01:43:53.396Z",
+              "expect": true,
+              "matched": true
+            },
+            {
+              "check": "http.reachable",
+              "title": "Website answers over HTTPS",
+              "params": {
+                "url": "https://drsalt.net/"
+              },
+              "pass": true,
+              "summary": "Loaded with HTTP 200",
+              "observed": {
+                "attempts": [
+                  {
+                    "status": 200,
+                    "error": null,
+                    "finalUrl": "https://drsalt.net/"
+                  }
+                ],
+                "chain": [
+                  {
+                    "url": "https://drsalt.net/",
+                    "status": 200
+                  }
+                ]
+              },
+              "ms": 0,
+              "at": "2026-10-23T01:43:53.396Z",
+              "expect": true,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:43:53.396Z",
+          "ownerText": "Your site uses a secure connection that stays valid."
+        }
+      ],
+      "dropped": [],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your site loads and shows real content (site_online).",
+          "cites": [
+            "site_online"
+          ]
+        },
+        {
+          "text": "Your site uses HTTPS with a valid certificate (https_healthy).",
+          "cites": [
+            "https_healthy"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1721,
+          "usage": {
+            "in": 321,
+            "out": 220,
+            "total": 541,
+            "reasoning": 145
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3822,
+          "usage": {
+            "in": 1107,
+            "out": 499,
+            "total": 1606,
+            "reasoning": 429
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3417,
+          "usage": {
+            "in": 289,
+            "out": 262,
+            "total": 551,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4656,
+          "usage": {
+            "in": 300,
+            "out": 722,
+            "total": 1022,
+            "reasoning": 498
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "yoresel",
+      "query": "Yöresel Bakkal, İzmir",
+      "note": "regional-food e-shop in Karşıyaka (Saker list, 16 Oct); name + city; own site yoreselbakkal.com.tr (forwards to www); two common words",
+      "ms": 11431,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2975,
+        "rewritesRejected": 0,
+        "ms": 11431
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Yöresel Bakkal is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false (No matching place on OpenStreetMap).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Yöresel Bakkal",
+                "city": "İzmir",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Yöresel Bakkal",
+                "city": "İzmir",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 29,
+              "at": "2026-10-23T01:44:10.758Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:44:10.758Z",
+          "ownerText": "We couldn't find Yöresel Bakkal listed on OpenStreetMap, which many map apps use."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Yöresel Bakkal; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check did not pass (search failed) indicating no own website confirmed.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Yöresel Bakkal",
+                "city": "İzmir",
+                "query": "Yöresel Bakkal İzmir"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Yöresel Bakkal",
+                "city": "İzmir",
+                "query": "Yöresel Bakkal İzmir"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 0,
+              "at": "2026-10-23T01:44:10.729Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:44:10.729Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "The business is missing from OpenStreetMap, so map apps that reuse OSM data do not display your location.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2122,
+          "usage": {
+            "in": 316,
+            "out": 194,
+            "total": 510,
+            "reasoning": 145
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2781,
+          "usage": {
+            "in": 757,
+            "out": 447,
+            "total": 1204,
+            "reasoning": 374
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2953,
+          "usage": {
+            "in": 165,
+            "out": 268,
+            "total": 433,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3244,
+          "usage": {
+            "in": 275,
+            "out": 553,
+            "total": 828,
+            "reasoning": 348
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "abfen",
+      "query": "Abfen Farma, Ankara",
+      "note": "cosmetics maker in Sincan (Saker list, 16 Oct); name + city; own site abfen.com.tr, an address without 'farma'",
+      "ms": 8820,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2634,
+        "rewritesRejected": 0,
+        "ms": 8820
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Abfen Farma is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false (no matching place on OpenStreetMap)",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Abfen Farma",
+                "city": "Ankara",
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Abfen Farma",
+                "city": "Ankara",
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 25,
+              "at": "2026-10-23T01:44:24.869Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:44:24.869Z",
+          "ownerText": "Your business isn’t appearing on map apps that rely on OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Abfen Farma; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed (Tavily off) indicating no confirmation of own site",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Abfen Farma",
+                "city": "Ankara",
+                "query": "Abfen Farma Ankara"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Abfen Farma",
+                "city": "Ankara",
+                "query": "Abfen Farma Ankara"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 1,
+              "at": "2026-10-23T01:44:24.844Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:44:24.844Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Abfen Farma is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1451,
+          "usage": {
+            "in": 311,
+            "out": 136,
+            "total": 447,
+            "reasoning": 86
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2205,
+          "usage": {
+            "in": 748,
+            "out": 352,
+            "total": 1100,
+            "reasoning": 279
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2142,
+          "usage": {
+            "in": 163,
+            "out": 207,
+            "total": 370,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2775,
+          "usage": {
+            "in": 270,
+            "out": 447,
+            "total": 717,
+            "reasoning": 230
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "vitisfera",
+      "query": "Vitisfera",
+      "note": "supplement e-shop (Saker list, 16 Oct); name only; own site vitisfera.co (a .co ending)",
+      "ms": 11265,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2923,
+        "rewritesRejected": 0,
+        "ms": 11265
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Vitisfera is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false, indicating Vitisfera not listed on OpenStreetMap",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Vitisfera",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Vitisfera",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 21,
+              "at": "2026-10-23T01:44:38.890Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:44:38.890Z",
+          "ownerText": "Your business isn’t showing up on maps that use OpenStreetMap data."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Vitisfera; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed (Tavily turned off), indicating no confirmation of own site for Vitisfera",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Vitisfera",
+                "city": null,
+                "query": "Vitisfera"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Vitisfera",
+                "city": null,
+                "query": "Vitisfera"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 0,
+              "at": "2026-10-23T01:44:38.869Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:44:38.869Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Vitisfera is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1790,
+          "usage": {
+            "in": 299,
+            "out": 212,
+            "total": 511,
+            "reasoning": 166
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2553,
+          "usage": {
+            "in": 722,
+            "out": 419,
+            "total": 1141,
+            "reasoning": 339
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 3546,
+          "usage": {
+            "in": 159,
+            "out": 199,
+            "total": 358,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2617,
+          "usage": {
+            "in": 257,
+            "out": 656,
+            "total": 913,
+            "reasoning": 435
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "fiyord",
+      "query": "Fiyord Balık Av Market",
+      "note": "fishing-gear e-shop (Saker list, 16 Oct); name only; own site balikavmarket.net, an address without 'Fiyord'",
+      "ms": 12363,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2882,
+        "rewritesRejected": 0,
+        "ms": 12363
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Fiyord Balık Av Market is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "OSM listing check returned false (no matching place on OpenStreetMap).",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Fiyord Balık Av Market",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Fiyord Balık Av Market",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 43,
+              "at": "2026-10-23T01:44:53.968Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:44:53.968Z",
+          "ownerText": "Your restaurant isn’t showing up on map apps because it’s not listed on OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Fiyord Balık Av Market; it shows up only on listings and platforms.",
+          "rationale": "Business ownSite flag false and web.own_site_found check failed (search turned off), indicating no confirmed website.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Fiyord Balık Av Market",
+                "city": null,
+                "query": "Fiyord Balık Av Market"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Fiyord Balık Av Market",
+                "city": null,
+                "query": "Fiyord Balık Av Market"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 1,
+              "at": "2026-10-23T01:44:53.925Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:44:53.925Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business is missing from OpenStreetMap, which many navigation apps use to display locations.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1489,
+          "usage": {
+            "in": 311,
+            "out": 158,
+            "total": 469,
+            "reasoning": 107
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2714,
+          "usage": {
+            "in": 750,
+            "out": 442,
+            "total": 1192,
+            "reasoning": 366
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2528,
+          "usage": {
+            "in": 167,
+            "out": 142,
+            "total": 309,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4922,
+          "usage": {
+            "in": 273,
+            "out": 639,
+            "total": 912,
+            "reasoning": 475
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "vitaminbox",
+      "query": "VitaminBox",
+      "note": "vitamin e-shop (Saker list, 16 Oct); name only, one word; own site vitaminbox.com.tr",
+      "ms": 13423,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2841,
+        "rewritesRejected": 0,
+        "ms": 13423
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "VitaminBox is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false: No matching place on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "VitaminBox",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "VitaminBox",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 78,
+              "at": "2026-10-23T01:45:12.442Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:45:12.442Z",
+          "ownerText": "Your business isn’t showing up on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for VitaminBox; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed: Search failed: Tavily is turned off for this comparison.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "VitaminBox",
+                "city": null,
+                "query": "VitaminBox"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "VitaminBox",
+                "city": null,
+                "query": "VitaminBox"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 0,
+              "at": "2026-10-23T01:45:12.364Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:45:12.364Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "VitaminBox is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2646,
+          "usage": {
+            "in": 302,
+            "out": 253,
+            "total": 555,
+            "reasoning": 196
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3887,
+          "usage": {
+            "in": 729,
+            "out": 386,
+            "total": 1115,
+            "reasoning": 312
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 1902,
+          "usage": {
+            "in": 161,
+            "out": 141,
+            "total": 302,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4501,
+          "usage": {
+            "in": 261,
+            "out": 608,
+            "total": 869,
+            "reasoning": 380
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "bebeto",
+      "query": "Bebeto",
+      "note": "confectionery brand (Saker list, 16 Oct); name only, one word with namesakes; own site bebeto.com",
+      "ms": 8676,
+      "error": null,
+      "grade": "–",
+      "stats": {
+        "proposed": 1,
+        "verified": 0,
+        "dropped": 1,
+        "checksRun": 4,
+        "notChecked": 4,
+        "modelCalls": 3,
+        "tokens": 2540,
+        "rewritesRejected": 0,
+        "ms": 8676
+      },
+      "verified": [],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Bebeto; it shows up only on listings and platforms.",
+          "rationale": "business.ownSite=false indicates no own website confirmed; web.own_site_found check failed (search turned off) so no evidence of a site.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Bebeto",
+                "city": null,
+                "query": "Bebeto"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Bebeto",
+                "city": null,
+                "query": "Bebeto"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 1,
+              "at": "2026-10-23T01:45:29.091Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:45:29.091Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1862,
+          "usage": {
+            "in": 299,
+            "out": 166,
+            "total": 465,
+            "reasoning": 121
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3717,
+          "usage": {
+            "in": 780,
+            "out": 628,
+            "total": 1408,
+            "reasoning": 574
+          },
+          "outcome": "rejected",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2768,
+          "usage": {
+            "in": 217,
+            "out": 450,
+            "total": 667,
+            "reasoning": 346
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "ergandan",
+      "query": "Ergandan",
+      "note": "grocery e-shop, Ergan Market (Saker list, 16 Oct); name only, one word; own site ergandan.com.tr",
+      "ms": 9133,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2710,
+        "rewritesRejected": 0,
+        "ms": 9133
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Ergandan is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false, meaning Ergandan not listed on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Ergandan",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Ergandan",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 26,
+              "at": "2026-10-23T01:45:39.935Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:45:39.935Z",
+          "ownerText": "Your business isn’t showing up on many map apps."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Ergandan; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check failed (Tavily off) indicating no confirmation of own site.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Ergandan",
+                "city": null,
+                "query": "Ergandan"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Ergandan",
+                "city": null,
+                "query": "Ergandan"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 0,
+              "at": "2026-10-23T01:45:39.909Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:45:39.909Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Ergandan is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1506,
+          "usage": {
+            "in": 299,
+            "out": 148,
+            "total": 447,
+            "reasoning": 96
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2280,
+          "usage": {
+            "in": 722,
+            "out": 410,
+            "total": 1132,
+            "reasoning": 334
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2416,
+          "usage": {
+            "in": 159,
+            "out": 205,
+            "total": 364,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2658,
+          "usage": {
+            "in": 257,
+            "out": 510,
+            "total": 767,
+            "reasoning": 291
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "deri",
+      "query": "Deri Malzeme",
+      "note": "leather-craft supplies e-shop in Eskişehir (Saker list, 16 Oct); name only, two common words; own site derimalzeme.com (forwards to www)",
+      "ms": 19870,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2943,
+        "rewritesRejected": 0,
+        "ms": 19870
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Deri Malzeme is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false, meaning Deri Malzeme is not listed on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Deri Malzeme",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Deri Malzeme",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 24,
+              "at": "2026-10-23T01:45:54.036Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:45:54.036Z",
+          "ownerText": "Your business isn’t showing up on many map apps because it’s not listed on OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Deri Malzeme; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned null (search failed), indicating no confirmation of an own site.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Deri Malzeme",
+                "city": null,
+                "query": "Deri Malzeme"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Deri Malzeme",
+                "city": null,
+                "query": "Deri Malzeme"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 0,
+              "at": "2026-10-23T01:45:54.012Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:45:54.012Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Your business is not listed on OpenStreetMap, which many map applications rely on for location data.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1884,
+          "usage": {
+            "in": 305,
+            "out": 251,
+            "total": 556,
+            "reasoning": 205
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2440,
+          "usage": {
+            "in": 736,
+            "out": 357,
+            "total": 1093,
+            "reasoning": 277
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 10346,
+          "usage": {
+            "in": 163,
+            "out": 224,
+            "total": 387,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 4502,
+          "usage": {
+            "in": 265,
+            "out": 642,
+            "total": 907,
+            "reasoning": 444
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "azram",
+      "query": "Azramtesettur",
+      "note": "modest-wear seller without a website (Saker list, 16 Oct; azramtesettur.com and .com.tr have no DNS); name only, a handle; expected: no website of its own",
+      "ms": 12182,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2814,
+        "rewritesRejected": 0,
+        "ms": 12182
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Azramtesettur is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check passed false, meaning no matching place found on OpenStreetMap.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Azramtesettur",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Azramtesettur",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 26,
+              "at": "2026-10-23T01:46:19.047Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:46:19.047Z",
+          "ownerText": "Your business isn’t showing up on map apps that use OpenStreetMap."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Azramtesettur; it shows up only on listings and platforms.",
+          "rationale": "web.own_site_found check returned null (search failed) and business.ownSite is false, indicating no confirmed own website.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Azramtesettur",
+                "city": null,
+                "query": "Azramtesettur"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Azramtesettur",
+                "city": null,
+                "query": "Azramtesettur"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 0,
+              "at": "2026-10-23T01:46:19.020Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:46:19.021Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Azramtesettur is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2011,
+          "usage": {
+            "in": 305,
+            "out": 150,
+            "total": 455,
+            "reasoning": 100
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3865,
+          "usage": {
+            "in": 736,
+            "out": 354,
+            "total": 1090,
+            "reasoning": 272
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 2115,
+          "usage": {
+            "in": 163,
+            "out": 175,
+            "total": 338,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3908,
+          "usage": {
+            "in": 265,
+            "out": 666,
+            "total": 931,
+            "reasoning": 449
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    },
+    {
+      "id": "organikixir",
+      "query": "Organikixir",
+      "note": "cosmetics seller without a website (Saker list, 16 Oct; organikixir.com and .com.tr have no DNS); name only, one word; expected: no website of its own",
+      "ms": 12679,
+      "error": null,
+      "grade": "C",
+      "stats": {
+        "proposed": 2,
+        "verified": 1,
+        "dropped": 1,
+        "checksRun": 5,
+        "notChecked": 3,
+        "modelCalls": 4,
+        "tokens": 2946,
+        "rewritesRejected": 0,
+        "ms": 12679
+      },
+      "verified": [
+        {
+          "id": "not_on_map",
+          "type": "not_on_map",
+          "area": "presence",
+          "tone": "issue",
+          "statement": "Organikixir is missing from OpenStreetMap, which many map apps reuse.",
+          "rationale": "osm.listed check returned false with summary 'No matching place on OpenStreetMap'.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "osm.listed",
+              "params": {
+                "name": "Organikixir",
+                "city": null,
+                "cityGuessed": false
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "verified",
+          "evidence": [
+            {
+              "check": "osm.listed",
+              "title": "Listed on OpenStreetMap under this name",
+              "params": {
+                "name": "Organikixir",
+                "city": null,
+                "cityGuessed": false
+              },
+              "pass": false,
+              "summary": "No matching place on OpenStreetMap",
+              "observed": {},
+              "ms": 108,
+              "at": "2026-10-23T01:46:33.689Z",
+              "expect": false,
+              "matched": true
+            }
+          ],
+          "dropReason": null,
+          "checkedAt": "2026-10-23T01:46:33.689Z",
+          "ownerText": "Our business isn’t listed on OpenStreetMap, so some map apps can’t find us."
+        }
+      ],
+      "dropped": [
+        {
+          "id": "no_own_website",
+          "type": "no_own_website",
+          "area": "reach",
+          "tone": "issue",
+          "statement": "No website of its own was found for Organikixir; it shows up only on listings and platforms.",
+          "rationale": "business.ownSite is false and web.own_site_found check failed (search turned off), indicating no confirmed own website.",
+          "proposedBy": "nvidia/nemotron-3-super-120b-a12b",
+          "proof": [
+            {
+              "check": "web.own_site_found",
+              "params": {
+                "name": "Organikixir",
+                "city": null,
+                "query": "Organikixir"
+              },
+              "expect": false
+            }
+          ],
+          "verdict": "dropped",
+          "evidence": [
+            {
+              "check": "web.own_site_found",
+              "title": "Search results lead to a website of its own",
+              "params": {
+                "name": "Organikixir",
+                "city": null,
+                "query": "Organikixir"
+              },
+              "pass": null,
+              "summary": "Search failed: Tavily is turned off for this comparison",
+              "observed": {},
+              "ms": 1,
+              "at": "2026-10-23T01:46:33.581Z",
+              "expect": false,
+              "matched": false
+            }
+          ],
+          "dropReason": "Search results lead to a website of its own: inconclusive (Search failed: Tavily is turned off for this comparison)",
+          "checkedAt": "2026-10-23T01:46:33.581Z"
+        }
+      ],
+      "rejected": [],
+      "findings": [
+        {
+          "text": "Organikixir is missing from OpenStreetMap, which many map apps reuse.",
+          "cites": [
+            "not_on_map"
+          ]
+        }
+      ],
+      "models": [
+        {
+          "role": "Planner",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 1470,
+          "usage": {
+            "in": 302,
+            "out": 153,
+            "total": 455,
+            "reasoning": 108
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Claim proposer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 2271,
+          "usage": {
+            "in": 729,
+            "out": 433,
+            "total": 1162,
+            "reasoning": 351
+          },
+          "outcome": "partial",
+          "format": "json_schema"
+        },
+        {
+          "role": "Owner rewrite",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "ms": 5027,
+          "usage": {
+            "in": 161,
+            "out": 284,
+            "total": 445,
+            "reasoning": null
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        },
+        {
+          "role": "Writer",
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "ms": 3037,
+          "usage": {
+            "in": 261,
+            "out": 623,
+            "total": 884,
+            "reasoning": 396
+          },
+          "outcome": "accepted",
+          "format": "json_schema"
+        }
+      ]
+    }
+  ]
+}

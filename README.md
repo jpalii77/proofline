@@ -99,6 +99,8 @@ Before "no website of its own" is said, a **second search** (`<name> .com`) runs
 
 **Measured** ([`docs/accuracy.md`](docs/accuracy.md#where-tavily-decides-the-claim), `node scripts/tavily-impact.mjs`, no new runs): identity is where most mistakes were, and it is where Tavily is read. Claims whose proof reads Tavily results were right in 52 of 77 checkable cases in rounds 1–7 and in 52 of 56 on the last four fresh lists (67.5% → 92.9%); "no website of its own" went from 9 of 16 to 10 of 12. Over 19 rounds the gate dropped 45 claims because a Tavily-backed check failed, 28 of them rightly.
 
+**With and without Tavily** ([`docs/accuracy.md`](docs/accuracy.md#with-tavily-without-tavily-and-the-model-alone), same 12 businesses): with search the agent found 8 of the 10 businesses' own websites and kept 27 right claims; with search off it found only the 2 the user typed and kept 14. Nemotron alone, asked from memory, proposed no claims. With search off the model proposed "no website" for 8 businesses that have one; the gate dropped every one, since that sentence needs a search result as proof.
+
 ## The proof gate
 
 The idea in one line: **the model proposes, code re-proves every claim, and a claim that cannot be proven is dropped, in plain sight.**

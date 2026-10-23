@@ -1,0 +1,332 @@
+{
+  "day": "2026-10-23",
+  "kind": "model-alone",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "list": "eval/businesses-9.json",
+  "results": [
+    {
+      "id": "sari",
+      "query": "Moda Sarı Butik, modasaributik.com",
+      "answer": {
+        "name": "Moda Sarı Butik",
+        "city": null,
+        "website": "modasaributik.com",
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 3275,
+        "usage": {
+          "in": 563,
+          "out": 403,
+          "total": 966,
+          "reasoning": 363
+        },
+        "format": "json_schema"
+      },
+      "website": "right",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "drsalt",
+      "query": "Dr.Salt, drsalt.net",
+      "answer": {
+        "name": "Dr.Salt",
+        "city": null,
+        "website": "drsalt.net",
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 4664,
+        "usage": {
+          "in": 558,
+          "out": 584,
+          "total": 1142,
+          "reasoning": 549
+        },
+        "format": "json_schema"
+      },
+      "website": "right",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "yoresel",
+      "query": "Yöresel Bakkal, İzmir",
+      "answer": {
+        "name": "Yöresel Bakkal",
+        "city": "İzmir",
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 4682,
+        "usage": {
+          "in": 559,
+          "out": 506,
+          "total": 1065,
+          "reasoning": 469
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "abfen",
+      "query": "Abfen Farma, Ankara",
+      "answer": {
+        "name": "Abfen Farma",
+        "city": "Ankara",
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 1988,
+        "usage": {
+          "in": 557,
+          "out": 257,
+          "total": 814,
+          "reasoning": 221
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "vitisfera",
+      "query": "Vitisfera",
+      "answer": {
+        "name": "Vitisfera",
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 5289,
+        "usage": {
+          "in": 553,
+          "out": 374,
+          "total": 927,
+          "reasoning": 343
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "fiyord",
+      "query": "Fiyord Balık Av Market",
+      "answer": {
+        "name": "Fiyord Balık Av Market",
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 2224,
+        "usage": {
+          "in": 557,
+          "out": 350,
+          "total": 907,
+          "reasoning": 315
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "vitaminbox",
+      "query": "VitaminBox",
+      "answer": {
+        "name": null,
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 2110,
+        "usage": {
+          "in": 554,
+          "out": 222,
+          "total": 776,
+          "reasoning": 194
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "bebeto",
+      "query": "Bebeto",
+      "answer": {
+        "name": null,
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 1941,
+        "usage": {
+          "in": 553,
+          "out": 219,
+          "total": 772,
+          "reasoning": 191
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "ergandan",
+      "query": "Ergandan",
+      "answer": {
+        "name": null,
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 1844,
+        "usage": {
+          "in": 553,
+          "out": 223,
+          "total": 776,
+          "reasoning": 195
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "deri",
+      "query": "Deri Malzeme",
+      "answer": {
+        "name": null,
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 1777,
+        "usage": {
+          "in": 555,
+          "out": 218,
+          "total": 773,
+          "reasoning": 190
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "azram",
+      "query": "Azramtesettur",
+      "answer": {
+        "name": "Azramtesettur",
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 3419,
+        "usage": {
+          "in": 555,
+          "out": 451,
+          "total": 1006,
+          "reasoning": 418
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained (right: it has no site)",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    },
+    {
+      "id": "organikixir",
+      "query": "Organikixir",
+      "answer": {
+        "name": null,
+        "city": null,
+        "website": null,
+        "phone": null,
+        "claims": []
+      },
+      "model": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "ms": 4865,
+        "usage": {
+          "in": 554,
+          "out": 200,
+          "total": 754,
+          "reasoning": 172
+        },
+        "format": "json_schema"
+      },
+      "website": "abstained (right: it has no site)",
+      "built": [],
+      "kept": [],
+      "dropped": [],
+      "error": null
+    }
+  ]
+}

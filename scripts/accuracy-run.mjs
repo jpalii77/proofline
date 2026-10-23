@@ -1,5 +1,6 @@
 // Accuracy run: the live agent on a list of real businesses, one after another, saved for later human review.
-//   NEBIUS_API_KEY=... TAVILY_API_KEY=... npm run accuracy -- [eval/businesses.json] [--only 3]
+//   NEBIUS_API_KEY=... TAVILY_API_KEY=... npm run accuracy -- [eval/businesses.json] [--only 3] [--no-tavily]
+// --no-tavily: the same agent with web search turned off (a comparison run; writes runs/<date>-notavily.json).
 // Writes eval/runs/<date>.json: for every business the claims the gate kept and dropped (with evidence and reason),
 // the cited findings, model calls (tokens, latency) and timing. Nothing is judged here; a person (or a second,
 // independent check) marks each kept claim right or wrong in eval/verdicts.json, then `npm run accuracy:table`.
@@ -7,6 +8,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runAgent } from '../src/agent/pipeline.mjs';
+import { withoutSearch } from '../src/baseline.mjs';
 import { configProblem, readConfig, wiringFor } from '../src/runtime.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -16,7 +18,8 @@ const only = onlyAt > -1 ? Number(args[onlyAt + 1]) : Infinity;
 // --round 2 writes runs/<date>-r2.json, so a second round on the same day never overwrites the first.
 const roundAt = args.indexOf('--round');
 const round = roundAt > -1 ? String(args[roundAt + 1] || '').replace(/[^0-9a-z]/gi, '') : '';
-const listPath = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--only' && args[i - 1] !== '--round') || join(root, 'eval', 'businesses.json');
+const noTavily = args.includes('--no-tavily');
+const listPath =args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--only' && args[i - 1] !== '--round') || join(root, 'eval', 'businesses.json');
 
 const cfg = readConfig();
 if (cfg.sampleMode) { console.error('Accuracy runs need live mode (unset SAMPLE_MODE).'); process.exit(1); }
@@ -27,9 +30,9 @@ const list = JSON.parse(readFileSync(listPath, 'utf8')).slice(0, only);
 const day = new Date().toISOString().slice(0, 10);
 const outDir = join(root, 'eval', 'runs');
 mkdirSync(outDir, { recursive: true });
-const outPath = join(outDir, `${day}${round ? `-r${round}` : ''}.json`);
+const outPath = join(outDir, `${day}${round ? `-r${round}` : ''}${noTavily ? '-notavily' : ''}.json`);
 const results = [];
-const save = () => writeFileSync(outPath, JSON.stringify({ day, models: { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || null }, results }, null, 2) + '\n');
+const save = () => writeFileSync(outPath, JSON.stringify({ day, ...(noTavily ? { tavily: 'off' } : {}), models: { reasoning: cfg.nebius.reasoningModel, fast: cfg.nebius.fastModel || null }, results }, null, 2) + '\n');
 
 for (const [i, item] of list.entries()) {
   const query = typeof item === 'string' ? item : item.query;
@@ -39,7 +42,7 @@ for (const [i, item] of list.entries()) {
   const models = [];
   let res;
   try {
-    res = await runAgent({ query: w.query, io: w.io, brain: w.brain, emit: (e) => { if (e.type === 'model') models.push({ role: e.role, model: e.model, ms: e.ms, usage: e.usage || null, outcome: e.outcome, format: e.format || null }); } });
+    res = await runAgent({ query: w.query, io: noTavily ? withoutSearch(w.io) : w.io, brain: w.brain, emit: (e) => { if (e.type === 'model') models.push({ role: e.role, model: e.model, ms: e.ms, usage: e.usage || null, outcome: e.outcome, format: e.format || null }); } });
   } catch (e) {
     res = { error: String(e && e.message ? e.message : e) };
   }

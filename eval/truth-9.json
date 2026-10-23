@@ -1,0 +1,18 @@
+{
+  "list": "eval/businesses-9.json",
+  "source": "eval/verdicts-r19.json (independent re-check on 2026-10-16: curl, openssl, map entries, web searches); own sites and 'no site' as established there",
+  "businesses": {
+    "sari": { "site": "modasaributik.com" },
+    "drsalt": { "site": "drsalt.net" },
+    "yoresel": { "site": "yoreselbakkal.com.tr", "city": "İzmir" },
+    "abfen": { "site": "abfen.com", "alsoOwn": ["abfen.com.tr"], "city": "Ankara" },
+    "vitisfera": { "site": "vitisfera.co" },
+    "fiyord": { "site": "balikavmarket.net" },
+    "vitaminbox": { "site": "vitaminbox.com.tr" },
+    "bebeto": { "site": "bebeto.com" },
+    "ergandan": { "site": "ergandan.com.tr" },
+    "deri": { "site": "derimalzeme.com", "city": "Eskişehir" },
+    "azram": { "site": "none" },
+    "organikixir": { "site": "none" }
+  }
+}

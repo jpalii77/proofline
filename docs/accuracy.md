@@ -135,6 +135,18 @@ A kept claim is counted as **Tavily-backed** when its proof ran a check that rea
 
 What this says: the hard part of the job is identity (is this domain the shop's, does the shop have a site at all), and that is exactly where Tavily is used, so most wrong claims were Tavily-backed: 46 of the 61 wrong kept claims in the run files. The fixes of rounds 6–19 were mostly about reading search results better (the plain-name query with 10 results, a namesake abroad, a placeholder page, the second search, a listing's website link), and the Tavily-backed share right rose from 67.5% in rounds 1–7 to 92.9% on the last four fresh lists. "No website of its own" is the riskiest sentence a seller can send and the one that leans on search the most; it went from 9 of 16 right to 10 of 12. When a Tavily-backed check failed, the gate dropped the claim: 45 drops over 19 rounds, 28 of them rightly (the claim was false), 11 wrongly (a true finding lost), 6 unknown. Both columns add up to the gate-ablation totals above (435 right kept claims).
 
+## With Tavily, without Tavily, and the model alone
+
+The same 12 businesses (round 19's list, `eval/businesses-9.json`: 2 typed with their domain, 10 without, 2 of them with no website at all), three ways. Every kept claim was checked independently (`eval/verdicts-r19.json`, `eval/verdicts-notavily.json`; own sites in `eval/truth-9.json`).
+
+| Run | Kept claims: right of checkable | Own website found (10 businesses have one) | "No website" claims the gate dropped: rightly / wrongly |
+| --- | --- | --- | --- |
+| Full agent, Tavily on (round 19, 16 Oct) | 27 of 30 | 8 of 10 | 2 / 0 |
+| Same agent, web search off (`--no-tavily`, 23 Oct) | 14 of 15 | 2 of 10 | 8 / 2 |
+| Nemotron 3 Super alone, no search, no checks (`scripts/model-alone.mjs`, 23 Oct) | 0 claims | 2 of 10 | — |
+
+What this says: without search, the agent found a business's website only when the user typed it, so the report shrank to map claims and the sites it was handed (14 right findings against 27). Asked from memory, Nemotron was honest: it proposed no claims and named no website it was not given. With search off, the model proposed "no website of its own" for 10 businesses; 8 of them have a site. The gate dropped all 10, because that sentence needs a search result as proof, so none of the 8 false ones reached a report (the cost: 2 true ones lost). The one wrong kept claim in both runs is the same known limit (Yöresel Bakkal is on the map as "Tereci"; with no search, its site and other names were never found). Round 19 ran a week earlier; the sites and certificates checked here had not changed in ways that affect these claims.
+
 ## What the gate dropped, and why
 
 | Claim type | Times dropped | Most common reason |

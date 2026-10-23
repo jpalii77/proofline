@@ -1,0 +1,36 @@
+{
+  "run": "eval/runs/2026-10-23-notavily.json",
+  "list": "eval/businesses-9.json (round 19's list), the same agent with web search turned off (scripts/accuracy-run.mjs --no-tavily)",
+  "compareWith": "eval/runs/2026-10-16-r19.json + eval/verdicts-r19.json (same list, Tavily on, 16 Oct)",
+  "checkedBy": "Independent re-check on 2026-10-23: openssl s_client (modasaributik.com ends 20 Jan 2027, drsalt.net ends 13 Jan 2027), curl (http→https, 200), Nominatim searches limited to Turkey for every map claim (also 'Tereci Karşıyaka', 'Ergan Market', 'Fiyord', 'Abfen'); own sites from eval/truth-9.json",
+  "summary": { "kept": 15, "right": 14, "wrong": 1, "unverifiable": 0, "dropped": 10, "droppedRightly": 8 },
+  "verdicts": {
+    "sari": { "site_online": "right", "https_healthy": "right (renewed, ends 20 Jan 2027)", "not_on_map": "right" },
+    "drsalt": { "site_online": "right", "https_healthy": "right (ends 13 Jan 2027)" },
+    "yoresel": { "not_on_map": "WRONG: on OpenStreetMap as “Tereci” (Bostanlı, Karşıyaka), the brand its own site uses; with no search the site and its other names were never found, so round 19's fix could not apply" },
+    "abfen": { "not_on_map": "right" },
+    "vitisfera": { "not_on_map": "right" },
+    "fiyord": { "not_on_map": "right" },
+    "vitaminbox": { "not_on_map": "right" },
+    "ergandan": { "not_on_map": "right (only a Tarım Kredi market on Mehmet Ergan Sokağı)" },
+    "deri": { "not_on_map": "right" },
+    "azram": { "not_on_map": "right" },
+    "organikixir": { "not_on_map": "right" }
+  },
+  "dropped": {
+    "yoresel": { "no_own_website": "rightly dropped: yoreselbakkal.com.tr" },
+    "abfen": { "no_own_website": "rightly dropped: abfen.com" },
+    "vitisfera": { "no_own_website": "rightly dropped: vitisfera.co" },
+    "fiyord": { "no_own_website": "rightly dropped: balikavmarket.net" },
+    "vitaminbox": { "no_own_website": "rightly dropped: vitaminbox.com.tr" },
+    "bebeto": { "no_own_website": "rightly dropped: bebeto.com" },
+    "ergandan": { "no_own_website": "rightly dropped: ergandan.com.tr" },
+    "deri": { "no_own_website": "rightly dropped: derimalzeme.com" },
+    "azram": { "no_own_website": "wrongly dropped: it has no site of its own (true finding lost)" },
+    "organikixir": { "no_own_website": "wrongly dropped: it has no site of its own (true finding lost)" }
+  },
+  "modelAlone": {
+    "run": "eval/runs/2026-10-23-alone.json",
+    "summary": "Nemotron 3 Super with no search and no checks, the same claim catalog: 0 claims for all 12 businesses. It named a website only when the query held it (2 of 2); for the other 10 it answered null (8 have a site, 2 do not). Honest, but nothing a seller can use."
+  }
+}
