@@ -1,0 +1,57 @@
+<!doctype html>
+<!-- Devpost gallery card (1920x1280): how Proofline uses Tavily, and what it measured.
+     Numbers come from docs/accuracy.md, "Where Tavily decides the claim"; tests/gallery-tavily.test.mjs keeps them in step.
+     Render: chromium --headless --window-size=1920,1280 --screenshot=tavily.png docs/gallery/tavily.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Proofline and Tavily</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --paper: #f6f4ef; --card: #fffdf9; --ink: #16181d; --ink-2: #4a4d55; --muted: #686b73;
+    --line: #e3dfd6; --good: #1f7a4d; --good-bg: #e6f2ea; --drop: #8a8d94;
+    --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1920px; height: 1280px; background: var(--paper); color: var(--ink); font-family: var(--sans); font-variant-numeric: tabular-nums; }
+  main { padding: 140px 140px 0; }
+  .brand { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 34px; letter-spacing: -0.01em; }
+  h1 { font-weight: 600; font-size: 76px; line-height: 1.08; letter-spacing: -0.025em; margin: 76px 0 0; max-width: 1500px; }
+  h1 span { color: var(--good); }
+  .uses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 76px; }
+  .use { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 34px 36px 36px; }
+  .use b { display: block; font-size: 34px; font-weight: 600; letter-spacing: -0.01em; }
+  .use p { margin: 12px 0 0; font-size: 25px; line-height: 1.45; color: var(--ink-2); }
+  .measured { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 76px; }
+  .stat { border-left: 4px solid var(--good); padding: 6px 0 6px 28px; }
+  .stat .k { font-size: 25px; color: var(--ink-2); }
+  .stat .v { margin-top: 10px; font-size: 54px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .stat .v small { font-size: 26px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+  .stat .v .from { color: var(--drop); }
+  .foot { position: absolute; left: 140px; right: 140px; bottom: 96px; font-size: 23px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7" stroke="#16181d" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="#16181d" stroke-width="2.2" stroke-linecap="round"/><path d="m7.6 10.6 2 2 3.6-4" stroke="#1f7a4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Proofline
+  </div>
+  <h1>Tavily results are part of the proof, <span>not just the starting point.</span></h1>
+
+  <section class="uses">
+    <div class="use"><b>1. Discovery</b><p>One search for the name and city. The model may take a domain or phone only from these results.</p></div>
+    <div class="use"><b>2. Whose site is it?</b><p>Search results must tie a domain to the business and its city. Before “no website”, a second search and the listing’s own link.</p></div>
+    <div class="use"><b>3. Closed or moved?</b><p>“Permanently closed” counts only if the result names the business. “We moved” is not a closure.</p></div>
+  </section>
+
+  <section class="measured" data-source="docs/accuracy.md#where-tavily-decides-the-claim">
+    <div class="stat"><div class="k">Claims proven with Tavily, right</div><div class="v" data-k="tavily"><span class="from">67.5%</span> → 92.9%</div></div>
+    <div class="stat"><div class="k">“No website of its own”, right</div><div class="v" data-k="nosite"><span class="from">9/16</span> → 10/12</div></div>
+    <div class="stat"><div class="k">Dropped by a failed Tavily check</div><div class="v" data-k="drops">45 <small>28 rightly</small></div></div>
+  </section>
+</main>
+<div class="foot">First rounds (1–7) → last four fresh lists of real Turkish small businesses, every kept claim checked independently. 19 rounds in all · docs/accuracy.md</div>
+</body>
+</html>
