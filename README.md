@@ -79,7 +79,9 @@ Every report has a panel that lists each Nemotron call of that run:
 - tokens in / out (and reasoning tokens when present), read from the response's `usage` field by `parseUsage` in [`src/llm.mjs`](src/llm.mjs). A missing field is shown as unknown, never estimated;
 - the outcome of code's checks on the answer: **accepted**, **partly rejected** (for example a Nano rewrite that introduced a number), **rejected**, or **no answer** (with the reason).
 
-A summary line reads "N model calls · X tokens · Y claims dropped by the gate".
+A summary line reads "N model calls · X tokens · ≈$Z at Nebius list price · Y claims dropped by the gate".
+
+**What a run costs.** The dollar figure is the run's own token counts times Nebius Token Factory list prices per 1M tokens (Super $0.30 in / $0.90 out, Nano $0.06 / $0.24, Ultra $1.00 / $3.00; read 26 Oct 2026, in [`public/cost.js`](public/cost.js)). The four recorded examples cost between $0.002 and $0.004 each, so checking a business before a sales call costs well under a cent in model calls. A model with no known price is left out and the line says "at least"; nothing is estimated for a call without token counts.
 
 **Recorded Nemotron answers in the examples.** `npm run record-samples` runs the four fictional examples once through the live Nemotron brain (English and Turkish; the plan step once, 7 calls per example) and saves every answer with its model id, tokens, latency and output format in [`fixtures/recorded/`](fixtures/recorded). The demo then replays them ([`src/agent/recorded-brain.mjs`](src/agent/recorded-brain.mjs)): the panel says "recorded on <date>, no new tokens", every call carries that label, and the code checks after each answer (gate, number check, citation lint) run again on the replay. The planted wrong claims are added after the model's own proposals and say "planted for this demo, not proposed by the model". A step with no recording falls back to the rule-based stand-in and is named as such; with no recordings at all the examples use the stand-in and the panel says "no tokens".
 
@@ -222,7 +224,7 @@ Where it lives:
 
 ## Tests
 
-**390 tests in 56 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**396 tests in 57 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 

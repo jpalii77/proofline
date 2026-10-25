@@ -4,6 +4,7 @@ import { applyStatic, DICT, dateTime, getLang, num, onLangChange, partialText, s
 import { setupTour } from './tour.js';
 import { createGateStage, mustSettle } from './gate.js';
 import { ACCURACY, accuracyPct } from './accuracy.js';
+import { runCost, usdText } from './cost.js';
 import { ctxFromEvents, gateSummary, laneFromGate, lanesFromEvents, lanesFromReport, miniLabel, shortLabel } from './gate-data.js';
 import { cardFacts, checkTitle, claimStatement, dropReasonText, guardNoteText, modelDetailText, modelName, removedReasonText, summaryText } from './report-lang.js';
 
@@ -507,7 +508,10 @@ function modelSummary(r, calls) {
   const standIn = calls.length > 0 && calls.every((c) => /sample/.test(c.model));
   const recorded = calls.some((c) => c.recordedAt);
   const tokenText = tokens == null ? t('ev.tokensNone') : t(recorded ? 'models.tokensRecorded' : 'models.tokens', { n: fmt(tokens) });
-  const parts = [t('models.calls', { n }), standIn ? t('models.standIn') : tokenText, t('models.droppedByGate', { n: r.stats.dropped })];
+  const parts = [t('models.calls', { n }), standIn ? t('models.standIn') : tokenText];
+  const cost = standIn ? { usd: null } : runCost(calls);
+  if (cost.usd != null) parts.push(t(cost.unpriced ? 'models.costPartial' : 'models.cost', { usd: usdText(cost.usd) }));
+  parts.push(t('models.droppedByGate', { n: r.stats.dropped }));
   if (r.stats.rewritesRejected) parts.push(t('models.rewritesRejected', { n: r.stats.rewritesRejected }));
   return parts.join(' · ');
 }
