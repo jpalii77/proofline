@@ -13,6 +13,7 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const PLACES = [
   { file: 'README.md', re: /\*\*(\d+) tests in (\d+) files, all passing\*\*/ },
   { file: 'docs/devpost-v2.md', re: /\*\*Tests:\*\* (\d+) `node:test` tests/ },
+  { file: 'docs/gallery/judge-sheet.html', re: /data-k="tests">(\d+) tests/ },
 ];
 
 /** Numbers a text states: { tests, files } (files is null when the sentence does not give it), or null if absent. */
