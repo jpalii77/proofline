@@ -273,7 +273,8 @@ export async function runAgent({ query, io: rawIO, brain, emit = () => {}, now =
   }
   const ctx = {
     name: (bareQuery ? parsed.name : plan.name || parsed.name) || null,
-    city: [plan.city, parsed.city].find((c) => c && !looksLikeDomain(c)) || null,
+    // Text only: on the plain-JSON retry (schema refused) a model has to keep the shape itself.
+    city: [plan.city, parsed.city].find((c) => typeof c === 'string' && c.trim() && !looksLikeDomain(c)) || null,
     domain: planned || parsed.domain || null,
     phone: plan.phone || null,
     searchQuery,
