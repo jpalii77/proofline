@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proofline — how often it is right</title>
+  <meta name="description" content="Every claim Proofline kept on real Turkish small businesses, checked by hand outside the tool: the right ones, the wrong ones and what the gate dropped.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121317" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Proofline">
+  <meta property="og:title" content="Proofline — how often it is right">
+  <meta property="og:description" content="Every kept claim on real businesses, checked by hand: the right ones, the wrong ones and what the gate dropped.">
+  <meta property="og:image" content="https://proofline-demo.dwelltime-yayin.workers.dev/og.png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/proof.css">
+</head>
+<body class="proof-page">
+  <a class="skip" href="#claims" data-p="skip">Skip to every claim</a>
+  <header class="top">
+    <a class="brand" href="/" aria-label="Proofline home">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M9.5 14.2l3 3 6-6.4" fill="none" stroke="var(--good)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.5 21.5L28 28" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <span>Proofline</span>
+    </a>
+    <div class="proof-top-right">
+      <a class="proof-back" href="/" data-p="back">Try the demo</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" lang="en" aria-pressed="true" aria-label="EN, English">EN</button>
+        <span class="lang-sep" aria-hidden="true">·</span>
+        <button type="button" data-lang="tr" lang="tr" aria-pressed="false" aria-label="TR, Türkçe">TR</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="proof-main">
+    <section class="proof-intro">
+      <h1 data-p="h1">How often is Proofline right?</h1>
+      <p class="proof-lede" data-p="lede">We ran the agent on real Turkish small businesses and checked every claim it kept by hand, outside Proofline. This page shows each one, the wrong ones too.</p>
+      <div id="stats" class="proof-stats"></div>
+    </section>
+
+    <section class="proof-block" aria-labelledby="final-h">
+      <h2 id="final-h" data-p="final.h">The final round</h2>
+      <div id="final"></div>
+    </section>
+
+    <section class="proof-block" aria-labelledby="claims-h">
+      <h2 id="claims-h" data-p="claims.h">Every claim on the last four fresh lists</h2>
+      <p class="proof-note" data-p="claims.lede">48 businesses the fixes were never made for. Each claim below is what the report said; next to it, what the hand check found.</p>
+      <div class="proof-filter" role="group" id="filter"></div>
+      <div id="claims"></div>
+    </section>
+
+    <section class="proof-block" aria-labelledby="search-h">
+      <h2 id="search-h" data-p="search.h">Search on, search off, the model alone</h2>
+      <p class="proof-note" data-p="search.lede">The same 12 businesses, three ways.</p>
+      <div class="proof-scroll"><table id="search" class="proof-table"></table></div>
+    </section>
+
+    <section class="proof-block" aria-labelledby="rounds-h">
+      <h2 id="rounds-h" data-p="rounds.h">All 19 rounds</h2>
+      <p class="proof-note" data-p="rounds.lede">A fresh list is 12 businesses never measured before. A repeat runs the same list again after the fixes, so only fresh lists count for the headline number.</p>
+      <div class="proof-scroll"><table id="rounds" class="proof-table"></table></div>
+    </section>
+
+    <section class="proof-block" aria-labelledby="method-h">
+      <h2 id="method-h" data-p="method.h">How it was measured, and what it does not show</h2>
+      <ul id="method" class="proof-list"></ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><span data-p="foot">Built for the Nebius × NVIDIA Global AI Hackathon</span> · <a id="src-link" href="https://github.com/jpalii77/proofline/blob/main/docs/accuracy.md" data-p="foot.src">Full write-up on GitHub</a></p>
+  </footer>
+  <script type="module" src="/proof.js"></script>
+</body>
+</html>

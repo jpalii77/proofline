@@ -4,7 +4,8 @@ export const ACCURACY = {
   rounds: [14, 16, 18, 19],
   kept: 109,
   total: 114,
-  url: 'https://github.com/jpalii77/proofline/blob/main/docs/accuracy.md#results',
+  // the measurement page on the demo itself; it lists every round and every claim (public/proof.html)
+  url: '/proof',
 };
 
 export const accuracyPct = (a) => Math.round((100 * a.kept) / a.total);

@@ -2,7 +2,7 @@
 
 **Proofline is an agent for people who sell web services to small businesses: it researches a business from its public web traces, lets NVIDIA Nemotron propose what is true, then re-checks every claim with code, so a stale or invented "fact" never reaches the sales call.**
 
-**Live demo: <https://proofline-demo.dwelltime-yayin.workers.dev>** · Video (2:00): <https://youtu.be/20kavMVwN70> · Code (MIT): <https://github.com/jpalii77/proofline> · One page for judges: [PDF](docs/proofline-one-page.pdf)
+**Live demo: <https://proofline-demo.dwelltime-yayin.workers.dev>** · Video (2:00): <https://youtu.be/20kavMVwN70> · Code (MIT): <https://github.com/jpalii77/proofline> · One page for judges: [PDF](docs/proofline-one-page.pdf) · Every claim, checked by hand: [/proof](https://proofline-demo.dwelltime-yayin.workers.dev/proof)
 
 ### Try it in 30 seconds
 
@@ -224,7 +224,7 @@ Where it lives:
 
 ## Tests
 
-**409 tests in 59 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
+**414 tests in 60 files, all passing** (`npm test`, Node's built-in `node:test`, no network). They cover the checks, the gate, own-site and hostname rules, model-call accounting, structured output (schemas, enums, the refused-schema fallback), share links, the Workers network adapter, the public demo's quotas, the interface and report language, the tour, and crash guards (odd input, broken services and malformed requests must never take the server down or show a stack trace), and one regression file per accuracy round.
 
 ## Reference
 

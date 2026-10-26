@@ -188,7 +188,7 @@ function renderProofLine() {
   if (!n) return;
   n.replaceChildren(
     t('hero.proof', { kept: num(ACCURACY.kept), total: num(ACCURACY.total), pct: num(accuracyPct(ACCURACY)) }), ' ',
-    h('a', { href: ACCURACY.url, target: '_blank', rel: 'noopener' }, `${t('hero.proofLink')} →`));
+    h('a', { href: ACCURACY.url }, `${t('hero.proofLink')} →`));
 }
 
 function relocalizeStatic() {

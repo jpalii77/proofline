@@ -52,7 +52,8 @@ export function createServer(cfg = readConfig(), { fetchImpl, pace = false, now 
   }
 
   function serveStatic(req, res, pathname) {
-    const rel = pathname === '/' ? 'index.html' : pathname.slice(1);
+    // "/proof" as on Workers, where the assets layer serves proof.html without its ending
+    const rel = pathname === '/' ? 'index.html' : pathname === '/proof' ? 'proof.html' : pathname.slice(1);
     const file = path.normalize(path.join(ROOT, rel));
     if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
       res.writeHead(404, { 'content-type': 'text/plain' });

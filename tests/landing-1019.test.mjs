@@ -29,17 +29,17 @@ test('the landing accuracy matches the fresh-list rounds in docs/accuracy.md', (
   assert.equal(accuracyPct(ACCURACY), 96);
 });
 
-test('the accuracy line reads right in both languages and links to every round', () => {
+test('the accuracy line reads right in both languages and links to the measurement page', () => {
   setLang('en');
   assert.equal(t('hero.proof', { kept: '109', total: '114', pct: '96' }),
     'Measured on real businesses: on the last four fresh lists (48 Turkish shops), 109 of 114 kept claims were right (96%), each checked by hand outside Proofline.');
   setLang('tr');
   assert.equal(t('hero.proof', { kept: '109', total: '114', pct: '96' }),
     'Gerçek işletmelerde ölçüldü: son dört taze listede (48 Türk işletmesi) tutulan 114 iddiadan 109 tanesi doğru çıktı (%96); her biri Proofline dışında elle kontrol edildi.');
-  assert.equal(t('hero.proofLink'), 'Tüm turlar');
+  assert.equal(t('hero.proofLink'), 'Tüm iddialar ve kontrolleri');
   setLang('en');
   assert.equal(ACCURACY.rounds.length * 12, 48);
-  assert.match(ACCURACY.url, /^https:\/\/github\.com\/jpalii77\/proofline\/blob\/main\/docs\/accuracy\.md#results$/);
+  assert.equal(ACCURACY.url, '/proof'); // the measurement page, tests/proof-page.test.mjs
   assert.match(html, /<p id="proof-line" class="proof-line"><\/p>/);
   assert.match(app, /else renderProofLine\(\);/);
 });
