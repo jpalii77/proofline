@@ -74,6 +74,15 @@ test('loadFinal reads the final run and its verdicts, and nothing before both ex
   fs.rmSync(dir, { recursive: true });
 });
 
-test('the real repository has no final run yet, so the page still waits', () => {
-  assert.equal(loadFinal(), null);
+test('the final round ran once (27 Oct) from the recorded list, and every kept claim has a hand verdict', () => {
+  const r = loadFinal();
+  assert.ok(r, 'final run and verdicts-final.json are both in the repository');
+  assert.equal(r.run, 'eval/runs/2026-10-27-final.json');
+  const run = JSON.parse(fs.readFileSync(new URL(`../${r.run}`, import.meta.url), 'utf8'));
+  assert.equal(run.frozen.sha256, recorded);
+  assert.deepEqual({ businesses: r.businesses, errors: r.errors, kept: r.kept, dropped: r.dropped, right: r.right, wrong: r.wrong, unsettled: r.unsettled }, { businesses: 12, errors: 0, kept: 33, dropped: 1, right: 33, wrong: 0, unsettled: 0 });
+  // a second start is refused
+  assert.match(finalStartProblem({ ...base, runs: ['2026-10-27-final.json'], done: 12 }), /already ran/);
+  // accuracy.md states the same numbers
+  assert.match(fs.readFileSync(new URL('../docs/accuracy.md', import.meta.url), 'utf8'), /\| 12 \| 34 \| 1 \| 33 \| 33 of 33 \| \*\*100%\*\* \|/);
 });

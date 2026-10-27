@@ -1,0 +1,68 @@
+{
+  "run": "runs/2026-10-27-final.json (frozen final round, eval/businesses-10.json, SHA-256 573d583a…; run once on 2026-10-27)",
+  "checkedBy": "independent re-check on 2026-10-27, outside Proofline: curl (https status, http→https redirect, title, full homepage HTML), openssl (certificate end date), phone and contact search in the full HTML, dig on the obvious own-site domains, Nominatim (OpenStreetMap) name queries limited to Turkey with a control query, web searches",
+  "verdicts": {
+    "kirmizibeyaz": {
+      "site_online": "right (https 200, title 'Kırmızı Beyaz Çanta - Şık ve Kullanışlı Çanta Modelleri', 147 KB)",
+      "https_healthy": "right (certificate ends 2 Jan 2027, 67 days; http 301 to https)",
+      "phone_confirmed": "right (tel:+905399877615 and wa.me/905399877615 on the homepage)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "mardinsabun": {
+      "site_online": "right (https 200, title 'Mardin Sabunum', 499 KB)",
+      "https_healthy": "right (certificate ends 7 Jan 2027, 72 days; http 301 to https)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "eva": {
+      "no_own_website": "right (evaappealing and evaappealingg .com/.com.tr have no DNS; only Shopier, Instagram and a Yandex Maps record; web search finds no site of its own)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "vanessa": {
+      "no_own_website": "right (vanessacollection(n) .com/.com.tr have no DNS; only Shopier, Instagram, Facebook and Yandex Maps; web search finds no site of its own)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "selverre": {
+      "site_online": "right (https 200, title 'SELVERRE', 581 KB)",
+      "https_healthy": "right (certificate ends 5 Jan 2027, 70 days; http 301 to https)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "zes": {
+      "site_online": "right (https 200, title 'ZES Şal Eşarp Çanta', 1.0 MB)",
+      "https_healthy": "right (certificate ends 16 Jan 2027, 81 days; http 301 to https)",
+      "phone_confirmed": "right (wa.me/905436572595 and wa.me/05436572595 on the homepage)",
+      "not_on_map": "right (no Nominatim result in Turkey for 'ZES Şal Eşarp')"
+    },
+    "nesli": {
+      "no_own_website": "right (neslinurmoda.com/.com.tr have no DNS; its Instagram @neslinurmoda takes orders by DM; asilnurmoda.com is Asilnur Moda, a separate brand that sells a 'Nesli' ferace model, nothing ties it to Nesli Nur Moda)",
+      "not_on_map": "right (no Nominatim result in Turkey for 'Nesli Nur Moda' or 'Neslinur Moda')"
+    },
+    "babil": {
+      "site_online": "right (https 200, title 'Babil Takı: En Şık Kolye, Küpe, Bileklik, Yüzük ve Takı Setleri', 388 KB)",
+      "https_healthy": "right (certificate ends 7 Jan 2027, 72 days; http 301 to https)",
+      "no_contact_path": "right as stated: the homepage has only a search form, add-to-cart forms and a menu link to /pages/iletisim; it says 'WhatsApp ve Telefon üzerinden 7/24 destek' but shows no number, email or link (the email is only in hidden schema data)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "kalicianlar": {
+      "site_online": "right (https 200, title 'Kalicianlar™', 261 KB)",
+      "https_healthy": "right (certificate ends 22 Dec 2026, 56 days; http 301 to https)",
+      "phone_confirmed": "right (tel:5438762537 and a WhatsApp button with 905438762537 on the homepage)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "gulcici": {
+      "no_own_website": "right (gulcici and gulcicibutik .com/.com.tr have no DNS; only Shopier, Trendyol and Yandex Maps; web search finds no site of its own)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "takik": {
+      "no_own_website": "right (takikjewelry/takikjewellery .com/.com.tr have no DNS; takik.com is a parked page; only Shopier, Instagram and Pinterest)",
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    },
+    "solivagant": {
+      "not_on_map": "right (no Nominatim result in Turkey)"
+    }
+  },
+  "dropped": {
+    "solivagant": {
+      "no_own_website": "a true claim lost: the shop sells only on Shopier (shopier.com/solivagantns); solivagant.com forwards to a domain broker and is not its site, but the gate could not tell that from the search results and left it unsettled"
+    }
+  }
+}

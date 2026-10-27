@@ -2052,7 +2052,19 @@ export const PROOF = {
   "file": "https://github.com/jpalii77/proofline/blob/main/eval/businesses-10.json",
   "note": "https://github.com/jpalii77/proofline/blob/main/eval/FROZEN.md",
   "sha256": "573d583ae2a575df7629642146ab22477780a673efb4d6f8558eba04693239b9",
-  "result": null
+  "result": {
+   "day": "2026-10-27",
+   "businesses": 12,
+   "errors": 0,
+   "kept": 33,
+   "dropped": 1,
+   "right": 33,
+   "wrong": 0,
+   "unsettled": 0,
+   "checkable": 33,
+   "run": "https://github.com/jpalii77/proofline/blob/main/eval/runs/2026-10-27-final.json",
+   "verdicts": "https://github.com/jpalii77/proofline/blob/main/eval/verdicts-final.json"
+  }
  },
  "sources": {
   "accuracy": "https://github.com/jpalii77/proofline/blob/main/docs/accuracy.md"

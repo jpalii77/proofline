@@ -79,6 +79,16 @@ Ultra as a second opinion (20 Oct, `scripts/second-opinion-compare.mjs`, `eval/r
 
 What changed between rounds: Kaptan Oyuncak and Elle Shoes no longer get a false "no contact path"; Petpal is no longer confused with a US site; Vatkalimon's own site is found by trying the address built from its name; Sakal Kafe Pub is found on the map.
 
+## The final round (frozen list)
+
+`eval/businesses-10.json`, 12 businesses never measured before, was committed on 20 October with its SHA-256 in `eval/FROZEN.md`, and the accuracy run refuses it if the hash differs, if it already ran, or with an option that runs only part of it (`scripts/final-round.mjs`). It ran once, on 2026-10-27 (`eval/runs/2026-10-27-final.json`), live: Tavily, Nemotron 3 Super with Ultra as a second opinion, Nano for rewrites. Nothing was changed after it.
+
+| Businesses | Claims proposed | Dropped by the gate | Kept | Kept and correct (independent check) | Accuracy of kept claims |
+| --- | --- | --- | --- | --- | --- |
+| 12 | 34 | 1 | 33 | 33 of 33 | **100%** |
+
+Every kept claim was checked outside Proofline on the same day (`eval/verdicts-final.json`: curl, openssl, the full homepage, dig, Nominatim, web searches); none was left unsettled. All six own sites were found, including the two whose address differs from the name (zessalesarp.com for "ZES Şal Eşarp Çanta", and "Nesli Nur Moda", rightly told it has no site: asilnurmoda.com is a separate brand). The five sellers on Shopier and Instagram only were not tied to a namesake (takik.com is a parked page, vanessacollection is a common name abroad). The one dropped claim was a true claim lost: Solivagant has no website of its own, but solivagant.com, which only forwards to a domain broker, kept that from being settled for a bare one-word name. One fresh list of 12 is a small sample; the four fresh lists before it (90–100%) are the larger one.
+
 ## Without the gate
 
 What would a reader have seen if every claim Nemotron proposed were shown? Each round's file already says whether every dropped claim was in fact wrong, true, or could not be settled (`eval/gate-ablation.json`, one label per dropped claim, tied to the run files by a test). `node scripts/gate-ablation.mjs` turns that into the table below; no new runs, no network.
