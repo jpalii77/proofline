@@ -6,7 +6,8 @@ import fs from 'node:fs';
 import { test } from 'node:test';
 import { ACCURACY } from '../public/accuracy.js';
 import { PROOF } from '../public/proof-data.js';
-import { build, OUT, render, searchRows } from '../scripts/proof-data.mjs';
+import { loadFinal } from '../scripts/final-round.mjs';
+import { build, finalForPage, OUT, render, searchRows } from '../scripts/proof-data.mjs';
 
 const read = (rel) => fs.readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8');
 const html = read('public/proof.html');
@@ -40,9 +41,10 @@ test('each round on the page matches its row in accuracy.md, and so do the gate 
   assert.deepEqual(searchRows(md).map((r) => [r.right, r.checkable, r.sitesFound]), [[27, 30, 8], [14, 15, 2], [0, 0, 2]]);
 });
 
-test('the frozen final round is named with its hash and has no result before it runs', () => {
+test('the frozen final round is named with its hash, and its result comes only from the checked run', () => {
   assert.ok(read('eval/FROZEN.md').includes(PROOF.frozen.sha256));
-  assert.equal(PROOF.frozen.result, null);
+  assert.deepEqual(PROOF.frozen.result, finalForPage(loadFinal()));
+  if (PROOF.frozen.result) assert.match(PROOF.frozen.result.run, /eval\/runs\/\d{4}-\d{2}-\d{2}-final\.json$/);
 });
 
 test('/proof is served locally as on Workers, and the page keeps to the CSP and the type rules', () => {

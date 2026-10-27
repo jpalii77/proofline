@@ -23,6 +23,9 @@ const TEXT = {
     'final.why': 'Why it is frozen',
     'final.hash': 'SHA-256',
     'final.done': 'Run once on {day}: {a} of {b} kept claims right ({pct}%).',
+    'final.more': '{w} wrong, {u} not settled, {d} dropped by the gate, across {n} businesses.',
+    'final.run': 'The run',
+    'final.verdicts': 'Hand checks',
     'claims.h': 'Every claim on the last four fresh lists',
     'claims.lede': '48 businesses the fixes were never made for. Each claim below is what the report said; next to it, what the hand check found.',
     'filter.label': 'Show',
@@ -86,6 +89,9 @@ const TEXT = {
     'final.why': 'Neden donduruldu',
     'final.hash': 'SHA-256',
     'final.done': '{day} tarihinde bir kez çalıştı: tutulan {b} iddiadan {a} tanesi doğru (%{pct}).',
+    'final.more': '{n} işletmede {w} yanlış, {u} belirsiz; kapı {d} iddiayı attı.',
+    'final.run': 'Çalıştırma',
+    'final.verdicts': 'Elle kontroller',
     'claims.h': 'Son dört taze listedeki her iddia',
     'claims.lede': 'Düzeltmelerin hiç yapılmadığı 48 işletme. Her satırda raporun söylediği ve elle kontrolün bulduğu yan yana.',
     'filter.label': 'Göster',
@@ -170,8 +176,10 @@ function renderFinal() {
   const r = F.result;
   $('#final').replaceChildren(
     h('p', { class: 'proof-note' }, r ? tx('final.done', { day: r.day, a: num(r.right), b: num(r.checkable), pct: num(pct(r.right, r.checkable)) }) : tx('final.wait')),
+    r ? h('p', { class: 'proof-note' }, tx('final.more', { w: num(r.wrong), u: num(r.unsettled), d: num(r.dropped), n: num(r.businesses) })) : null,
     h('p', { class: 'proof-final-links' },
       h('a', { href: F.file }, tx('final.list')), ' · ',
+      r ? [h('a', { href: r.run }, tx('final.run')), ' · ', h('a', { href: r.verdicts }, tx('final.verdicts')), ' · '] : null,
       h('a', { href: F.note }, tx('final.why')), ' · ',
       h('span', { class: 'proof-hash' }, `${tx('final.hash')} ${F.sha256.slice(0, 12)}…`)));
 }
