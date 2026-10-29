@@ -153,8 +153,11 @@ The live agent runs on lists of 12 real Turkish small businesses; every claim th
 | 17 | 2026-10-15, after round-16 fixes | same 12 | 35 | 0 | 35 | 35 of 35 | **100%** |
 | 18 | 2026-10-15, after the audit fixes | 12 new shops, mixed input | 33 | 0 | 33 | 32 of 33 | **97%** |
 | 19 | 2026-10-16, after the round-18 fix | 12 new shops, mixed input | 32 | 2 | 30 | 27 of 30 | 90% |
+| **Final** | 2026-10-27, frozen list, run once | 12 new shops, hash committed 20 Oct | 34 | 1 | 33 | 33 of 33 | **100%** |
 
 Rounds 8–14 are the most useful lesson of the project. Fixing one list until it scored 96% (round 11) and then running a list the fixes had never seen gave 61% (round 12): the agent had taken a parking page, an empty page and two foreign namesakes for small Turkish shops, and called a 404 page "secure". Each cause got a guard and a regression test; the next fresh list (round 14) kept no wrong claim. Since then every fix is measured on businesses it was not made for: the last four fresh lists (rounds 14, 16, 18, 19; 48 shops) kept 109 of 114 checkable claims right (96%), and each error became a fix or a named limit. The price is visible too: when the agent cannot tie a site to the business it now says "not settled" instead of guessing, so some reports are shorter.
+
+**The final round** used a list committed with its SHA-256 a week earlier (`eval/FROZEN.md`); the run refuses it if the hash differs, if it already ran, or if asked to run only part of it. It ran once on 27 October, live, with nothing changed after: 33 claims kept, 33 right on an independent check, none unsettled; the one dropped claim was a true claim lost. One list of 12 is a small sample; the four fresh lists above are the larger one. Details in [`docs/accuracy.md`](docs/accuracy.md#the-final-round-frozen-list), every claim on [/proof](https://proofline-demo.dwelltime-yayin.workers.dev/proof).
 
 Round 3 is the honest test: businesses the earlier fixes were not made for. Its 3 wrong claims came from two causes (a site that answers on http only; a one-word map match of the wrong kind of place), both now fixed with tests.
 
