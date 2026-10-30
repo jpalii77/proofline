@@ -160,5 +160,5 @@ javascript, node.js, nvidia-nemotron, nemotron-3-super, nemotron-3-nano, nemotro
 
 - Live demo: https://proofline-demo.dwelltime-yayin.workers.dev
 - Code (MIT): https://github.com/jpalii77/proofline
-- Video (2:00): https://youtu.be/20kavMVwN70
+- Video (1:52): https://youtu.be/fYQCcudvnsI
 - Every claim, checked by hand: https://proofline-demo.dwelltime-yayin.workers.dev/proof

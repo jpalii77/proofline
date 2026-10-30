@@ -59,7 +59,7 @@ test('model prices on the sheet are the ones the panel uses, and the cost range 
 });
 
 test('links on the sheet are the README ones', () => {
-  for (const url of ['https://proofline-demo.dwelltime-yayin.workers.dev', 'https://youtu.be/20kavMVwN70', 'https://github.com/jpalii77/proofline']) {
+  for (const url of ['https://proofline-demo.dwelltime-yayin.workers.dev', 'https://youtu.be/fYQCcudvnsI', 'https://github.com/jpalii77/proofline']) {
     assert.ok(readme.includes(url), `README ${url}`);
     assert.ok(sheet.includes(`href="${url}"`), `sheet ${url}`);
   }
